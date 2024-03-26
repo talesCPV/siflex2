@@ -1,6 +1,10 @@
 <template>
     <style>
 
+        #tblAnaFrota, #fdsRelat{
+            display: none;
+        }
+
     </style>
 
     <fieldset class="fds-busca analise">
@@ -30,6 +34,39 @@
         </div>
     </fieldset>  
     <table id="tblAnaFrota"></table>
+
+    <fieldset id="fdsRelat">
+        <legend>Relatórios</legend>
+        <div class="inline">
+            <label for="edtTitle">Título</label>
+            <input type="text" id="edtTitle" placeholder="Título do relatório" value="Análise de Frota">
+            <label for="edtObj">Objeto</label>
+            <input type="text" id="edtObj" class="mob-wide" value="Carro" style="width: 200px;">
+            <label for="edtFont">Fonte</label>
+            <input type="text" id="edtFont" class="mob-wide" onkeyup="return valFloat(this,0)" value="11" style="width: 80px;">
+            <label for="edtCor">Cor</label>
+            <input type="color" id="edtCor" class="mob-wide" style="width: 80px;">
+            <label for="edtDesc">Desconto</label>
+            <input type="text" id="edtDesc"  class="mob-wide" style="width: 200px;" onkeyup="return valFloat(this)" value="0">
+        </div>
+
+        <div class="inline">
+            <label for="edtObs">Obs:</label>
+            <textarea id="edtObs" cols="30" rows="10"></textarea>
+        </div>
+        <div class="inline">
+            <label for="edtRodape">Rodapé:</label>
+            <textarea id="edtRodape" cols="30" rows="3"></textarea>
+        </div>
+
+        <div class="line">            
+            <button id="btnRelat">Reltório</button>
+            <button id="btnOrc">Orçamento</button>
+        </div>
+
+    </fieldset>
+
+
 
 </template>
 <script>
@@ -62,6 +99,7 @@
             myPromisse.then((resolve)=>{
                 const json = JSON.parse(resolve)
                 tbl.style.display = json.length > 0 ? 'inline-table' : 'none'
+                pageScreen.querySelector('#fdsRelat').style.display = json.length > 0 ? 'inline-table' : 'none'
                 tbl.head('Cod.,Data,Cliente,Carro,Exec.,Valor') 
                 for(let i=0; i<json.length;i++){
                 
@@ -85,6 +123,43 @@
     pageScreen.querySelector('#tblAnaFrota').addEventListener('click',(e)=>{
         data = e.target.parentNode.data
         openHTML('oper_view_ana_frota.html','pop-up','Cadastro - Análise de Frota',data)
+    })
+
+    pageFunc.print = (relat)=>{
+        pageData.org = 'Análise'
+        pageData.relatorio = relat
+        pageData.titulo = pageScreen.querySelector('#edtTitle').value.trim()
+        pageData.desc = parseFloat(pageScreen.querySelector('#edtDesc').value)
+        pageData.cor = pageScreen.querySelector('#edtCor').value
+        pageData.objeto = pageScreen.querySelector('#edtObj').value
+        pageData.rodape = pageScreen.querySelector('#edtRodape').value
+        pageData.fontsize = parseFloat(pageScreen.querySelector('#edtFont').value)
+        pageData.showdata = pageScreen.querySelector('#ckbData').value
+        pageData.data_ini = pageScreen.querySelector('#edtIni').value
+        pageData.data_fin = pageScreen.querySelector('#edtFin').value
+        carrosRelat(pageScreen.querySelector('#tblAnaFrota'),pageData )
+    }
+
+    pageScreen.querySelector('#btnRelat').addEventListener('click',()=>{
+        pageFunc.print(1)
+    })
+
+    pageScreen.querySelector('#btnOrc').addEventListener('click',()=>{
+        pageFunc.print(0)
+/*        
+        pageData.org = 'Análise'
+        pageData.relatorio = 0
+        pageData.titulo = pageScreen.querySelector('#edtTitle').value.trim()
+        pageData.desc = parseFloat(pageScreen.querySelector('#edtDesc').value)
+        pageData.cor = pageScreen.querySelector('#edtCor').value
+        pageData.objeto = pageScreen.querySelector('#edtObj').value
+        pageData.rodape = pageScreen.querySelector('#edtRodape').value
+        pageData.fontsize = parseFloat(pageScreen.querySelector('#edtFont').value)
+        pageData.showdata = pageScreen.querySelector('#ckbData').value
+        pageData.data_ini = pageScreen.querySelector('#edtIni').value
+        pageData.data_fin = pageScreen.querySelector('#edtFin').value
+        carrosRelat(pageScreen.querySelector('#tblAnaFrota'), 'AnaFrotaOrc')
+*/        
     })
 
 

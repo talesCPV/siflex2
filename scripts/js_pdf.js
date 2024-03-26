@@ -154,137 +154,15 @@ function block_text(T=''){
     print()
 }
 
-function header_pdf(lin_h = 5, font_size = 20){
-    const ini_y = txt.y
+function header_pdf(lin_h = 5, font_size = 12){
+    ini_y = 13
     logo([14,15,45,10])
     //  CABEÇALHO
     doc.setFontSize(font_size)
-    doc.setFont(undefined, 'bold')
-    txt.y = 20
-    center_text('CALDEIRÃO SUCATAS',[35,200])
-    txt.y = ini_y
+    doc.setFont(undefined, 'normal')
+    doc.text('Av. Dr. Rosalvo de Almeida Telles, 2070', 97,ini_y);
+    doc.text('Nova Cacapava - Cacapava-SP - CEP 12.283-020', 88,ini_y+lin_h);
+    doc.text('comercial@flexibus.com.br | (12) 3653-2230', 93,ini_y + (lin_h*2));
+    doc.text('CNPJ 00.519.547/0001-06', 111,ini_y+(lin_h*3));    
+
 }
-
-
-/*  RELATORIES  */
-
-function print_etq(data){
-    
-    doc = new jsPDF()  
-    const x_ = 60
-
-    clearTxt()
-//    frame()
-
-    doc.rect(x_+5,5,txt.dim[0]-5*2,txt.dim[1]-5*2)
-    doc.line(x_+5,23,x_+txt.dim[0]-5,23)
-    doc.line(x_+5,45,x_+txt.dim[0]-5,45)
-
-    getBarcode(data.cod.padStart(13,'0'),[x_+25,52,40,15])
-    logo([x_+30,10,30,10])
-
-    doc.setFontSize(8)
-    doc.setFont(undefined, 'bold')
-    doc.text(data.descricao, x_+6,30);
-    doc.text('Forn.:', x_+6,35);
-    doc.text('Cod.:', x_+6,40);
-    doc.text('Cod. Orig:', x_+40,40);
-
-    doc.setFont(undefined,'normal')
-    doc.text(data.nome.toUpperCase(), x_+15,35);
-    doc.text(data.cod.padStart(13,'0') , x_+15,40);
-    doc.text(data.cod_cli.padStart(13,'0') , x_+55,40);
-
-    doc.save('etiqueta.pdf')
-}
-
-function print_compra(data){
-
-    jsPDF.autoTableSetDefaults({
-        headStyles: { fillColor: [37, 68, 65] },
-    })
-
-    const now = new Date()
-    let tbl_body = []
-    let total = 0
-    let outfile = `Viagem_${data.id.padStart(6,'0')}.pdf`
-    for(let i=0; i<data.itens.length; i++){
-        if(Math.round(parseFloat(data.itens[i].qtd))>0){
-            if(data.callby == 'viewLocal'){
-                tbl_body.push([data.itens[i].nome,data.itens[i].und, data.itens[i].qtd_tot ,viewMoneyBR(parseFloat(data.itens[i].val_unit).toFixed(2)),viewMoneyBR(data.itens[i].total)])
-            }else{
-                tbl_body.push([data.itens[i].nome,data.itens[i].und, data.itens[i].qtd,viewMoneyBR(parseFloat(data.itens[i].val_unit).toFixed(2)),viewMoneyBR(data.itens[i].total)])
-            }
-        }
-        total += parseFloat(data.itens[i].total)
-    }
-    tbl_body.push(['','','','TOTAL',viewMoneyBR(total.toFixed(2))])
-
-    doc = new jsPDF()
-
-    const x_ = 60
-    clearTxt()    
-    header_pdf()
-
-    txt.y = 40
-
-    doc.setFontSize(12)
-    doc.setFont(undefined, 'bold')
-
-    doc.setFontSize(10)
-//    doc.setFont(undefined, 'NORMAL')
-    if(data.callby == 'viewLocal'){
-        doc.text('Relatório de Estoque - '+ now.getFormatBR() +' as '+now.getFullTime() , 10,50);
-        if(data.local == 'FIXO'){
-            doc.text('Local: '+data.modelo, 10,55);
-            doc.text('Peso Total Estimado: '+data.peso, 10,60);
-            txt.y = 70
-    
-        }else{
-            doc.text('Veículo: '+data.modelo, 10,55);
-            doc.text('Tipo: '+ data.tipo , 10,60);
-            doc.text('Placa: '+data.placa, 10,65);
-            doc.text('Peso Total Estimado: '+data.peso, 10,70);
-            txt.y = 80
-        }
-
-    }else{
-        txt.y = 35
-/*        doc.setFontSize(15)
-        doc.setTextColor(255,0,0);
-        center_text('NÃO VALE COMO RECIBO')
-*/      doc.setFontSize(12)
-        doc.setTextColor(0);
-
-        if(data.callby == 'viewComp_detal'){
-            doc.text('Compra: '+ data.id.padStart(6,'0') , 10,35);
-            doc.text('Data: '+ data.saida , 10,40);
-            outfile = `Boleta_CP_${data.id.padStart(6,'0')}.pdf`
-        }else{
-            doc.text('Venda: '+ data.id.padStart(6,'0')+' realizada dia '+data.saida, 10,35);
-            doc.text('Data: '+ data.saida , 10,40);
-            outfile = `Boleta_VD_${data.id.padStart(6,'0')}.pdf`
-        }
-        doc.text('Cliente: '+ data.nome, 10,45);       
-        txt.y = 60
-    }    
-
-    
-    doc.autoTable({
-        head: [["Discriminação",'Und.','Qtd.',"Valor Unit.","Total"]],
-        body: tbl_body,
-        startY: txt.y      
-    });
-    
-    txt.y = doc.previousAutoTable.finalY + 10
-
-
-    if(data.callby == 'viewComp_detal'){
-        doc.setFontSize(15)
-        doc.setTextColor(255,0,0);
-        center_text('NÃO VALE COMO RECIBO')
-    }
-
-    doc.save(outfile)
-}
-
