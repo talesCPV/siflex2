@@ -22,6 +22,7 @@ then
 
 #    git branch -M main
 #    git remote add origin git@github.com:talesCPV/siflex2.git
+    git remote set-url origin git@github.com:talesCPV/siflex2.git
 
     git push -u -f origin main
 
