@@ -35,3 +35,7 @@
 20/03/2024 14:29 tales@flexibus.com.br : Insercao de novo usuarios, email:undefined -> sassu@fdelgado.com.br, acesso:undefined -> 2
 23/03/2024 05:10 tales@flexibus.com.br : Menu Alterado (Inventario, tool_inventario.html, pop-up, Inventario)
 24/03/2024 01:43 tales@flexibus.com.br : Menu Alterado (Analise de Frota, oper_analise_frota.html, pop-up, Analise de Frota)
+27/03/2024 20:01 tales@flexibus.com.br : Menu Alterado (Servico Executado, oper_serv_exec.html, pop-up, Servico Executado)
+27/03/2024 20:01 tales@flexibus.com.br : Menu Alterado (Analise de Frota, oper_analise_frota.html, pop-up, Analise de Frota)
+28/03/2024 21:05 tales@flexibus.com.br : EDICAO SERV EXEC - Cliente:ABRAFIX PARAFUSO, Data:2024-03-28, N. Carro:2, VALOR: R$1.00
+28/03/2024 21:06 tales@flexibus.com.br : DELECAO SERV EXEC - Cliente:ABRAFIX PARAFUSO, Data:2024-03-28, N. Carro:2, VALOR: R$1.00
