@@ -9,8 +9,8 @@
                 <label for="cmbBusca">Pesquisa</label>
                 <select id="cmbBusca">
                     <option value="nome" signal="LIKE">Nome</option>
-                    <option value="ativo" signal="=" val="1" selected>Ativos</option>
-                    <option value="ativo" signal="=" val="0" >Inativos</option>
+                    <option value="status" signal="=" val="'ATIVO'" selected>Ativos</option>
+                    <option value="status" signal="=" val="'DEMIT'" >Inativos</option>
                     <option value="cargo" signal="LIKE">Cargo</option>
                     <option value="setor" signal="LIKE">Setor</option>
                     <option value="mensal" signal="=" val="0">Horista</option>
@@ -41,6 +41,7 @@
         const myPromisse = queryDB(params,'FUN-0');
         myPromisse.then((resolve)=>{
             const json = JSON.parse(resolve)
+        
             tbl.style.display = json.length > 0 ? 'inline-table' : 'none'
             tbl.head('Nome,Cargo,Setor')
             for(let i=0; i<json.length;i++){
