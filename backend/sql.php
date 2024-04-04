@@ -45,6 +45,8 @@
         "ADM-3"  => 'CALL sp_view_cargo(@access,@hash,"x00","x01","x02");', // FIELD,SIGNAL, VALUE
         "ADM-4"  => 'CALL sp_set_und(@access,@hash,x00,"x01","x02");', // ID,NOME, SIGLA
         "ADM-5"  => 'CALL sp_view_und(@access,@hash,"x00","x01","x02");', // FIELD,SIGNAL, VALUE
+        "ADM-6"  => 'SELECT * FROM vw_feriado;',
+        "ADM-7"  => 'CALL sp_set_feriado(@access,@hash,x00,"x01",x02,x03,x04)', // ID,Nome,Dia,Mes,Ano
 
         /* SYSTEMA */
         "SYS-0"  => 'CALL sp_set_usr_perm_perf(@access,@hash,x00,"x01");', // ID, NOME

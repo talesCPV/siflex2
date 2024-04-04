@@ -178,21 +178,21 @@
             document.querySelector('#up_file').disabled = 1
         }else{
             document.querySelector('#edtNome').value = pageData.nome
-            document.querySelector('#edtNasc').value = pageData.nasc
-            document.querySelector('#edtRG').value = pageData.rg
-            document.querySelector('#edtCPF').value = pageData.cpf
+            document.querySelector('#edtNasc').value = pageData.data_nasc
+            document.querySelector('#edtRG').value = getRG(pageData.rg)
+            document.querySelector('#edtCPF').value = getCPF(pageData.cpf)
             document.querySelector('#edtPIS').value = pageData.pis
-            document.querySelector('#edtEnd').value = pageData.end
+            document.querySelector('#edtEnd').value = pageData.endereco
             document.querySelector('#edtNum').value = pageData.num
             document.querySelector('#edtCidade').value = pageData.cidade
             document.querySelector('#edtBairro').value = pageData.bairro
-            document.querySelector('#cmbUF').value = pageData.uf
+            document.querySelector('#cmbUF').value = pageData.estado
             document.querySelector('#edtCEP').value = pageData.cep
             document.querySelector('#edtAdm').value = pageData.data_adm
             document.querySelector('#edtDem').value = pageData.data_dem
             document.querySelector('#edtFone').value = pageData.tel
             document.querySelector('#edtCel').value = pageData.cel
-            document.querySelector('#cmbAtivo').value = pageData.ativo
+            document.querySelector('#cmbAtivo').value = pageData.status=='ATIVO' ? 1 : 0
             document.querySelector('#edtObs').value = pageData.obs
             document.querySelector('#btnEdit').disabled = 0
 
@@ -209,9 +209,9 @@
             params.id = newFunc ? 0 : pageData.id
             params.nome = document.querySelector('#edtNome').value.trim()
             params.nasc = document.querySelector('#edtNasc').value.trim()
-            params.rg = document.querySelector('#edtRG').value.trim()
-            params.cpf = document.querySelector('#edtCPF').value.trim()
-            params.pis = document.querySelector('#edtPIS').value.trim()
+            params.rg = getNum(document.querySelector('#edtRG').value)
+            params.cpf = getNum(document.querySelector('#edtCPF').value)
+            params.pis = getNum(document.querySelector('#edtPIS').value)
             params.end = document.querySelector('#edtEnd').value.trim()
             params.num = document.querySelector('#edtNum').value.trim()
             params.cidade = document.querySelector('#edtCidade').value.trim()
@@ -226,7 +226,7 @@
             params.cel = document.querySelector('#edtCel').value.trim()
             params.ativo = document.querySelector('#cmbAtivo').value.trim()
             params.obs = document.querySelector('#edtObs').value.trim()
-          
+         
         const myPromisse = queryDB(params,'FUN-1');
         myPromisse.then((resolve)=>{
             try{
@@ -268,15 +268,20 @@
             const json = JSON.parse(resolve)
             const cmb = document.querySelector('#cmbCargo')
             cmb.innerHTML=''
+            let achou = 0
             for(let i=0; i<json.length; i++){
                 const opt = document.createElement('option')
                 opt.value = json[i].id
                 opt.innerHTML = json[i].cargo
                 if(!newFunc){
                     opt.selected =  json[i].id == pageData.id_cargo ? 1 : 0
+                    achou = opt.selected || achou ? 1 : 0
                 }
                 cmb.appendChild(opt)
-            }            
+            }
+            if(!achou){
+                cmb.value = 0
+            }
         });
     }
 
@@ -290,15 +295,20 @@
             const json = JSON.parse(resolve)
             const cmb = document.querySelector('#cmbSetor')
             cmb.innerHTML=''
+            let achou = 0
             for(let i=0; i<json.length; i++){
                 const opt = document.createElement('option')
                 opt.value = json[i].id
                 opt.innerHTML = json[i].nome
                 if(!newFunc){
                     opt.selected =  json[i].id == pageData.id_setor ? 1 : 0
+                    achou = opt.selected || achou ? 1 : 0
                 }
                 cmb.appendChild(opt)
-            }            
+            }
+            if(!achou){
+                cmb.value = 0
+            }
         });
     }
 

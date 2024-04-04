@@ -1,0 +1,29 @@
+04/04/2024 15:13 tales@flexibus.com.br : Menu Incluido (RH)
+04/04/2024 15:13 tales@flexibus.com.br : Menu Incluido (Funcionarios)
+04/04/2024 15:15 tales@flexibus.com.br : Menu Alterado (Funcionarios, adm_funcionarios.html, pop-up, Funcionarios)
+04/04/2024 15:15 tales@flexibus.com.br : Menu Deletado (Cadastros)
+04/04/2024 15:17 tales@flexibus.com.br : Inclusao de novo Setor (EQUIPE DE SUPORTE)
+04/04/2024 15:32 tales@flexibus.com.br : Inclusao de novo Setor (ENGENHARIA)
+04/04/2024 15:32 tales@flexibus.com.br : Funcionario Editado TALES CEMBRANELI DANTAS -> TALES CEMBRANELI DANTAS
+04/04/2024 15:39 tales@flexibus.com.br : Funcionario Editado TALES CEMBRANELI DANTAS -> TALES CEMBRANELI DANTAS
+04/04/2024 15:41 tales@flexibus.com.br : Funcionario Editado TALES CEMBRANELI DANTAS -> TALES CEMBRANELI DANTAS
+04/04/2024 15:42 tales@flexibus.com.br : Funcionario Editado TALES CEMBRANELI DANTAS -> TALES CEMBRANELI DANTAS
+04/04/2024 15:42 tales@flexibus.com.br : Funcionario Editado TALES CEMBRANELI DANTAS -> TALES CEMBRANELI DANTAS
+04/04/2024 15:45 tales@flexibus.com.br : Funcionario Editado TALES CEMBRANELI DANTAS -> TALES CEMBRANELI DANTAS
+04/04/2024 15:48 tales@flexibus.com.br : Funcionario Editado LUCIMAR DIAS CALIXTO DA SILVA -> LUCIMAR DIAS CALIXTO DA SILVA
+04/04/2024 15:49 tales@flexibus.com.br : Funcionario Editado TALES CEMBRANELI DANTAS -> TALES CEMBRANELI DANTAS
+04/04/2024 15:49 tales@flexibus.com.br : Funcionario Editado ADEMIR MOREIRA -> ADEMIR MOREIRA
+04/04/2024 16:05 tales@flexibus.com.br : Funcionario Editado IGOR HENRIQUE -> IGOR HENRIQUE
+04/04/2024 16:05 tales@flexibus.com.br : Funcionario Editado JOAO LUZ -> JOAO LUZ
+04/04/2024 16:06 tales@flexibus.com.br : Funcionario Editado ONDINA DE FATIMA SOUSA -> ONDINA DE FATIMA SOUSA
+04/04/2024 16:06 tales@flexibus.com.br : Funcionario Editado BRUNO JOSE MATHIAS -> BRUNO JOSE MATHIAS
+04/04/2024 16:06 tales@flexibus.com.br : Funcionario Editado JERONIMO IGNACIO RAMOS -> JERONIMO IGNACIO RAMOS
+04/04/2024 16:06 tales@flexibus.com.br : Funcionario Editado GABRIEL LUIZ PEREIRA -> GABRIEL LUIZ PEREIRA
+04/04/2024 16:07 tales@flexibus.com.br : Funcionario Editado CARLOS ROBERTO OLIVEIRA SOUZA -> CARLOS ROBERTO OLIVEIRA SOUZA
+04/04/2024 16:07 tales@flexibus.com.br : Funcionario Editado IGOR HENRIQUE -> IGOR HENRIQUE
+04/04/2024 16:07 tales@flexibus.com.br : Alteracao de nome de Setor (EQUIPE DE SUPORTE -> SUPORTE)
+04/04/2024 16:12 tales@flexibus.com.br : Menu Incluido (Feriados)
+04/04/2024 16:14 tales@flexibus.com.br : Menu Alterado (Feriados, adm_feriados.html, pop-up, Feriados)
+04/04/2024 17:04 tales@flexibus.com.br : Inclusao de Feriado: 19/03 - NIVER DO TALES
+04/04/2024 17:04 tales@flexibus.com.br : Edicao de Feriado (NIVER DO TALES -> NIVER DO TALES 2, 19/03 -> 19/03)
+04/04/2024 17:04 tales@flexibus.com.br : Delecao de Feriado (NIVER DO TALES 2)
