@@ -1,25 +1,6 @@
 <template>
     <style>
 
-        .linCKB{
-            display: flex;
-            flex-direction: row;
-        }
-
-        .linCKB label {
-            text-align: right;
-            width: auto;
-            min-width: 120px;
-            align-self: flex-end;
-            padding: 10px;
-            white-space: nowrap;
-        }
-
-        .linCKB input[type=checkbox]{
-            margin: 30px 10px 10px 0 !important;
-
-        }
-
     </style>
     
     <fieldset>
@@ -35,7 +16,7 @@
             <input type="text" id="edtSal" onkeyup="return valFloat(this)">
             <label for="edtCBO">CBO</label>
             <input type="text" id="edtCBO" maxlength="8" onkeyup="return valInt(this)">
-            <div class="linCKB">
+            <div class="line-ckb">
                 <label for="ckbHora">Horista</label>
                 <input type="checkbox" id="ckbHora" checked>
             </div>    

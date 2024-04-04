@@ -125,11 +125,15 @@
 
     .inline input[type=checkbox]{
         width: auto;
-        margin-left: 0px !important;
+        height: fit-content;
     }
 
     .inline :first-child{
         min-width: 120px;
+    }
+
+    .fds-busca label{
+        min-width: unset !important;
     }
 
     .inline span{
@@ -140,7 +144,7 @@
     .inline label{
         text-align: right;
         width: auto;
-        align-self: flex-end;
+       /* align-self: flex-end;*/
         padding: 10px;
         white-space: nowrap;
     }
@@ -148,11 +152,22 @@
     .line{
         display: flex;
         justify-content: center;
+        align-items: center;
         gap: 10px;
     }
 
     .line button{
         min-width: 150px;
+    }
+
+    .line-ckb{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .line-ckb input[type=checkbox]{
+        height: fit-content;
     }
 
     .form-base{

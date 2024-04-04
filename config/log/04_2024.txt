@@ -27,3 +27,6 @@
 04/04/2024 17:04 tales@flexibus.com.br : Inclusao de Feriado: 19/03 - NIVER DO TALES
 04/04/2024 17:04 tales@flexibus.com.br : Edicao de Feriado (NIVER DO TALES -> NIVER DO TALES 2, 19/03 -> 19/03)
 04/04/2024 17:04 tales@flexibus.com.br : Delecao de Feriado (NIVER DO TALES 2)
+04/04/2024 20:14 tales@flexibus.com.br : Menu Alterado (Feriados, adm_feriados.html, pop-up, Feriados)
+04/04/2024 20:31 tales@flexibus.com.br : Menu Incluido (Relogio de Ponto)
+04/04/2024 20:32 tales@flexibus.com.br : Menu Alterado (Relogio de Ponto, rh_relogio_ponto.html, pop-up, Relogio de Ponto)

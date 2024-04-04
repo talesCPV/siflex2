@@ -1,33 +1,35 @@
 <template>
     <style>
 
-        .busca-data input[type=date]{
-            max-width: 150px;
-        }
      
     </style>
   
-    <fieldset class="fds-busca">
+    <fieldset class="fds-busca relogio">
         <legend>Busca</legend>
         <div class="inline">
-            <select id="cmbBusca">                      
-                <option value="nome" signal="LIKE">Funcionário</option>
+            <label for="edtBusca">por:</label>
+            <select id="cmbBusca">
+                <option value="nome" signal="LIKE">Nome</option>
                 <option value="cargo" signal="LIKE">Cargo</option>
                 <option value="setor" signal="LIKE">Setor</option>
-                <option value="mensal" signal="=" val="0" selected>Horista</option>
-                <option value="mensal" signal="=" val="1" >Mensalista</option>
-                <option value="ativo" signal="=" val="1">Ativos</option>                    
-                <option value="ativo" signal="=" val="0">Inativos</option>                    
+                <option value="horista" signal="=" val="1" selected>Horista</option>
+                <option value="horista" signal="=" val="0">Mensalista</option>
             </select>
             <input type="text" id="edtBusca" onkeypress="return getEnter(event, 'btnBusca')">
             <button id="btnBusca" class="btn-round" ><span class="mdi mdi-magnify"></span></button>
+            <div class="line-ckb">
+                <label for="ckbAtv">Ativo</label>
+                <input type="checkbox" id="ckbAtv" checked>
+            </div>  
         </div>
-        <div class="inline center-itens busca-data">
-            <label for="edtIni">Intervalo</label>
+        <div class="inline fdata">
+            <label for="ckbData">entre:</label>
+            <input type="checkbox" id="ckbData" checked>
             <input type="date" id="edtIni" onkeypress="return getEnter(event, 'btnBusca')">
             <input type="date" id="edtFin" onkeypress="return getEnter(event, 'btnBusca')">
-        </div>        
-    </fieldset>
+        </div>
+    </fieldset>  
+
     <fieldset class="calendar">
         <legend>Dias</legend>
         <table id="tblRelogio"></table>
@@ -39,11 +41,13 @@
 
     const pageData = main_data.rh_relogio_ponto.data
     const pageFunc = main_data.rh_relogio_ponto.func
+    const pageScreen = document.querySelector('#card-rh_relogio_ponto')
+
 
     pageFunc.fillRelogio = (func)=>{      
         const params = new Object;
-            params.inicio = document.querySelector('#edtIni').value
-            params.final = document.querySelector('#edtFin').value
+            params.inicio = pageScreen.querySelector('#edtIni').value
+            params.final = pageScreen.querySelector('#edtFin').value
             params.func = func
             
         const myPromisse = queryDB(params,'REL-0');
@@ -58,11 +62,12 @@ console.log(json)
     }
 
     pageFunc.fillFunc = ()=>{      
-        const query = getVal()
+        const query = getVal('relogio')
         const params = new Object;
             params.field = query[0]
             params.signal = query[1]
             params.value = query[2]
+            params.ativo = pageScreen.querySelector('#ckbAtv').checked ? 1 : 0                      
         const myPromisse = queryDB(params,'FUN-0');
         myPromisse.then((resolve)=>{
             const json = JSON.parse(resolve)
@@ -76,15 +81,15 @@ console.log(func)
     }
 
     function startPage(){
-        const td = new Date;
-        document.querySelector('#edtIni').value = td.iniMonth()
-        document.querySelector('#edtFin').value = td.finMonth()
+        const month = (today.getDate() <= 25 ? today.getMonth() : today.getMonth()+1)
+        pageScreen.querySelector('#edtIni').value = `${today.getFullYear()}-${month.toString().padStart(2, "0")}-26`
+        pageScreen.querySelector('#edtFin').value = `${today.getFullYear()}-${(month+1).toString().padStart(2, "0")}-25`
     }
 
     function makeCalendar(){
-        const td_ini = new Date(document.querySelector('#edtIni').value)
+        const td_ini = new Date(pageScreen.querySelector('#edtIni').value)
         td_ini.change()
-        const td_fin = new Date(document.querySelector('#edtFin').value)
+        const td_fin = new Date(pageScreen.querySelector('#edtFin').value)
         td_fin.change()
 
         const range = ((td_fin - td_ini) / 86400000) +1
@@ -100,8 +105,8 @@ console.log(func)
     }
 
 
-    document.querySelector('#btnBusca').addEventListener('click',()=>{
-        pageFunc.fillRelogio()
+    pageScreen.querySelector('#btnBusca').addEventListener('click',()=>{
+//        pageFunc.fillRelogio()
         pageFunc.fillFunc()
     })
 
