@@ -54,6 +54,7 @@
 
     const pageData = main_data.sys_new_menu.data
     const pageFunc = main_data.sys_new_menu.func
+    const pageScreen = document.querySelector('#card-sys_new_menu')
     const link = pageData.link
 
     function saveMenu(){
@@ -62,13 +63,13 @@
         closeModal('sys_new_menu')
     }
 
-    document.querySelector('#edtMod').value = pageData.innerHTML
-    document.querySelector('#edtLink').value = pageData.link
-    document.querySelector('#edtLabel').value = pageData.label
-    document.querySelector('#edtLargura').value = pageData.width 
-    document.querySelector('#edtIcon').value = pageData.icone 
+    pageScreen.querySelector('#edtMod').value = pageData.innerHTML
+    pageScreen.querySelector('#edtLink').value = pageData.link
+    pageScreen.querySelector('#edtLabel').value = pageData.label
+    pageScreen.querySelector('#edtLargura').value = pageData.width 
+    pageScreen.querySelector('#edtIcon').value = pageData.icone 
 
-    document.querySelector('#btnAddItem').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnAddItem').addEventListener('click',()=>{
         const menu = new Object
             menu.modulo = prompt('Digite o nome do ítem:')
             menu.link = 'menu'
@@ -92,7 +93,7 @@
         setLog(`Menu Incluído (${menu.modulo})`)
     })
 
-    document.querySelector('#btnDelMenu').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnDelMenu').addEventListener('click',()=>{
         if(pageData.id != 'menu-raiz'){
             if(confirm(`Deseja realmente deletar o menu ${pageData.innerHTML.toUpperCase()} e todos seus ítens?`)){
                 const index = pageData.index
@@ -110,15 +111,15 @@
         }
     })
 
-    document.querySelector('#btnSaveMenu').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnSaveMenu').addEventListener('click',()=>{
         if(confirm(`Deseja salvar a alteração?`)){
             const index = pageData.index
-            const modulo = document.querySelector('#edtMod').value.trim()
-            const link = document.querySelector('#edtLink').value.trim()
-            const janela = document.querySelector('#cmbJanela').value
-            const label = document.querySelector('#edtLabel').value
-            const icone = document.querySelector('#edtIcon').value
-            let width = document.querySelector('#edtLargura').value.trim()
+            const modulo = pageScreen.querySelector('#edtMod').value.trim()
+            const link = pageScreen.querySelector('#edtLink').value.trim()
+            const janela = pageScreen.querySelector('#cmbJanela').value
+            const label = pageScreen.querySelector('#edtLabel').value
+            const icone = pageScreen.querySelector('#edtIcon').value
+            let width = pageScreen.querySelector('#edtLargura').value.trim()
 
             width = width != 'auto' ? parseInt(width) : 'auto'
             width = width == undefined ? 'auto' : width
@@ -140,7 +141,7 @@
         }
     })
 
-    document.querySelector('#btnIcon').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnIcon').addEventListener('click',()=>{
         openHTML('sys_icons.html','pop-up','Busca de Icones',{},600)
     })
 

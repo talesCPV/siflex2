@@ -48,19 +48,20 @@
 
     const pageData = main_data.adm_view_und.data
     const pageFunc = main_data.adm_view_und.func
+    const pageScreen = document.querySelector('#card-adm_view_und')
 
     pageFunc.fill = ()=>{
         if(parseInt(pageData.id)>0){
-            document.querySelector('#edtUnd').value = pageData.nome
-            document.querySelector('#edtSigla').value = pageData.sigla
+            pageScreen.querySelector('#edtUnd').value = pageData.nome
+            pageScreen.querySelector('#edtSigla').value = pageData.sigla
         }
     }
 
-    document.querySelector('#btnSaveUnd').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnSaveUnd').addEventListener('click',()=>{
         const params = new Object
             params.id = pageData.id
-            params.nome = document.querySelector('#edtUnd').value.trim()
-            params.sigla = document.querySelector('#edtSigla').value.trim()
+            params.nome = pageScreen.querySelector('#edtUnd').value.trim()
+            params.sigla = pageScreen.querySelector('#edtSigla').value.trim()
 
         const myPromisse = queryDB(params,'ADM-4');
         myPromisse.then((resolve)=>{

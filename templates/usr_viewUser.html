@@ -40,15 +40,16 @@
 
     const pageData = main_data.usr_viewUser.data
     const pageFunc = main_data.usr_viewUser.func
+    const pageScreen = document.querySelector('#card-usr_viewUser')
 
-    document.querySelector('#edtPass').value = ''
-    document.querySelector('#edtRepass').value = ''
-    document.querySelector('#edtEmail').value = localStorage.getItem('email')
+    pageScreen.querySelector('#edtPass').value = ''
+    pageScreen.querySelector('#edtRepass').value = ''
+    pageScreen.querySelector('#edtEmail').value = localStorage.getItem('email')
 
-    document.querySelector('#btnSave').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnSave').addEventListener('click',()=>{
         if(checkField(['edtPass']) && checkRepass(['edtPass','edtRepass'])){
             const newusr = pageData.mode == 'new'
-            const pass = document.querySelector('#edtPass').value.trim()
+            const pass = pageScreen.querySelector('#edtPass').value.trim()
             const params = new Object;                
                 params.pass = pass
             const myPromisse = queryDB(params,'USR-2');

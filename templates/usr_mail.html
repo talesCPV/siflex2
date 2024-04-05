@@ -149,11 +149,12 @@
 
     const pageData = main_data.usr_mail.data
     const pageFunc = main_data.usr_mail.func
+    const pageScreen = document.querySelector('#card-usr_mail')
 
     function readMail(send=1){
 
-        const cmb = send ? document.querySelector('#cmbEntrada') : document.querySelector('#cmbSaida')
-        const txt = send ? document.querySelector('#edtViewEntrada') : document.querySelector('#edtViewSaida')
+        const cmb = send ? pageScreen.querySelector('#cmbEntrada') : pageScreen.querySelector('#cmbSaida')
+        const txt = send ? pageScreen.querySelector('#edtViewEntrada') : pageScreen.querySelector('#edtViewSaida')
         if(cmb.selectedIndex >= 0){
             const data = cmb.options[cmb.selectedIndex].data
             txt.value = data.txt
@@ -181,7 +182,7 @@
         myPromisse.then((resolve)=>{
             const json = JSON.parse(resolve)
 
-            const mail = send ? document.querySelector('#cmbEntrada') : document.querySelector('#cmbSaida')
+            const mail = send ? pageScreen.querySelector('#cmbEntrada') : pageScreen.querySelector('#cmbSaida')
             mail.innerHTML = ''
 
             for(let i=0; i<json.length; i++){        
@@ -202,7 +203,7 @@
 
     pageFunc.fillUsers = ()=>{
 
-        const cmb = document.querySelector('#cmbUser')
+        const cmb = pageScreen.querySelector('#cmbUser')
         cmb.innerHTML = ''
         const params = new Object;
             params.hash = localStorage.getItem('hash');
@@ -228,13 +229,13 @@
     pageFunc.sendMail = ()=>{
         if(confirm('Enviar mensagem?')){
             const params = new Object;
-                params.id_to = document.querySelector('#cmbUser').value
-                params.message =  document.querySelector('#edtMail').value.trim()
+                params.id_to = pageScreen.querySelector('#cmbUser').value
+                params.message =  pageScreen.querySelector('#edtMail').value.trim()
 
             const myPromisse = queryDB(params,'MAIL-0');
             myPromisse.then((resolve)=>{
                 pageFunc.refreshMail()
-                document.querySelector('#edtMail').value = ''
+                pageScreen.querySelector('#edtMail').value = ''
             })
         }
     }
@@ -259,33 +260,33 @@
                 const myPromisse = queryDB(params,'MAIL-3');
                 myPromisse.then((resolve)=>{
                     pageFunc.refreshMail()
-                    document.querySelector('#edtViewEntrada').value = ''
-                    document.querySelector('#edtViewSaida').value = ''
+                    pageScreen.querySelector('#edtViewEntrada').value = ''
+                    pageScreen.querySelector('#edtViewSaida').value = ''
                 })
             }
         }
     }
 
-    document.querySelector('#mail-raiz').innerHTML = localStorage.getItem('email')
+    pageScreen.querySelector('#mail-raiz').innerHTML = localStorage.getItem('email')
 
-    document.querySelector('#btnEnviar').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnEnviar').addEventListener('click',()=>{
         pageFunc.sendMail()        
     })
 
-    document.querySelector('#cmbEntrada').addEventListener('click',()=>{
+    pageScreen.querySelector('#cmbEntrada').addEventListener('click',()=>{
         readMail(1)
     })
 
-    document.querySelector('#cmbEntrada').addEventListener('dblclick',()=>{
-        pageFunc.delMail(document.querySelector('#cmbEntrada'))
+    pageScreen.querySelector('#cmbEntrada').addEventListener('dblclick',()=>{
+        pageFunc.delMail(pageScreen.querySelector('#cmbEntrada'))
     })
 
-    document.querySelector('#cmbSaida').addEventListener('click',()=>{
+    pageScreen.querySelector('#cmbSaida').addEventListener('click',()=>{
         readMail(0)
     })
 
-    document.querySelector('#cmbSaida').addEventListener('dblclick',()=>{
-        pageFunc.delMail(document.querySelector('#cmbSaida'))
+    pageScreen.querySelector('#cmbSaida').addEventListener('dblclick',()=>{
+        pageFunc.delMail(pageScreen.querySelector('#cmbSaida'))
     })
 
     pageFunc.fillUsers()

@@ -33,9 +33,10 @@
 
     const pageData = main_data.adm_setores.data
     const pageFunc = main_data.adm_setores.func
+    const pageScreen = document.querySelector('#card-adm_setores')
   
     pageFunc.fillSetor = ()=>{
-        const tbl = document.getElementById('tblSetor')
+        const tbl = pageScreen.querySelector('#tblSetor')
         tbl.innerHTML = ''
         const query = getVal('setor')
         const params = new Object;
@@ -45,7 +46,7 @@
         const myPromisse = queryDB(params,'ADM-1');
         myPromisse.then((resolve)=>{
             const json = JSON.parse(resolve)
-            document.querySelector('#fdsSetor').style.display = json.length > 0 ? 'block' : 'none'
+            pageScreen.querySelector('#fdsSetor').style.display = json.length > 0 ? 'block' : 'none'
 
             tbl.head('Cod.,Nome')
             for(let i=0; i<json.length;i++){
@@ -54,11 +55,11 @@
         });
     }
 
-    document.querySelector('#btnBusca-setor').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnBusca-setor').addEventListener('click',()=>{
         pageFunc.fillSetor()
     })
 
-    document.querySelector('#btnNovoSetor').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnNovoSetor').addEventListener('click',()=>{
 
         try{
             const params = new Object
@@ -74,10 +75,9 @@
         }catch{
             console.error('Cancelado pelo usuário!')
         }
-        
     })
 
-    document.querySelector('#tblSetor').addEventListener('click',(e)=>{
+    pageScreen.querySelector('#tblSetor').addEventListener('click',(e)=>{
         data = e.target.parentNode.data
      
         try{
@@ -98,8 +98,6 @@
         }catch{
             console.error('operação cancelada pelo usuário!')
         }
-
-
     })
 
 

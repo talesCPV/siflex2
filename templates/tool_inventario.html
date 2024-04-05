@@ -39,6 +39,7 @@
 
     const pageData = main_data.tool_inventario.data
     const pageFunc = main_data.tool_inventario.func
+    const pageScreen = document.querySelector('#card-tool_inventario')
 
     pageFunc.addItem = (data)=>{
 
@@ -50,14 +51,14 @@
             const radio = data.radio=='add' ? 'ADICIONAR' : data.radio=='sub' ? 'RETIRAR' : 'RESERVAR'
             opt.innerHTML = `${radio} ${Math.abs(data.qtd)} ${data.unidade}(s) (${data.descricao})` 
 
-        document.querySelector('#lbxItens').appendChild(opt)
-        document.getElementById('tbl_prod_inv').innerHTML = ''
-        document.getElementById('edtBusca').value = ''
+        pageScreen.querySelector('#lbxItens').appendChild(opt)
+        pageScreen.querySelector('#tbl_prod_inv').innerHTML = ''
+        pageScreen.querySelector('#edtBusca').value = ''
         closeModal('tool_add_prod')
     }
 
     pageFunc.fillProd = ()=>{      
-        const tbl = document.getElementById('tbl_prod_inv')
+        const tbl = pageScreen.querySelector('#tbl_prod_inv')
         tbl.innerHTML = ''
         const query = getVal('inv')
         const params = new Object;
@@ -75,11 +76,11 @@
         });
     }
 
-    document.querySelector('#btnBusca-prod-inv').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnBusca-prod-inv').addEventListener('click',()=>{
         pageFunc.fillProd()
     })
 
-    document.querySelector('#tbl_prod_inv').addEventListener('click',(e)=>{        
+    pageScreen.querySelector('#tbl_prod_inv').addEventListener('click',(e)=>{        
         try{
             if(main_data.hasOwnProperty('tool_add_prod')){
                 closeModal('tool_add_prod')
@@ -89,16 +90,16 @@
         }catch{}
     })
 
-    document.querySelector('#lbxItens').addEventListener('dblclick',()=>{
+    pageScreen.querySelector('#lbxItens').addEventListener('dblclick',()=>{
         if(confirm('Deletar essa linha?')) {
-            const sel =  document.querySelector('#lbxItens')
+            const sel =  pageScreen.querySelector('#lbxItens')
             sel.remove(sel.selectedIndex)
         }
     })
 
-    document.querySelector('#btnProc').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnProc').addEventListener('click',()=>{
         if(confirm('Processar este inventário?')) {
-            const opt = document.querySelector('#lbxItens').querySelectorAll('option')
+            const opt = pageScreen.querySelector('#lbxItens').querySelectorAll('option')
             for(let i=0; i<opt.length; i++){
                 const params = new Object;
                     params.id = opt[i].getAttribute('id_prod')

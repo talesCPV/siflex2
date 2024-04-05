@@ -81,6 +81,7 @@
 
     const pageData = main_data.usr_calc.data
     const pageFunc = main_data.usr_calc.func
+    const pageScreen = document.querySelector('#card-usr_calc')
 
     const calc = new Object
         calc.display = 0
@@ -88,14 +89,14 @@
         calc.oper = '='
         calc.clear = 1
 
-    const number = document.querySelectorAll('.numer')
+    const number = pageScreen.querySelectorAll('.numer')
     for(let i=0; i<number.length; i++){
         number[i].addEventListener('click',()=>{
             type(number[i].innerHTML)
         })
     }
 
-    const oper = document.querySelectorAll('.oper')
+    const oper = pageScreen.querySelectorAll('.oper')
     for(let i=0; i<oper.length; i++){
         oper[i].addEventListener('click',()=>{
             calcula()
@@ -104,7 +105,7 @@
     }
 
     function show(){        
-        document.querySelector('#display').innerHTML = calc.display
+        pageScreen.querySelector('#display').innerHTML = calc.display
     }
 
     function type(N){
@@ -174,11 +175,11 @@
         }
     }
 
-    document.querySelector('#ac').addEventListener('click',()=>{
+    pageScreen.querySelector('#ac').addEventListener('click',()=>{
         clear()
     })
 
-    document.querySelector('#neg').addEventListener('click',()=>{
+    pageScreen.querySelector('#neg').addEventListener('click',()=>{
         calc.display *= -1
         show()
     })

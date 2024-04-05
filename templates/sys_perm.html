@@ -52,6 +52,7 @@
 
     const pageData = main_data.sys_perm.data
     const pageFunc = main_data.sys_perm.func
+    const pageScreen = document.querySelector('#card-sys_perm')
 
     function createTree(data,index){
         const ul = document.createElement('ul')
@@ -126,7 +127,7 @@
     }
 
     pageFunc.refreshMenu = ()=>{       
-        const ul_menu = document.querySelector('.menu-data')
+        const ul_menu = pageScreen.querySelector('.menu-data')
         ul_menu.innerHTML = ''
         const sum = document.createElement('summary')
         sum.id = 'menu-raiz'
@@ -147,7 +148,7 @@
     }
 
     pageFunc.fillPerfil = ()=>{      
-        const tbl = document.getElementById('tblPerfil')
+        const tbl = pageScreen.querySelector('#tblPerfil')
         tbl.innerHTML = ''
         const query = getVal('perm')
         const params = new Object;
@@ -210,11 +211,11 @@
     }
 
 
-    document.querySelector('#btnBusca-perfil').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnBusca-perfil').addEventListener('click',()=>{
         pageFunc.fillPerfil()
     })
 
-    document.querySelector('#btnNovoPerfil').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnNovoPerfil').addEventListener('click',()=>{
         try{
             const params = new Object
                 params.id = 0
@@ -230,7 +231,7 @@
         }
     })
 
-    document.querySelector('#tblPerfil').addEventListener('click',(e)=>{
+    pageScreen.querySelector('#tblPerfil').addEventListener('click',(e)=>{
         data = e.target.parentNode.data                
         try{
             const params = new Object

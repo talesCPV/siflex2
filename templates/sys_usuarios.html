@@ -33,9 +33,10 @@
 
     const pageData = main_data.sys_usuarios.data
     const pageFunc = main_data.sys_usuarios.func
+    const pageScreen = document.querySelector('#card-sys_usuarios')
   
     pageFunc.fillUser = ()=>{      
-        const tbl = document.getElementById('tblUser')
+        const tbl = pageScreen.querySelector('#tblUser')
         tbl.innerHTML = ''
         const query = getVal('usr')
         const params = new Object;
@@ -45,7 +46,7 @@
         const myPromisse = queryDB(params,'USR-0');
         myPromisse.then((resolve)=>{
             const json = JSON.parse(resolve)
-            document.querySelector('#fdsUser').style.display = json.length > 0 ? 'block' : 'none'
+            pageScreen.querySelector('#fdsUser').style.display = json.length > 0 ? 'block' : 'none'
 
             tbl.head('Cod.,Email,Perfil')
             for(let i=0; i<json.length;i++){
@@ -54,16 +55,16 @@
         });
     }
 
-    document.querySelector('#btnBusca-usr').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnBusca-usr').addEventListener('click',()=>{
         pageFunc.fillUser()
     })
 
-    document.querySelector('#btnNovoUser').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnNovoUser').addEventListener('click',()=>{
         openHTML('sys_view_user.html','pop-up','Novo Usuario',{'id':'0'},800)
     })
     
 
-    document.querySelector('#tblUser').addEventListener('click',(e)=>{
+    pageScreen.querySelector('#tblUser').addEventListener('click',(e)=>{
         data = e.target.parentNode.data
         try{
             if(main_data.hasOwnProperty('sys_view_user')){

@@ -44,13 +44,14 @@
 
     const pageData = main_data.tool_add_prod.data
     const pageFunc = main_data.tool_add_prod.func
+    const pageScreen = document.querySelector('#card-tool_add_prod')
 
-    document.querySelector('#edtQtd').focus()
-    document.querySelector('#inv-und').innerHTML = pageData.unidade +'(s)'
+    pageScreen.querySelector('#edtQtd').focus()
+    pageScreen.querySelector('#inv-und').innerHTML = pageData.unidade +'(s)'
 
-    document.querySelector('#btn-addinv').addEventListener('click',()=>{
-        const qtd = document.querySelector('#edtQtd').value 
-        pageData.radio = document.querySelector('#add').checked ? 'add' : document.querySelector('#sub').checked ? 'sub' : 'res'
+    pageScreen.querySelector('#btn-addinv').addEventListener('click',()=>{
+        const qtd = pageScreen.querySelector('#edtQtd').value 
+        pageData.radio = pageScreen.querySelector('#add').checked ? 'add' : pageScreen.querySelector('#sub').checked ? 'sub' : 'res'
         pageData.qtd = qtd==''? 0 : qtd
         main_data.tool_inventario.func.addItem(pageData)
     })

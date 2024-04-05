@@ -35,9 +35,11 @@
 
     const pageData = main_data.adm_cargos.data
     const pageFunc = main_data.adm_cargos.func
+    const pageScreen = document.querySelector('#card-adm_cargos')
+
 
     pageFunc.fillCargo = ()=>{
-        const tbl = document.getElementById('tblCargo')
+        const tbl = pageScreen.querySelector('#tblCargo')
         tbl.innerHTML = ''
         const params = new Object;
         const query = getVal('cargo')
@@ -47,7 +49,7 @@
         const myPromisse = queryDB(params,'ADM-3');
         myPromisse.then((resolve)=>{
             const json = JSON.parse(resolve)            
-            document.querySelector('#fdsCargo').style.display = json.length > 0 ? 'block' : 'none'
+            pageScreen.querySelector('#fdsCargo').style.display = json.length > 0 ? 'block' : 'none'
 
             tbl.head('Cod.,Cargo,CBO,Salário,Horista')
             for(let i=0; i<json.length;i++){
@@ -56,15 +58,15 @@
         });
     }
 
-    document.querySelector('#btnBusca-cargo').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnBusca-cargo').addEventListener('click',()=>{
         pageFunc.fillCargo()
     })
 
-    document.querySelector('#btnNovoCargo').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnNovoCargo').addEventListener('click',()=>{
         openHTML('adm_view_cargo.html','pop-up','Cargos',{'id':'0'},800)
     })
 
-    document.querySelector('#tblCargo').addEventListener('click',(e)=>{
+    pageScreen.querySelector('#tblCargo').addEventListener('click',(e)=>{
         try{
             if(main_data.hasOwnProperty('adm_view_cargo')){
                 closeModal('adm_view_cargo')

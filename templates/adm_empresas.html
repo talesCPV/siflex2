@@ -32,9 +32,10 @@
   
     const pageData = main_data.adm_empresas.data
     const pageFunc = main_data.adm_empresas.func
+    const pageScreen = document.querySelector('#card-adm_empresas')
 
     pageFunc.fillEmp = ()=>{      
-        const tbl = document.getElementById('tblEmp')
+        const tbl = pageScreen.querySelector('#tblEmp')
         tbl.innerHTML = ''
         const query = getVal('emp')
         const params = new Object;
@@ -52,15 +53,15 @@
         });
     }
 
-    document.querySelector('#btnBusca-emp').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnBusca-emp').addEventListener('click',()=>{
         pageFunc.fillEmp()
     })
 
-    document.querySelector('#btnNovo').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnNovo').addEventListener('click',()=>{
         openHTML('adm_view_emp.html','pop-up','Cadastro de Empresas')
     })
 
-    document.querySelector('#tblEmp').addEventListener('click',(e)=>{
+    pageScreen.querySelector('#tblEmp').addEventListener('click',(e)=>{
         try{
             if(main_data.hasOwnProperty('adm_view_emp')){
                 closeModal('adm_view_emp')

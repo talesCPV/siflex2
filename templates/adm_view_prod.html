@@ -118,6 +118,7 @@
     
     const pageData = main_data.adm_view_prod.data
     const pageFunc = main_data.adm_view_prod.func
+    const pageScreen = document.querySelector('#card-adm_view_prod')
     const newProd = Object.keys(pageData).length == 0
 
     function fillEmp(){
@@ -128,7 +129,7 @@
         const myPromisse = queryDB(params,'EMP-0');
         myPromisse.then((resolve)=>{
             const json = JSON.parse(resolve)
-            const cmb = document.querySelector('#cmbForn')
+            const cmb = pageScreen.querySelector('#cmbForn')
             cmb.innerHTML=''
             for(let i=0; i<json.length; i++){
                 const opt = document.createElement('option')
@@ -150,7 +151,7 @@
         const myPromisse = queryDB(params,'ADM-5');
         myPromisse.then((resolve)=>{
             const json = JSON.parse(resolve)
-            const cmb = document.querySelector('#cmdUnd')
+            const cmb = pageScreen.querySelector('#cmdUnd')
             cmb.innerHTML=''
             for(let i=0; i<json.length; i++){
                 const opt = document.createElement('option')
@@ -169,23 +170,23 @@
         fillUnd()
         if(newProd){
             openFields(1)
-            document.querySelector('#btnDel').disabled = 1
-            document.querySelector('#btnEdit').disabled = 1
-            document.querySelector('#up_file').disabled = 1
+            pageScreen.querySelector('#btnDel').disabled = 1
+            pageScreen.querySelector('#btnEdit').disabled = 1
+            pageScreen.querySelector('#up_file').disabled = 1
         }else{
-            document.querySelector('#edtDesc').value = pageData.descricao
-            document.querySelector('#edtCodFW').value = pageData.cod
-            document.querySelector('#edtCodForn').value = pageData.cod_cli
-            document.querySelector('#edtCodBar').value = pageData.cod_bar
-            document.querySelector('#cmdUnd').value = pageData.unidade
-            document.querySelector('#edtEtq').value = pageData.estoque
-            document.querySelector('#edtEtqMin').value = pageData.etq_min
-            document.querySelector('#cmbCons').value = pageData.consumo
-            document.querySelector('#edtCusto').value = pageData.preco_comp
-            document.querySelector('#edtMarkup').value = pageData.margem
-            document.querySelector('#edtLocal').value = pageData.local
-            document.querySelector('#edtNCM').value = pageData.ncm
-            document.querySelector('#btnEdit').disabled = 0
+            pageScreen.querySelector('#edtDesc').value = pageData.descricao
+            pageScreen.querySelector('#edtCodFW').value = pageData.cod
+            pageScreen.querySelector('#edtCodForn').value = pageData.cod_cli
+            pageScreen.querySelector('#edtCodBar').value = pageData.cod_bar
+            pageScreen.querySelector('#cmdUnd').value = pageData.unidade
+            pageScreen.querySelector('#edtEtq').value = pageData.estoque
+            pageScreen.querySelector('#edtEtqMin').value = pageData.etq_min
+            pageScreen.querySelector('#cmbCons').value = pageData.consumo
+            pageScreen.querySelector('#edtCusto').value = pageData.preco_comp
+            pageScreen.querySelector('#edtMarkup').value = pageData.margem
+            pageScreen.querySelector('#edtLocal').value = pageData.local
+            pageScreen.querySelector('#edtNCM').value = pageData.ncm
+            pageScreen.querySelector('#btnEdit').disabled = 0
 
             const back = backFunc({'filename':`../assets/prod/prod_${pageData.id}.jpg`},1)
             back.then((resp)=>{
@@ -196,7 +197,7 @@
     }
 
     function openFields(open=1){
-        const view = document.querySelectorAll('.only-view')
+        const view = pageScreen.querySelectorAll('.only-view')
         for(let i=0; i<view.length; i++){
             view[i].disabled = !open
         }
@@ -205,19 +206,19 @@
     pageFunc.setProd = ()=>{
         const params = new Object;
             params.id = newProd ? 0 : pageData.id
-            params.id_emp = document.querySelector('#cmbForn').value
-            params.descricao = document.querySelector('#edtDesc').value.trim()
-            params.estoque = document.querySelector('#edtEtq').value.trim()
-            params.estq_min = document.querySelector('#edtEtqMin').value.trim()
-            params.und = document.querySelector('#cmdUnd').value
-            params.ncm = document.querySelector('#edtNCM').value.trim()
-            params.cod_int = document.querySelector('#edtCodFW').value.trim()
-            params.cod_bar = document.querySelector('#edtCodBar').value.trim()
-            params.cod_forn = document.querySelector('#edtCodForn').value.trim()
-            params.consumo = document.querySelector('#cmbCons').value
-            params.custo = document.querySelector('#edtCusto').value.trim()
-            params.markup = document.querySelector('#edtMarkup').value.trim()
-            params.local = document.querySelector('#edtLocal').value.trim()
+            params.id_emp = pageScreen.querySelector('#cmbForn').value
+            params.descricao = pageScreen.querySelector('#edtDesc').value.trim()
+            params.estoque = pageScreen.querySelector('#edtEtq').value.trim()
+            params.estq_min = pageScreen.querySelector('#edtEtqMin').value.trim()
+            params.und = pageScreen.querySelector('#cmdUnd').value
+            params.ncm = pageScreen.querySelector('#edtNCM').value.trim()
+            params.cod_int = pageScreen.querySelector('#edtCodFW').value.trim()
+            params.cod_bar = pageScreen.querySelector('#edtCodBar').value.trim()
+            params.cod_forn = pageScreen.querySelector('#edtCodForn').value.trim()
+            params.consumo = pageScreen.querySelector('#cmbCons').value
+            params.custo = pageScreen.querySelector('#edtCusto').value.trim()
+            params.markup = pageScreen.querySelector('#edtMarkup').value.trim()
+            params.local = pageScreen.querySelector('#edtLocal').value.trim()
           
         const myPromisse = queryDB(params,'PROD-1');
         myPromisse.then((resolve)=>{            
@@ -250,16 +251,16 @@
         }
     }
 
-    document.querySelector('#btnSave').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnSave').addEventListener('click',()=>{
         pageFunc.setProd()
     })
 
-    document.querySelector('#btnDel').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnDel').addEventListener('click',()=>{
         pageFunc.delProd()
     })
 
-    document.querySelector('#btnEdit').addEventListener('click',()=>{
-        if(document.querySelector('#btnSave').disabled){
+    pageScreen.querySelector('#btnEdit').addEventListener('click',()=>{
+        if(pageScreen.querySelector('#btnSave').disabled){
             if(confirm('Abrir registro para edição?')){
                 openFields(1)
             }
@@ -268,7 +269,7 @@
         }
     })
 
-    document.querySelector('#up_file').addEventListener('change',()=>{        
+    pageScreen.querySelector('#up_file').addEventListener('change',()=>{        
         showFile()
         const up = uploadImage('up_file','assets/prod/',`prod_${pageData.id}`)
         up.then((resp)=>{

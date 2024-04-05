@@ -61,12 +61,13 @@
 
     const pageData = main_data.sys_view_user.data
     const pageFunc = main_data.sys_view_user.func
+    const pageScreen = document.querySelector('#card-sys_view_user')
 
     pageFunc.fillData = ()=>{
         if(parseInt(pageData.id)>0){
-            document.querySelector('#edtEmail').value = pageData.email
-            document.querySelector('#cmbPerfil').value = pageData.access
-            document.querySelector('#btnDelUser').style.display = 'block'
+            pageScreen.querySelector('#edtEmail').value = pageData.email
+            pageScreen.querySelector('#cmbPerfil').value = pageData.access
+            pageScreen.querySelector('#btnDelUser').style.display = 'block'
         }
     }
 
@@ -77,8 +78,8 @@
         const params = new Object
             params.id = id
             params.email = email
-            params.pass = document.querySelector('#edtPass').value.trim()
-            params.acesso = document.querySelector('#cmbPerfil').value
+            params.pass = pageScreen.querySelector('#edtPass').value.trim()
+            params.acesso = pageScreen.querySelector('#cmbPerfil').value
         
         const myPromisse = queryDB(params,'USR-1');
         myPromisse.then((resolve)=>{
@@ -94,7 +95,7 @@
 
     pageFunc.fillPerm = ()=>{
 
-        const cmb = document.querySelector('#cmbPerfil')
+        const cmb = pageScreen.querySelector('#cmbPerfil')
         cmb.innerHTML = ''
         const params = new Object;
             params.field = 'nome'
@@ -122,11 +123,11 @@
         });
     }
 
-    document.querySelector('#btnSaveUser').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnSaveUser').addEventListener('click',()=>{
         if(checkField(['edtEmail']) && checkRepass(['edtPass','edtRepass'])){
             const id = parseInt(pageData.id)
-            const email = document.querySelector('#edtEmail').value.trim().toLowerCase()
-            const pass = document.querySelector('#edtPass')
+            const email = pageScreen.querySelector('#edtEmail').value.trim().toLowerCase()
+            const pass = pageScreen.querySelector('#edtPass')
             if(id==0 && pass.value.trim()==''){
                 alert('Favor digitar uma senha válida!')
                 pass.focus()
@@ -136,7 +137,7 @@
         }
     })
 
-    document.querySelector('#btnDelUser').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnDelUser').addEventListener('click',()=>{
         if(confirm(`Deseja deletar o usuário ${pageData.email}?`)){
             const id = parseInt(pageData.id)
             pageFunc.setUser(id,'')

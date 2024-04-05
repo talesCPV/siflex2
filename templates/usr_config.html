@@ -115,28 +115,29 @@
 
     const pageData = main_data.usr_config.data
     const pageFunc = main_data.usr_config.func
+    const pageScreen = document.querySelector('#card-usr_config')
     const dashboard = main_data.dashboard.data
     const styleSheet = document.styleSheets[0].cssRules[2].style
 
-    document.querySelector('#edtBarColor').value = dashboard.colors.bar_back_color.substr(0,7)
-    document.querySelector('#edtBarFontColor').value = dashboard.colors.bar_font_color.substr(0,7)
-    document.querySelector('#edtBarMouse').value = dashboard.colors.bar_mouse_color.substr(0,7)
-    document.querySelector('#edtWinColor').value = dashboard.colors.win_back_color.substr(0,7)
-    document.querySelector('#edtWinFontColor').value = dashboard.colors.win_font_color.substr(0,7)
+    pageScreen.querySelector('#edtBarColor').value = dashboard.colors.bar_back_color.substr(0,7)
+    pageScreen.querySelector('#edtBarFontColor').value = dashboard.colors.bar_font_color.substr(0,7)
+    pageScreen.querySelector('#edtBarMouse').value = dashboard.colors.bar_mouse_color.substr(0,7)
+    pageScreen.querySelector('#edtWinColor').value = dashboard.colors.win_back_color.substr(0,7)
+    pageScreen.querySelector('#edtWinFontColor').value = dashboard.colors.win_font_color.substr(0,7)
     
-    document.querySelector('#rngBarColor').value = parseInt(dashboard.colors.bar_back_color.substr(7,2),16)
-    document.querySelector('#rngFontColor').value = parseInt(dashboard.colors.bar_font_color.substr(7,2),16)
-    document.querySelector('#rngBarMouse').value = parseInt(dashboard.colors.bar_mouse_color.substr(7,2),16)
-    document.querySelector('#rngWinColor').value = parseInt(dashboard.colors.win_back_color.substr(7,2),16)
-    document.querySelector('#rngWinFontColor').value = parseInt(dashboard.colors.win_font_color.substr(7,2),16)
+    pageScreen.querySelector('#rngBarColor').value = parseInt(dashboard.colors.bar_back_color.substr(7,2),16)
+    pageScreen.querySelector('#rngFontColor').value = parseInt(dashboard.colors.bar_font_color.substr(7,2),16)
+    pageScreen.querySelector('#rngBarMouse').value = parseInt(dashboard.colors.bar_mouse_color.substr(7,2),16)
+    pageScreen.querySelector('#rngWinColor').value = parseInt(dashboard.colors.win_back_color.substr(7,2),16)
+    pageScreen.querySelector('#rngWinFontColor').value = parseInt(dashboard.colors.win_font_color.substr(7,2),16)
 
     loadImg(dashboard.wallpaper.pic)
-    document.querySelector('#cmbEfect').value = dashboard.wallpaper.efect
-    document.querySelector('#cmbSize').value = dashboard.wallpaper.size == 'cover' ? 2  : dashboard.wallpaper.size == 'contain' ? 4 : dashboard.wallpaper.repeat == 'repeat' ? 3 : 1
-    document.querySelector('#edtFundo').value = dashboard.wallpaper.color.substr(0,7)
-    document.querySelector('#rngBackColor').value = parseInt(dashboard.wallpaper.color.substr(7,2),16)
+    pageScreen.querySelector('#cmbEfect').value = dashboard.wallpaper.efect
+    pageScreen.querySelector('#cmbSize').value = dashboard.wallpaper.size == 'cover' ? 2  : dashboard.wallpaper.size == 'contain' ? 4 : dashboard.wallpaper.repeat == 'repeat' ? 3 : 1
+    pageScreen.querySelector('#edtFundo').value = dashboard.wallpaper.color.substr(0,7)
+    pageScreen.querySelector('#rngBackColor').value = parseInt(dashboard.wallpaper.color.substr(7,2),16)
 
-    const cmb = document.querySelector('#cmbWallpaper')
+    const cmb = pageScreen.querySelector('#cmbWallpaper')
     for(let i=0; i<cmb.options.length; i++){
         if(cmb.options[i].value == dashboard.wallpaper.pic){
             cmb.options.selectedIndex = i
@@ -144,13 +145,13 @@
     }
 
     function saveWallpaper(){
-        dashboard.wallpaper.efect = document.querySelector('#cmbEfect').value
-        dashboard.wallpaper.color = document.querySelector('#edtFundo').value+ parseInt(document.querySelector('#rngBackColor').value).toString(16).padStart(2, "0")
+        dashboard.wallpaper.efect = pageScreen.querySelector('#cmbEfect').value
+        dashboard.wallpaper.color = pageScreen.querySelector('#edtFundo').value+ parseInt(pageScreen.querySelector('#rngBackColor').value).toString(16).padStart(2, "0")
         setConfig('wallpaper',JSON.stringify(dashboard.wallpaper))
         main_data.dashboard.func.wallpaper()
     }
 
-    document.querySelector('#up_file').addEventListener('change',()=>{
+    pageScreen.querySelector('#up_file').addEventListener('change',()=>{
         const up = uploadImage('up_file',`config/user/${localStorage.getItem('id_user')}/`,'wallpaper')
         up.then((resp)=>{
             dashboard.wallpaper.pic = `config/user/${localStorage.getItem('id_user')}/${resp}`
@@ -160,27 +161,27 @@
         })
     })
 
-    document.querySelector('#cmbWallpaper').addEventListener('change',()=>{
-        const cmb = document.querySelector('#cmbWallpaper').value
+    pageScreen.querySelector('#cmbWallpaper').addEventListener('change',()=>{
+        const cmb = pageScreen.querySelector('#cmbWallpaper').value
         loadImg(cmb)
         dashboard.wallpaper.pic = cmb
         saveWallpaper()
     })
 
-    document.querySelector('#edtFundo').addEventListener('change',()=>{
+    pageScreen.querySelector('#edtFundo').addEventListener('change',()=>{
         saveWallpaper()
     })
 
-    document.querySelector('#rngBackColor').addEventListener('change',()=>{
+    pageScreen.querySelector('#rngBackColor').addEventListener('change',()=>{
         saveWallpaper()
     })
 
-    document.querySelector('#cmbEfect').addEventListener('change',()=>{
+    pageScreen.querySelector('#cmbEfect').addEventListener('change',()=>{
         saveWallpaper()
     })
 
-    document.querySelector('#cmbSize').addEventListener('change',()=>{        
-        switch(document.querySelector('#cmbSize').value){
+    pageScreen.querySelector('#cmbSize').addEventListener('change',()=>{        
+        switch(pageScreen.querySelector('#cmbSize').value){
             case '1': // Normal
                 dashboard.wallpaper.repeat = 'no-repeat'
                 dashboard.wallpaper.size = 'inherit'
@@ -201,14 +202,14 @@
     })
 
 
-    document.querySelector('#btnSave').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnSave').addEventListener('click',()=>{
 
         try{
-            dashboard.colors.bar_back_color = document.querySelector('#edtBarColor').value + parseInt(document.querySelector('#rngBarColor').value).toString(16).padStart(2, "0")
-            dashboard.colors.bar_font_color = document.querySelector('#edtBarFontColor').value + parseInt(document.querySelector('#rngFontColor').value).toString(16).padStart(2, "0")
-            dashboard.colors.bar_mouse_color = document.querySelector('#edtBarMouse').value + parseInt(document.querySelector('#rngBarMouse').value).toString(16).padStart(2, "0")
-            dashboard.colors.win_back_color = document.querySelector('#edtWinColor').value + parseInt(document.querySelector('#rngWinColor').value).toString(16).padStart(2, "0")
-            dashboard.colors.win_font_color = document.querySelector('#edtWinFontColor').value + parseInt(document.querySelector('#rngWinFontColor').value).toString(16).padStart(2, "0")
+            dashboard.colors.bar_back_color = pageScreen.querySelector('#edtBarColor').value + parseInt(pageScreen.querySelector('#rngBarColor').value).toString(16).padStart(2, "0")
+            dashboard.colors.bar_font_color = pageScreen.querySelector('#edtBarFontColor').value + parseInt(pageScreen.querySelector('#rngFontColor').value).toString(16).padStart(2, "0")
+            dashboard.colors.bar_mouse_color = pageScreen.querySelector('#edtBarMouse').value + parseInt(pageScreen.querySelector('#rngBarMouse').value).toString(16).padStart(2, "0")
+            dashboard.colors.win_back_color = pageScreen.querySelector('#edtWinColor').value + parseInt(pageScreen.querySelector('#rngWinColor').value).toString(16).padStart(2, "0")
+            dashboard.colors.win_font_color = pageScreen.querySelector('#edtWinFontColor').value + parseInt(pageScreen.querySelector('#rngWinFontColor').value).toString(16).padStart(2, "0")
 
             setConfig('colors' , JSON.stringify(dashboard.colors))
             main_data.dashboard.func.setBarStyle()

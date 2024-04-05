@@ -33,9 +33,10 @@
 
     const pageData = main_data.adm_unidades.data
     const pageFunc = main_data.adm_unidades.func
+    const pageScreen = document.querySelector('#card-adm_unidades')
   
     pageFunc.fillUnd = ()=>{
-        const tbl = document.getElementById('tblUND')
+        const tbl = pageScreen.querySelector('#tblUND')
         tbl.innerHTML = ''
         const query = getVal('und')
         const params = new Object;
@@ -45,7 +46,7 @@
         const myPromisse = queryDB(params,'ADM-5');
         myPromisse.then((resolve)=>{
             const json = JSON.parse(resolve)
-            document.querySelector('#fdsUND').style.display = json.length > 0 ? 'block' : 'none'
+            pageScreen.querySelector('#fdsUND').style.display = json.length > 0 ? 'block' : 'none'
 
             tbl.head('Nome,Sigla')
             for(let i=0; i<json.length;i++){
@@ -54,15 +55,15 @@
         });
     }
 
-    document.querySelector('#btnBusca-und').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnBusca-und').addEventListener('click',()=>{
         pageFunc.fillUnd()
     })
 
-    document.querySelector('#btnNovaUND').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnNovaUND').addEventListener('click',()=>{
         openHTML('adm_view_und.html','pop-up','Nova Unidade',{'id':'0'},500)
     })
 
-    document.querySelector('#tblUND').addEventListener('click',(e)=>{
+    pageScreen.querySelector('#tblUND').addEventListener('click',(e)=>{
         if(main_data.hasOwnProperty('adm_view_und')){
             closeModal('adm_view_und')
         }

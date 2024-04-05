@@ -139,8 +139,10 @@
 
 <script>    
 
-    const cmbMes = document.querySelector('#cmbMes'); 
-    const cmbAno = document.querySelector('#edtAno'); 
+    const pageScreen = document.querySelector('#card-usr_agenda')
+
+    const cmbMes = pageScreen.querySelector('#cmbMes'); 
+    const cmbAno = pageScreen.querySelector('#edtAno'); 
     const user_id = localStorage.getItem("id");
 
     cmbAno.value = today.getFullYear();
@@ -157,9 +159,9 @@
     openCalendar();
 
     function openCalendar(){
-        const screen = document.querySelector('.calendar');
-        const mes = document.querySelector('#cmbMes');
-        const ano = document.querySelector('#edtAno');
+        const screen = pageScreen.querySelector('.calendar');
+        const mes = pageScreen.querySelector('#cmbMes');
+        const ano = pageScreen.querySelector('#edtAno');
         const day = new Date();
         
         let row = 0;
@@ -232,7 +234,7 @@
             if(resolve.trim() != ""){
                 const json = JSON.parse(resolve);                
                 for(let i=0; i<json.length; i++){
-                    const square = document.getElementById(json[i].data_agd.substr(0,10));
+                    const square = pageScreen.querySelector('#'+json[i].data_agd.substr(0,10));
                     square.innerHTML = json[i].obs;
                     square.title = json[i].obs;
                     square.parentNode.style.background = "#f8f693"

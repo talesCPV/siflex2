@@ -34,9 +34,10 @@
 
     const pageData = main_data.adm_produtos.data
     const pageFunc = main_data.adm_produtos.func
+    const pageScreen = document.querySelector('#card-adm_produtos')
 
     pageFunc.fillProd = ()=>{      
-        const tbl = document.getElementById('tblProd')
+        const tbl = pageScreen.querySelector('#tblProd')
         tbl.innerHTML = ''
         const query = getVal('prod')
         const params = new Object;
@@ -54,15 +55,15 @@
         });
     }
 
-    document.querySelector('#btnBusca-prod').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnBusca-prod').addEventListener('click',()=>{
         pageFunc.fillProd()
     })
 
-    document.querySelector('#btnNovo').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnNovo').addEventListener('click',()=>{
         openHTML('adm_view_prod.html','pop-up','Cadastro de Produtos')
     })
 
-    document.querySelector('#tblProd').addEventListener('click',(e)=>{        
+    pageScreen.querySelector('#tblProd').addEventListener('click',(e)=>{        
         try{
             if(main_data.hasOwnProperty('adm_view_prod')){
                 closeModal('adm_view_prod')
@@ -72,7 +73,7 @@
         }catch{}
     })
 
-    document.querySelector('#tblProd').addEventListener('contextmenu',(e)=>{
+    pageScreen.querySelector('#tblProd').addEventListener('contextmenu',(e)=>{
         e.preventDefault();
         try{
             data = e.target.parentNode.data

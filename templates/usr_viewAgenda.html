@@ -25,12 +25,13 @@
 
     const pageData = main_data.usr_viewAgenda.data
     const pageFunc = main_data.usr_viewAgenda.func
+    const pageScreen = document.querySelector('#card-usr_viewAgenda')
 
-    document.getElementById('txtSchedule').value = document.getElementById(pageData.data).innerHTML.trim()
-    document.getElementById('txtSchedule').focus()
-    document.getElementById('btnSalvar').addEventListener('click',()=>{
+    pageScreen.querySelector('#txtSchedule').value = pageScreen.querySelector('#'+pageData.data).innerHTML.trim()
+    pageScreen.querySelector('#txtSchedule').focus()
+    pageScreen.querySelector('#btnSalvar').addEventListener('click',()=>{
     
-        const text = document.getElementById('txtSchedule').value.trim()
+        const text = pageScreen.querySelector('#txtSchedule').value.trim()
         let color = "#f8f693"
         let font = "#000000"
 
@@ -45,9 +46,9 @@
 
         const resp = queryDB(params,'CAL-1')
         resp.then((resolve)=>{
-            document.getElementById(pageData.data).innerHTML = text
-            document.getElementById(pageData.data).parentNode.style.background = color
-            document.getElementById(pageData.data).parentNode.style.color = font
+            pageScreen.querySelector('#'+pageData.data).innerHTML = text
+            pageScreen.querySelector('#'+pageData.data).parentNode.style.background = color
+            pageScreen.querySelector('#'+pageData.data).parentNode.style.color = font
             closeModal('usr_viewAgenda')
         }); 
 
