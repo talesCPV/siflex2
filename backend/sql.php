@@ -53,7 +53,7 @@
         "SYS-1"  => 'CALL sp_view_usr_perm_perf(@access,@hash,"x00","x01","x02");', // FIELD,SIGNAL, VALUE
 
         /* RELOGIO DE PONTO */
-        "REL-0"  => 'CALL sp_view_relogio_ponto(@access,@hash,"x00","x01");', // DATA INICIO, DATA FINAL
+        "REL-0"  => 'CALL sp_view_relogio_ponto(@access,@hash,"x00","x01","x02");', // DATA INICIO, DATA FINAL,FUNC
 
         /* ANÁLISE DE FROTA */
         "ANA-0" => 'CALL sp_view_analise_frota(@access,@hash,"x00","x01","x02","x03","x04","x05");', // FIELD,SIGNAL, VALUE, EXEC, DT_INI, DT_FIN

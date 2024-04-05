@@ -72,11 +72,14 @@ console.log(json)
         myPromisse.then((resolve)=>{
             const json = JSON.parse(resolve)
 console.log(json)
-            let func = ''
+            let func_id = ''
+            const func = []
             for(let i=0; i<json.length;i++){
-                func += (i!=0 ? ',' : '') + json[i].id
+                func_id += (i!=0 ? ',' : '') + json[i].id
+                func.push(json[i].nome.split(' ')[0])
             }   
-console.log(func)                  
+            makeCalendar(func)
+            pageFunc.fillRelogio(func_id)
         });
     }
 
@@ -86,7 +89,8 @@ console.log(func)
         pageScreen.querySelector('#edtFin').value = `${today.getFullYear()}-${(month+1).toString().padStart(2, "0")}-25`
     }
 
-    function makeCalendar(){
+    function makeCalendar(func){
+console.log(func)        
         const td_ini = new Date(pageScreen.querySelector('#edtIni').value)
         td_ini.change()
         const td_fin = new Date(pageScreen.querySelector('#edtFin').value)
@@ -96,8 +100,11 @@ console.log(func)
 
 
         for(let i=0; i<range; i++){
+            const dt = td_ini.getFullYear()+'-'+(td_ini.getMonth()+1).toString().padStart(2,0)+'-'+td_ini.getDate().toString().padStart(2,0)
+//            console.log(dt)
 
             
+
 
             td_ini.change()
         }
@@ -108,6 +115,7 @@ console.log(func)
     pageScreen.querySelector('#btnBusca').addEventListener('click',()=>{
 //        pageFunc.fillRelogio()
         pageFunc.fillFunc()
+        
     })
 
 
