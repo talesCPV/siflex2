@@ -63,15 +63,16 @@ DELIMITER $$
 		CALL sp_allow(Iallow,Ihash);
 		IF(@allow)THEN
 			IF(Iemail="")THEN
-				DELETE FROM tb_usuario WHERE id=Iid;
+				DELETE FROM tb_mail WHERE de=Iid OR para=Iid;
+				DELETE FROM tb_user WHERE id=Iid;
             ELSE			
 				IF(Iid=0)THEN
-					INSERT INTO tb_usuario (email,hash,access)VALUES(Iemail,SHA2(CONCAT(Iemail, Isenha), 256),Iaccess);            
+					INSERT INTO tb_user (email,hash,access)VALUES(Iemail,SHA2(CONCAT(Iemail, Isenha), 256),Iaccess);            
                 ELSE
 					IF(Isenha="")THEN
-						UPDATE tb_usuario SET email=Iemail, access=Iaccess WHERE id=Iid;
+						UPDATE tb_user SET email=Iemail, access=Iaccess WHERE id=Iid;
                     ELSE
-						UPDATE tb_usuario SET email=Iemail, hash=SHA2(CONCAT(Iemail, Isenha), 256), access=Iaccess WHERE id=Iid;
+						UPDATE tb_user SET email=Iemail, hash=SHA2(CONCAT(Iemail, Isenha), 256), access=Iaccess WHERE id=Iid;
                     END IF;
                 END IF;
             END IF;
@@ -94,7 +95,7 @@ DELIMITER $$
 	BEGIN    
 		CALL sp_allow(Iallow,Ihash);
 		IF(@allow)THEN
-			SET @quer =CONCAT('SELECT id,email,id_func,access, IF(access=0,"ROOT",IFNULL((SELECT nome FROM tb_usr_perm_perfil WHERE USR.access = id),"DESCONHECIDO")) AS perfil FROM tb_usuario AS USR WHERE ',Ifield,' ',Isignal,' ',Ivalue,' ORDER BY ',Ifield,';');
+			SET @quer =CONCAT('SELECT id,email,id_func,access, IF(access=0,"ROOT",IFNULL((SELECT nome FROM tb_usr_perm_perfil WHERE USR.access = id),"DESCONHECIDO")) AS perfil FROM tb_user AS USR WHERE ',Ifield,' ',Isignal,' ',Ivalue,' ORDER BY ',Ifield,';');
 			PREPARE stmt1 FROM @quer;
 			EXECUTE stmt1;
 		ELSE 
@@ -110,9 +111,9 @@ DELIMITER $$
 		IN Isenha varchar(30)
     )
 	BEGIN    
-		SET @call_id = (SELECT IFNULL(id,0) FROM tb_usuario WHERE hash COLLATE utf8_general_ci = Ihash COLLATE utf8_general_ci LIMIT 1);
+		SET @call_id = (SELECT IFNULL(id,0) FROM tb_user WHERE hash COLLATE utf8_general_ci = Ihash COLLATE utf8_general_ci LIMIT 1);
 		IF(@call_id > 0)THEN
-			UPDATE tb_usuario SET hash = SHA2(CONCAT(email, Isenha), 256) WHERE id=@call_id;
+			UPDATE tb_user SET hash = SHA2(CONCAT(email, Isenha), 256) WHERE id=@call_id;
             SELECT 1 AS ok;
 		ELSE 
 			SELECT 0 AS ok;
@@ -126,9 +127,9 @@ DELIMITER $$
 		IN Ihash varchar(64)
     )
 	BEGIN        
-		SET @id_call = (SELECT IFNULL(id,0) FROM tb_usuario WHERE hash COLLATE utf8_general_ci = Ihash COLLATE utf8_general_ci LIMIT 1);
+		SET @id_call = (SELECT IFNULL(id,0) FROM tb_user WHERE hash COLLATE utf8_general_ci = Ihash COLLATE utf8_general_ci LIMIT 1);
 		IF(@id_call>0)THEN
-			SELECT COUNT(*) AS new_mail FROM tb_mail WHERE id_to = @id_call AND looked=0;
+			SELECT COUNT(*) AS new_mail FROM tb_mail WHERE para = @id_call AND nao_lida=1;
 		ELSE
 			SELECT 0 AS new_mail ;
         END IF;
@@ -193,7 +194,7 @@ DELIMITER $$
 		IN IdataFin date
     )
 	BEGIN    
-		SET @id_call = (SELECT IFNULL(id,0) FROM tb_usuario WHERE hash COLLATE utf8_general_ci = Ihash COLLATE utf8_general_ci LIMIT 1);
+		SET @id_call = (SELECT IFNULL(id,0) FROM tb_user WHERE hash COLLATE utf8_general_ci = Ihash COLLATE utf8_general_ci LIMIT 1);
 		SELECT * FROM tb_calendario WHERE id_user=@id_call AND data_agd>=IdataIni AND data_agd<=IdataFin;
 	END $$
 DELIMITER ;
@@ -206,7 +207,7 @@ DELIMITER $$
 		IN Iobs varchar(255)
     )
 	BEGIN    
-		SET @id_call = (SELECT IFNULL(id,0) FROM tb_usuario WHERE hash COLLATE utf8_general_ci = Ihash COLLATE utf8_general_ci LIMIT 1);
+		SET @id_call = (SELECT IFNULL(id,0) FROM tb_user WHERE hash COLLATE utf8_general_ci = Ihash COLLATE utf8_general_ci LIMIT 1);
         IF(@id_call >0)THEN
 			SET @exist = (SELECT COUNT(*) FROM tb_calendario WHERE id_user=@id_call AND data_agd = Idata);
 			IF(@exist AND Iobs = "")THEN
@@ -229,9 +230,9 @@ DELIMITER $$
 		IN Imessage varchar(512)
     )
 	BEGIN    
-		SET @id_call = (SELECT IFNULL(id,0) FROM tb_usuario WHERE hash COLLATE utf8_general_ci = Ihash COLLATE utf8_general_ci LIMIT 1);
+		SET @id_call = (SELECT IFNULL(id,0) FROM tb_user WHERE hash COLLATE utf8_general_ci = Ihash COLLATE utf8_general_ci LIMIT 1);
         IF(@id_call >0)THEN
-			INSERT INTO tb_mail (id_from,id_to,message) VALUES (@id_call,Iid_to,Imessage);
+			INSERT INTO tb_mail (de,para,txt) VALUES (@id_call,Iid_to,Imessage);
         END IF;
 	END $$
 DELIMITER ;
@@ -243,18 +244,18 @@ DELIMITER $$
         IN Isend boolean
     )
 	BEGIN    
-		SET @id_call = (SELECT IFNULL(id,0) FROM tb_usuario WHERE hash COLLATE utf8_general_ci = Ihash COLLATE utf8_general_ci LIMIT 1);
+		SET @id_call = (SELECT IFNULL(id,0) FROM tb_user WHERE hash COLLATE utf8_general_ci = Ihash COLLATE utf8_general_ci LIMIT 1);
 		IF(@id_call > 0)THEN
 			IF(Isend)THEN
 				SELECT MAIL.*, USR.email AS mail_from
 					FROM tb_mail AS MAIL 
-					INNER JOIN tb_usuario AS USR
-					ON MAIL.id_from = USR.id AND id_to = @id_call;            
+					INNER JOIN tb_user AS USR
+					ON MAIL.de = USR.id AND para = @id_call;            
             ELSE
 				SELECT MAIL.*, USR.email AS mail_to
 					FROM tb_mail AS MAIL 
-					INNER JOIN tb_usuario AS USR
-					ON MAIL.id_to = USR.id AND id_from = @id_call;            
+					INNER JOIN tb_user AS USR
+					ON MAIL.para = USR.id AND de = @id_call;            
             END IF;
         END IF;
 	END $$
@@ -269,9 +270,9 @@ DELIMITER $$
         IN Iid_to int(11)
     )
 	BEGIN        
-		SET @id_call = (SELECT IFNULL(id,0) FROM tb_usuario WHERE hash COLLATE utf8_general_ci = Ihash COLLATE utf8_general_ci LIMIT 1);
+		SET @id_call = (SELECT IFNULL(id,0) FROM tb_user WHERE hash COLLATE utf8_general_ci = Ihash COLLATE utf8_general_ci LIMIT 1);
 		IF(@id_call = Iid_to OR @id_call = Iid_from)THEN
-			DELETE FROM tb_mail WHERE data = Idata AND id_from = Iid_from AND id_to = Iid_to;
+			DELETE FROM tb_mail WHERE data = Idata AND de = Iid_from AND para = Iid_to;
         END IF;
 	END $$
 DELIMITER ;
@@ -285,9 +286,9 @@ DELIMITER $$
         IN Iid_to int(11)
     )
 	BEGIN        
-		SET @id_call = (SELECT IFNULL(id,0) FROM tb_usuario WHERE hash COLLATE utf8_general_ci = Ihash COLLATE utf8_general_ci LIMIT 1);
+		SET @id_call = (SELECT IFNULL(id,0) FROM tb_user WHERE hash COLLATE utf8_general_ci = Ihash COLLATE utf8_general_ci LIMIT 1);
 		IF(@id_call = Iid_to OR @id_call = Iid_from)THEN
-			UPDATE tb_mail SET looked=1 WHERE data = Idata AND id_from = Iid_from AND id_to = Iid_to;
+			UPDATE tb_mail SET nao_lida=0 WHERE data = Idata AND de = Iid_from AND para = Iid_to;
         END IF;
 	END $$
 DELIMITER ;
@@ -298,8 +299,8 @@ DELIMITER $$
 		IN Ihash varchar(64)
     )
 	BEGIN
-		SET @id_call = (SELECT IFNULL(id,0) FROM tb_usuario WHERE hash COLLATE utf8_general_ci = Ihash COLLATE utf8_general_ci LIMIT 1);
-		SELECT id,email FROM tb_usuario WHERE id != @id_call ORDER BY email ASC;
+		SET @id_call = (SELECT IFNULL(id,0) FROM tb_user WHERE hash COLLATE utf8_general_ci = Ihash COLLATE utf8_general_ci LIMIT 1);
+		SELECT id,email FROM tb_user WHERE id != @id_call ORDER BY email ASC;
 	END $$
 DELIMITER ; 
 
@@ -446,16 +447,44 @@ DELIMITER $$
 	END $$
 DELIMITER ;
 
-/* FUNCIONÁRIO */
-
- DROP PROCEDURE sp_set_funcionario;
+ DROP PROCEDURE sp_set_feriado;
 DELIMITER $$
-	CREATE PROCEDURE sp_set_funcionario(	
+	CREATE PROCEDURE sp_set_feriado(	
+		IN Iallow varchar(80),
+		IN Ihash varchar(64),
+        In Iid int(11),
+		IN Inome varchar(40),
+		IN Idia int(11),
+		IN Imes int(11),
+		IN Iano int(11)
+    )
+	BEGIN    
+		CALL sp_allow(Iallow,Ihash);
+		IF(@allow)THEN
+			IF(Iid = 0)THEN
+				INSERT INTO tb_feriados (nome,dia,mes,ano) VALUES (Inome,Idia,Imes,Iano);
+            ELSE
+				IF(Inome = "")THEN
+					DELETE FROM tb_feriados WHERE id=Iid;
+				ELSE
+					UPDATE tb_feriados SET nome=Inome, dia=Idia, mes=Imes, ano=Iano WHERE id=Iid;
+				END IF;
+            END IF;			
+			SELECT * FROM tb_feriados;
+        END IF;
+	END $$
+DELIMITER ;
+
+/* FUNCIONÁRIO */
+-- id,nome,nasc,rg,cpf,pis,end,num,cidade,bairro,uf,cep,data_adm,data_dem,id_cargo,id_setor,tel,cel,ativo,obs
+ DROP PROCEDURE sp_set_func;
+DELIMITER $$
+	CREATE PROCEDURE sp_set_func(
 		IN Iallow varchar(80),
 		IN Ihash varchar(64),
         IN Iid int(11),
 		IN Inome varchar(30),
-        IN Inasc date,
+		IN Inasc date,
 		IN Irg varchar(15),
 		IN Icpf varchar(15),
 		IN Ipis varchar(15),
@@ -477,11 +506,12 @@ DELIMITER $$
 	BEGIN    
 		CALL sp_allow(Iallow,Ihash);
 		IF(@allow)THEN
-			INSERT INTO tb_funcionario (id,nome,nasc,rg,cpf,pis,end,num,cidade,bairro,uf,cep,data_adm,id_cargo,id_setor,tel,cel,obs) 
+			SET @status = (SELECT IF(Iativo,'ATIVO','DEMIT'));
+			INSERT INTO tb_funcionario (id,nome,data_nasc,rg,cpf,pis,endereco,num,cidade,bairro,estado,cep,data_adm,id_cargo,id_setor,tel,cel,obs) 
 				VALUES (Iid,Inome,Inasc,Irg,Icpf,Ipis,Iend,Inum,Icidade,Ibairro,Iuf,Icep,Idata_adm,Iid_cargo,Iid_setor,Itel,Icel,Iobs)
 				ON DUPLICATE KEY UPDATE
-				nome=Inome,nasc=Inasc,rg=Irg,pis=Ipis,end=Iend,num=Inum,cidade=Icidade,bairro=Ibairro,uf=Iuf,cep=Icep,data_adm=Idata_adm,
-				data_dem=Idata_dem,id_cargo=Iid_cargo,id_setor=Iid_setor,tel=Itel,cel=Icel,ativo=Iativo,obs=Iobs;
+				nome=Inome,data_nasc=Inasc,rg=Irg,cpf=Icpf,pis=Ipis,endereco=Iend,num=Inum,cidade=Icidade,bairro=Ibairro,estado=Iuf,cep=Icep,data_adm=Idata_adm,
+				data_dem=Idata_dem,id_cargo=Iid_cargo,id_setor=Iid_setor,tel=Itel,cel=Icel,status=@status,obs=Iobs;
         END IF;
 	END $$
 DELIMITER ;
@@ -493,12 +523,13 @@ DELIMITER $$
 		IN Ihash varchar(64),
 		IN Ifield varchar(30),
         IN Isignal varchar(4),
-		IN Ivalue varchar(50)
+		IN Ivalue varchar(50),
+        IN Iativo boolean
     )
 	BEGIN    
 		CALL sp_allow(Iallow,Ihash);
 		IF(@allow)THEN
-			SET @quer =CONCAT('SELECT * FROM vw_func WHERE ',Ifield,' ',Isignal,' ',Ivalue,' ORDER BY ',Ifield,';');
+			SET @quer =CONCAT('SELECT * FROM vw_func WHERE ativo = ',Iativo,' AND ',Ifield,' ',Isignal,' ',Ivalue,' ORDER BY nome;');
 			PREPARE stmt1 FROM @quer;
 			EXECUTE stmt1;
 		ELSE 
@@ -724,6 +755,98 @@ DELIMITER $$
 	END $$
 DELIMITER ;
 
+/* ANÁLISE DE FROTA  E SERVIÇO EXECUTADO*/
+
+ DROP PROCEDURE sp_view_analise_frota;
+DELIMITER $$
+	CREATE PROCEDURE sp_view_analise_frota(
+		IN Iallow varchar(80),
+		IN Ihash varchar(64),
+		IN Ifield varchar(30),
+        IN Isignal varchar(4),
+		IN Ivalue varchar(50),
+        IN Iexec varchar(3),
+        IN Idt_ini date,
+        IN Idt_fin date
+    )
+	BEGIN
+		CALL sp_allow(Iallow,Ihash);
+		IF(@allow)THEN
+			SET @quer =CONCAT('SELECT * FROM vw_analise_frota WHERE ',Ifield,' ',Isignal,' ',Ivalue,'AND exec IN (',Iexec,') AND data_analise BETWEEN "',Idt_ini,'" AND "',Idt_fin,'" ORDER BY data_analise;');
+			PREPARE stmt1 FROM @quer;
+			EXECUTE stmt1;
+		ELSE
+			SELECT 0 AS id, "" AS nome;
+        END IF;
+	END $$
+	DELIMITER ;
+
+ DROP PROCEDURE sp_view_serv_exec;
+DELIMITER $$
+	CREATE PROCEDURE sp_view_serv_exec(
+		IN Iallow varchar(80),
+		IN Ihash varchar(64),
+		IN Ifield varchar(30),
+        IN Isignal varchar(4),
+		IN Ivalue varchar(50),
+        IN Idt_ini date,
+        IN Idt_fin date
+    )
+	BEGIN
+		CALL sp_allow(Iallow,Ihash);
+		IF(@allow)THEN
+			SET @quer =CONCAT('SELECT * FROM vw_serv_exec WHERE ',Ifield,' ',Isignal,' ',Ivalue,'AND data_exec BETWEEN "',Idt_ini,'" AND "',Idt_fin,'" ORDER BY data_exec;');
+			PREPARE stmt1 FROM @quer;
+			EXECUTE stmt1;
+		ELSE
+			SELECT 0 AS id, "" AS nome;
+        END IF;
+	END $$
+	DELIMITER ;
+
+DELIMITER $$
+	CREATE PROCEDURE sp_set_serv_exec(
+		IN Iallow varchar(80),
+		IN Ihash varchar(64),
+        IN Iid int(11),
+		IN Iid_emp int(11),
+		IN Idata_exec date,
+		IN Inum_carro varchar(15),
+        IN Inf varchar(10),
+        IN Ifunc varchar(150),
+        IN Ipedido varchar(15),
+        IN Ivalor double,
+        IN Iobs varchar(500)
+    )
+	BEGIN
+		CALL sp_allow(Iallow,Ihash);
+		IF(@allow)THEN
+			SET @id = (SELECT IF(Iid = 0,'DEFAULT',Iid));
+			INSERT INTO tb_serv_exec (id,id_emp,data_exec,num_carro,nf,func,pedido,valor,obs)
+				VALUES (@id,Iid_emp,Idata_exec,Inum_carro,Inf,Ifunc,Ipedido,Ivalor,Iobs)
+				ON DUPLICATE KEY UPDATE
+				id_emp=Iid_emp, data_exec=Idata_exec, num_carro=Inum_carro, nf = Inf, 
+                func=Ifunc, pedido=Ipedido, valor=Ivalor, obs=Iobs;
+		END IF;
+	END $$
+	DELIMITER ;
+
+DELIMITER $$
+	CREATE PROCEDURE sp_del_serv_exec(
+		IN Iallow varchar(80),
+		IN Ihash varchar(64),
+		IN Iid int(11)
+    )
+	BEGIN    
+		CALL sp_allow(Iallow,Ihash);
+		IF(@allow)THEN
+			DELETE FROM tb_serv_exec WHERE id = Iid;
+            SELECT 1 AS ok;
+		ELSE 
+			SELECT 0 AS ok;
+        END IF;	
+	END $$
+	DELIMITER ;
 
 /* RELOGIO DE PONTO */
 
@@ -733,16 +856,26 @@ DELIMITER $$
 		IN Iallow varchar(80),
 		IN Ihash varchar(64),
         IN Iinicio date,
-        IN Ifinal date
+        IN Ifinal date,
+        IN Ifunc varchar(50)
     )
 	BEGIN
 		CALL sp_allow(Iallow,Ihash);
-		IF(@allow)THEN							   
-			SET @quer =CONCAT('SELECT * FROM vw_relogio_ponto WHERE date BETWEEN "',Iinicio,'" AND "',Ifinal,'";');        
-            PREPARE stmt1 FROM @quer;
-			EXECUTE stmt1;          
+		IF(@allow)THEN	
+			SET @quer =CONCAT('SELECT HE.*,FUNC.nome
+				FROM tb_hora_extra AS HE
+				INNER JOIN tb_funcionario AS FUNC
+				ON HE.id_func = FUNC.id
+				AND entrada BETWEEN "',Iinicio,'" AND "',Ifinal,'"
+				AND id_func IN(',Ifunc,');');
+                
+-- 			SELECT @quer;
+ 			PREPARE stmt1 FROM @quer;
+ 			EXECUTE stmt1;
+	
 		ELSE
 			SELECT 0 AS ok;
         END IF;
 	END $$
 DELIMITER ;
+
