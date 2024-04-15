@@ -29,7 +29,7 @@ String.prototype.getHash = function(S){
         chr = chr===34 ? 173 : chr;
         hash += String.fromCharCode(chr)  
     }
-
+    
     return hash;
 }
 
@@ -128,34 +128,34 @@ HTMLTableElement.prototype.plot = function(obj, fields,type='',file=false, mark=
     
         if(type.length > 0 && i<type.length){
             switch (type[i].substring(0,3)) {
-                case 'int':
+                case 'int': // Numero Inteiro
                   html = parseInt(obj[arr[0]])
                   break;
-                case 'flo':
+                case 'flo': // Numero Decimal
                     html = obj[arr[0]] != null ? parseFloat(obj[arr[0]]).toFixed(2) : ''
                     break;
-                case 'Upp':
+                case 'Upp': // Upper Case
                     html = obj[arr[0]] != null ? obj[arr[0]].toUpperCase().trim() : ''
                     break
-                case 'str':
+                case 'str': // Valor literal
                     html = obj[arr[0]] != null ? obj[arr[0]].trim() : ''
                   break;
-                case 'dat':
+                case 'dat': // Formato de Data dia/mes/ano
                     html = obj[arr[0]] != null ? obj[arr[0]].substring(8,10)+'/'+ obj[arr[0]].substring(5,7)+'/'+obj[arr[0]].substring(0,4) : ''
                     break                 
-                case 'Low':
+                case 'Low': // Lower Case
                     html = obj[arr[0]] != null ? obj[arr[0]].toLowerCase().trim() : ''
                     break;
-                case 'R$.':
+                case 'R$.': // Formato Monetário R$0,00
                     if(parseFloat(obj[arr[0]]).toFixed(2) >=0 ){
-                        html = obj[arr[0]] != null ? viewMoneyBR(parseFloat(obj[arr[0]]).toFixed(2)) : ''   //'R$'+ parseFloat(obj[arr[0]]).toFixed(2)
+                        html = obj[arr[0]] != null ? viewMoneyBR(parseFloat(obj[arr[0]]).toFixed(2)) : ''
                         green = true
                     }else{
-                        html = obj[arr[0]] != null ? `(${viewMoneyBR(parseFloat(obj[arr[0]]).toFixed(2))})` : ''   //'R$'+ parseFloat(obj[arr[0]]).toFixed(2)
+                        html = obj[arr[0]] != null ? `(${viewMoneyBR(parseFloat(obj[arr[0]]).toFixed(2))})` : ''
                         green = false
                     }
                     break;             
-                case 'cha':
+                case 'cha': // Troca palavra escolhida por outra valor_original=valor_desejado
                     op = type[i].split(' ')
                     html = ''
                     for(let j=1; j<op.length; j++){
@@ -163,34 +163,22 @@ HTMLTableElement.prototype.plot = function(obj, fields,type='',file=false, mark=
                             html = op[j].split('=')[1] == '**' ? obj[arr[0]] : op[j].split('=')[1]
                         }
                     }
-                    break;
-                case 'fun':
-                    op = type[i].split(' ')                    
-                    html = eval(`${op[1]}(obj[arr[0]])`)
-                    break;
-                case 'cal':
-                    op = type[i].split(' ')                   
-                    html = eval(op[1])
-                    break;
-                case 'con':
-                    op =   arr[0].split('#')
-                    const campo = op[0].split(' ')
-                    html = ''
-                    for(let j=0; j< campo.length; j++){
-                        html +=  obj[campo[j]] 
-                        html += j<campo.length-1 ? op[1] : ''
-                    }
                     break; 
-                case 'ckb':                            
+                case 'ckb': // insere checkbox                      
                     html = `<input type="checkbox" id="tblCkb_${this.rows.length-1}" class="tbl-ckb" ${parseInt(obj[arr[0]])? '' : 'checked'}>`
                     break;
-                case 'cnp':
+                case 'cnp': // Formata CNPJ
                     html = obj[arr[0]] != null ? getCNPJ(obj[arr[0]].trim()) : ''
                     break;
-                case 'ie.':
+                case 'ie.': // Formata Insc. Estadual
                     html = obj[arr[0]] != null ? getIE(obj[arr[0]].trim()) : ''
                     break;                    
-    
+                case 'btn': // Adiciona Botão
+                op = type[i].split(' ')
+                op = op.length > 1 ? op[1] : 'OK'
+                console.log(op)
+                html = `<button id="btn_${this.rows.length-1}" class="tbl-btn">${op}</button>`
+                break;  
                 default:
                   html = obj[arr[0]] != null ? obj[arr[0]] :''
             }            
@@ -224,7 +212,6 @@ HTMLTableElement.prototype.head = function(hd){
             all.addEventListener('click',(e)=>{
                 var nodes = Array.prototype.slice.call(e.target.parentNode.parentNode.children);
                 const index = nodes.indexOf(e.target.parentNode)
-//                console.log(e.target.parentNode.parentNode.children)
                 for(let i=1; i<this.rows.length; i++){
                     try{
                         this.rows[i].cells[index].children[index].checked = all.checked
@@ -234,8 +221,6 @@ HTMLTableElement.prototype.head = function(hd){
                 }
             })
             th.appendChild(all)
-
-//            th.innerHTML = '<input type="checkbox" id="ckb-all"></input>'
         }else{
             th.innerHTML = arr[0]
         }
