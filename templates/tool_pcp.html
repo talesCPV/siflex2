@@ -75,7 +75,10 @@
             min-height: 600px;
         }
 
-
+        .pcp-cell:hover{
+            background-color: rgb(73, 73, 238);
+            color: rgb(250, 243, 243);
+        }
 
         @media all and (max-width : 768px) {
 
@@ -175,11 +178,12 @@
             for(let j=0; j<=pageData.setores.length; j++){
                 const td = document.createElement('td')
                 if(j==0){
-                    td.innerHTML =   `${week.getDate().toString().padStart(2,0)}/${(week.getMonth()+1).toString().padStart(2,0)} ${dia[i]}` 
+                    td.innerHTML =   `${dia[i]} ${week.getDate().toString().padStart(2,0)}/${(week.getMonth()+1).toString().padStart(2,0)}` 
                     td.classList = i<5 ? 'day-name' : 'day-name week-end'
                     row.appendChild(td)
                 }else{
-                    td.innerHTML =  ''
+                    td.innerHTML = ''
+                    td.classList = 'pcp-cell'
                     if(pageData.setores[j-1].sel){
                         row.appendChild(td)
                     }
@@ -228,10 +232,21 @@
     })
 
     tbl.addEventListener('click',(e)=>{
-        data = e.target.parentNode.data      
-        data.mode = 'viewPCP'
-        data.dayweek = e.target.parentNode.cells[0].innerHTML
-        openHTML('tool_view_PCP.html','pop-up','Programação de Produção',data)
+
+        const rowindex = e.target.parentNode.rowIndex
+
+        console.log(e.target.cellIndex)
+//        console.log(rowindex)
+
+        if(rowindex>0){
+            data = e.target.parentNode.data      
+            data.mode = 'viewPCP'
+            data.dayweek = e.target.parentNode.cells[0].innerHTML
+//            console.log(data)
+        }
+
+
+//        openHTML('tool_view_PCP.html','pop-up','Programação de Produção',data)
     })
 
     pageScreen.querySelector('#btnPrint').addEventListener('click',()=>{
