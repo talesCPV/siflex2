@@ -174,11 +174,10 @@ HTMLTableElement.prototype.plot = function(obj, fields,type='',file=false, mark=
                     html = obj[arr[0]] != null ? getIE(obj[arr[0]].trim()) : ''
                     break;                    
                 case 'btn': // Adiciona Botão
-                op = type[i].split(' ')
-                op = op.length > 1 ? op[1] : 'OK'
-                console.log(op)
-                html = `<button id="btn_${this.rows.length-1}" class="tbl-btn">${op}</button>`
-                break;  
+                    op = type[i].split(' ')
+                    op = op.length > 1 ? op[1] : 'OK'                
+                    html = `<button id="btn_${this.rows.length-1}" class="tbl-btn">${op}</button>`
+                    break;                      
                 default:
                   html = obj[arr[0]] != null ? obj[arr[0]] :''
             }            

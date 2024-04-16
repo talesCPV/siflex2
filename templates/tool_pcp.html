@@ -6,8 +6,13 @@
             padding: 0 10px;
         }
 
+        table{
+            font-size: 0.8em;
+        }
+
         th{
             text-align: center;
+            padding: 0;
         }
 
         #btnPrint{
@@ -39,6 +44,38 @@
             width: 0;
         }
 
+        .tbl-btn{
+            border-radius: 50%;
+            font-size: 1.3em;
+            font-weight: 10;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .frm-pcp{
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .left-panel, .rigth-panel{
+            width: 100%;
+            max-width: 584px;
+        }
+
+        .left-panel fieldset, .rigth-panel fieldset{
+            height: 100%;
+        }
+
+        .rigth-panel fieldset{
+            min-height: 600px;
+        }
+
+
 
         @media all and (max-width : 768px) {
 
@@ -58,24 +95,21 @@
   
         <h1>Planejamento e Controle de Produção</h1>
 
-        <fieldset class="setor">
-            <legend>Setores</legend>
-            <table id="tblSetor"></table>
-        </fieldset>
+            <fieldset>
+                <legend id="lgdSem">Semana</legend>
+                <div class="inline">
+                    <label for="edtSem">Semana</label>
+                    <input type="date" id="edtSem">
+                    <button id="btnBusca" class="btn-round" ><span class="mdi mdi-magnify"></span></button>        
+                </div>
+                <table id="tblSetor"></table>
+            </fieldset>
 
-
-        <fieldset>
-            <legend id="lgdSem">Semana</legend>
-
-            <div class="inline">
-                <label for="edtSem">Semana</label>
-                <input type="date" id="edtSem">
-                <button id="btnBusca" class="btn-round" ><span class="mdi mdi-magnify"></span></button>
-
-            </div>
             <table id="tblPCP"></table>
-            <button id="btnPrint">Imprimir</button>
-        </fieldset>
+        <button id="btnPrint">Imprimir</button>
+
+
+
 
 
 </template>
@@ -98,19 +132,22 @@
             params.value = "'%%'"
         const myPromisse = queryDB(params,'ADM-1');
         myPromisse.then((resolve)=>{
-            const json = JSON.parse(resolve)         
-            const id_setor = []
-            for(let i=0; i<pageData.setores.length; i++){
-                id_setor.push(pageData.setores[i].id)
-            }
+            const json = JSON.parse(resolve)
+    
             for(let i=0; i<json.length;i++){
-                json[i].sel = id_setor.includes(json[i].id) ? 0 : 1
-                json[i].ord = i
-                tbl.plot(json[i],'ord|ckb,sel|ckb,nome','btn ↑,ckb,Upp')
-                if(i>0){
-                    
+                const index = pageData.setores.findIndex(p => p.id === json[i].id)
+                if(index >=0){
+                    json[i].sel = pageData.setores[index].sel ? 0 : 1
+                    json[i].ord = pageData.setores[index].ord
+                }else{
+                    json[i].sel = 1
+                    json[i].ord = i
                 }
-            }         
+
+                tbl.plot(json[i],'ord|ckb,sel|ckb,nome','btn ↑,ckb,Upp')
+                
+            }   
+            sortTable()
         });
     }
 
@@ -118,9 +155,11 @@
         const week = new Date(pageScreen.querySelector('#edtSem').value)
         tbl.innerHTML = ''
         let head = 'Dia'
-            for(let i=0; i<pageData.setores.length; i++){
+        for(let i=0; i<pageData.setores.length; i++){
+            if(pageData.setores[i].sel){
                 head+=`,${pageData.setores[i].nome}`
-            }        
+            }
+        }        
         tbl.head(head)
         week.change(-week.getDay()+1)
         pageScreen.querySelector('#lgdSem').innerHTML = `Semana de ${week.getFormatBR()}`
@@ -133,15 +172,19 @@
             row.data = new Object
             row.data.day = new Date(week.getFormatDate())
             row.data.day.change()
-            for(let j=0; j<5; j++){
+            for(let j=0; j<=pageData.setores.length; j++){
                 const td = document.createElement('td')
                 if(j==0){
                     td.innerHTML =   `${week.getDate().toString().padStart(2,0)}/${(week.getMonth()+1).toString().padStart(2,0)} ${dia[i]}` 
                     td.classList = i<5 ? 'day-name' : 'day-name week-end'
+                    row.appendChild(td)
                 }else{
                     td.innerHTML =  ''
+                    if(pageData.setores[j-1].sel){
+                        row.appendChild(td)
+                    }
                 }
-                row.appendChild(td)
+                
             }
             tbl.appendChild(row)
             week.change()
@@ -196,12 +239,10 @@
     })
 
     pageScreen.querySelector('#tblSetor').addEventListener('click',(e)=>{
-
-
         if(e.target.type!='checkbox'){
             if(e.target.type!='submit'){
                 const ckb = e.target.parentNode.childNodes[1].childNodes[0]
-                ckb.checked = !ckb.checked
+                ckb.checked = !ckb.checked                
             }else{
                 const row = e.target.parentNode.parentNode
                 if(row.rowIndex > 0){
@@ -218,16 +259,31 @@
         const tbl = pageScreen.querySelector('#tblSetor')
         pageData.setores = []
         for(let i=0; i<tbl.rows.length; i++){
-            if(tbl.rows[i].cells[1].childNodes[0].checked ){
+            tbl.rows[i].data.sel = tbl.rows[i].cells[1].childNodes[0].checked
+//            if(tbl.rows[i].cells[1].childNodes[0].checked ){
                 pageData.setores.push(tbl.rows[i].data)
-            }
+//            }
         }
         setConfig('pcp' , JSON.stringify(pageData.setores))   
     })
 
+    function sortTable(){
+        const rows = pageScreen.querySelector('#tblSetor').rows
+        for(let i=0;  i<rows.length; i++){
+            for(let j=rows.length-1; j>i; j--){
+                let rowindex = rows[j].rowIndex
+                if(Number(rows[j].data.ord) < Number(rows[j-1].data.ord)){
+                    rows[rowindex].parentNode.insertBefore(rows[rowindex], rows[rowindex-1]);
+                }else{
+                    rowindex--
+                }
+            }
+        }
+    }
+
     getConfig('pcp')
     .then((response)=>{
-        pageData.setores  = response=='' ? {nome:[],id:[],ord:[]} : JSON.parse(JSON.parse(response))     
+        pageData.setores  = response=='' ? [] : JSON.parse(JSON.parse(response))     
         pageFunc.fillSetor()
     })
 
