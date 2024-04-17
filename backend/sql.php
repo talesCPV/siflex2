@@ -66,7 +66,8 @@
         "SERV-2" => 'CALL sp_del_serv_exec(@access,@hash,x00);', // ID
 
         /* TOOLS */
-        "TOOL-0" => 'CALL sp_view_pcp(@access, @hash, "x00");',
+        "TOOL-0" => 'CALL sp_view_pcp(@access, @hash, "x00");', // data
+        "TOOL-1" => 'CALL sp_set_pcp(@access, @hash, "x00",x01,"x02");', // data, id_setor, valor
 
 
     );
