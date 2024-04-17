@@ -17,6 +17,13 @@
 
         #btnPrint{
             display: none;
+            font-size: 1.7em;
+            gap: 10px;
+            justify-content: center;
+            width: 200px;
+            height: 50px;
+            min-width: unset;
+            border-radius: 25px;
         }
 
         .day-name{
@@ -80,6 +87,10 @@
             color: rgb(250, 243, 243);
         }
 
+        #tblSetor{
+            display: none;
+        }
+
         @media all and (max-width : 768px) {
 
             td{
@@ -103,16 +114,17 @@
                 <div class="inline">
                     <label for="edtSem">Semana</label>
                     <input type="date" id="edtSem">
-                    <button id="btnBusca" class="btn-round" ><span class="mdi mdi-magnify"></span></button>        
+                    <button id="btnBusca" class="btn-round" ><span class="mdi mdi-magnify"></span></button>  
+                    <button id="btnShow" class="btn-round"><span class="mdi mdi-account-details"></span></button>
                 </div>
                 <table id="tblSetor"></table>
             </fieldset>
 
             <table id="tblPCP"></table>
             <div class="line">
-                <button id="btnPrint">Imprimir</button>
+                <button id="btnPrint" class="btn-round"><span class="mdi mdi-printer"></span></button>
             </div>
-        
+            
 
 </template>
 <script>
@@ -135,7 +147,7 @@
         const myPromisse = queryDB(params,'ADM-1');
         myPromisse.then((resolve)=>{
             const json = JSON.parse(resolve)
-    
+            tbl.innerHTML = '<tr><th colspan="3">SETORES</th></tr>'
             for(let i=0; i<json.length;i++){
                 const index = pageData.setores.findIndex(p => p.id === json[i].id)
                 if(index >=0){
@@ -216,14 +228,18 @@
             if(resolve.trim() != ""){
                 const json = JSON.parse(resolve)    
                 for(let i=0; i<json.length;i++){
-                    looking = pageScreen.querySelector(`#day-${json[i].data_serv}-${json[i].id_setor}`)
-                    if(looking != undefined ){
-                        looking.innerHTML = json[i].valor
-                        pageScreen.querySelector('#btnPrint').style.display = 'block'
-                    }
+                    pageFunc.refresh(json[i])       
                 }                
             }        
         })
+    }
+
+    pageFunc.refresh = (json)=>{
+        looking = pageScreen.querySelector(`#day-${json.data_serv}-${json.id_setor}`)
+        if(looking != undefined ){
+            looking.innerHTML = json.valor
+            pageScreen.querySelector('#btnPrint').style.display = 'flex'
+        }
     }
 
     pageScreen.querySelector('#btnBusca').addEventListener('click',()=>{
@@ -233,25 +249,16 @@
     pageScreen.querySelector('#edtSem').addEventListener('change',()=>{
         pageFunc.viewWeek()       
     })
-/*
-    tbl.addEventListener('click',(e)=>{
 
-        const rowindex = e.target.parentNode.rowIndex
-
-        console.log(e.target.cellIndex)
-        console.log(e.target.data)
-
-        if(rowindex>0){
-            data = e.target.parentNode.data      
-            data.mode = 'viewPCP'
-            data.dayweek = e.target.parentNode.cells[0].innerHTML
-//            console.log(data)
+    pageScreen.querySelector('#btnShow').addEventListener('click',()=>{
+        const tbl = pageScreen.querySelector('#tblSetor')
+        if (tbl.style.display != "inline-table") {
+            tbl.style.display = "inline-table";
+        } else {
+            tbl.style.display = "none";
         }
-
-
-//        openHTML('tool_view_PCP.html','pop-up','Programação de Produção',data)
     })
-*/
+
     pageScreen.querySelector('#btnPrint').addEventListener('click',()=>{
         print_pcp(pageScreen.querySelector('#tblPCP').rows)
     })
@@ -276,7 +283,7 @@
 
         const tbl = pageScreen.querySelector('#tblSetor')
         pageData.setores = []
-        for(let i=0; i<tbl.rows.length; i++){
+        for(let i=1; i<tbl.rows.length; i++){
             tbl.rows[i].data.sel = tbl.rows[i].cells[1].childNodes[0].checked
 //            if(tbl.rows[i].cells[1].childNodes[0].checked ){
                 pageData.setores.push(tbl.rows[i].data)
@@ -287,7 +294,7 @@
 
     function sortTable(){
         const rows = pageScreen.querySelector('#tblSetor').rows
-        for(let i=0;  i<rows.length; i++){
+        for(let i=1;  i<rows.length; i++){
             for(let j=rows.length-1; j>i; j--){
                 let rowindex = rows[j].rowIndex
                 if(Number(rows[j].data.ord) < Number(rows[j-1].data.ord)){

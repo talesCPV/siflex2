@@ -33,26 +33,12 @@ function print_etq(data){
 
 function print_pcp(tbl){
 
-    function grid(){
-        line(37)
-        line(27,'v',37,5)
-        line(92,'v',37,5)
-        line(157,'v',37,5)
-        line(222,'v',37,5)
-        line(70.6)
-        line(104.2)
-        line(137.8)
-        line(171.4)
-    }
-
     doc = new jsPDF({
         orientation: 'landscape',
         format: 'a4'
     })  
 
     clearTxt(10,10,[297,210])
-    frame()
-    grid()
     header_pdf(4,10)
    
     doc.setFontSize(45)
@@ -60,27 +46,44 @@ function print_pcp(tbl){
     doc.setFontSize(12)
     doc.text(`de ${tbl[1].data.day.getFormatBR()} a ${tbl[7].data.day.getFormatBR()}`, 186,28);
   
- // TEXT
-    const x = [12,30,95,160,225]
-    const y = [20,40.6,74.2,107.8,141.4,175]
-    let y_
-    doc.setFontSize(12)
-    doc.setFont(undefined, 'normal')
-    for(let row=0; row<tbl.length-2; row++){
-        txt.y = 10 
-        for(let cel=0; cel<tbl[row].cells.length;cel++){
-            if(row == 0||cel == 0){
-                doc.setFont(undefined, 'bold')
-                doc.setFontSize(14)
-                y_ = 15
-            }else{
-                doc.setFont(undefined, 'normal')
-                doc.setFontSize(8)
-                y_ = 0
-            }
-            box(tbl[row].cells[cel].innerHTML, x[cel],y[row]+y_,60,1,false)
+    txt.y = 30
+
+    const head = []
+    const body = []
+
+    for(let y=0; y<tbl.length; y++){
+        const row =[]
+        for(let x=0; x<tbl[y].cells.length; x++){           
+            row.push(tbl[y].cells[x].innerHTML)
         }
+
+        y==0 ? head.push(row) : body.push(row)
     }
+
+    doc.autoTable({
+        head: head,
+        body: body,
+
+        columnStyles: {
+            0: {cellWidth: 3,
+                fontSize: 10}
+        },
+        
+        styles :{fontSize: 10},
+        startY: txt.y,
+        theme: 'grid',
+        headStyles: {
+            fillColor: [46, 128, 186],
+            minCellHeight:5,
+            halign: 'center'
+        },
+        bodyStyles: {
+            fontSize: 8,
+            minCellHeight: 22,
+            halign: 'center',
+            valign: 'center'
+        }        
+    });
 
     doc.save('pcp.pdf')
 }

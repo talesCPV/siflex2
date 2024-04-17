@@ -24,11 +24,12 @@
     document.querySelector('#btnSave').addEventListener('click',()=>{
 
         const params = new Object;
-            params.dt = pageData.data
+            params.data_serv = pageData.data
             params.id_setor = pageData.id
             params.valor = pageScreen.querySelector('#edtPCP').value.trim()
         const myPromisse = queryDB(params,'TOOL-1');
         myPromisse.then((resolve)=>{
+            main_data.tool_pcp.func.refresh(params)
             closeModal('tool_view_PCP')
         })
 
