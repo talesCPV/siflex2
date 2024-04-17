@@ -27,7 +27,7 @@
     const pageFunc = main_data.usr_viewAgenda.func
     const pageScreen = document.querySelector('#card-usr_viewAgenda')
 
-    pageScreen.querySelector('#txtSchedule').value = pageScreen.querySelector('#'+pageData.data).innerHTML.trim()
+    pageScreen.querySelector('#txtSchedule').value = pageData.innerHTML.trim()
     pageScreen.querySelector('#txtSchedule').focus()
     pageScreen.querySelector('#btnSalvar').addEventListener('click',()=>{
     
@@ -46,9 +46,10 @@
 
         const resp = queryDB(params,'CAL-1')
         resp.then((resolve)=>{
-            pageScreen.querySelector('#'+pageData.data).innerHTML = text
-            pageScreen.querySelector('#'+pageData.data).parentNode.style.background = color
-            pageScreen.querySelector('#'+pageData.data).parentNode.style.color = font
+            const div = document.querySelector('#dia-'+pageData.data)
+            div.innerHTML = text
+            div.parentNode.style.background = color
+            div.parentNode.style.color = font
             closeModal('usr_viewAgenda')
         }); 
 

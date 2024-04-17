@@ -193,8 +193,8 @@
             for(let y=0; y<6; y++){
             const div = document.createElement('div');
             div.classList.add("daysquare");
-            div.id = String(day.getDate()).padStart(2, '0')+'/'+String((day.getMonth()+1)).padStart(2, '0');
-            div.innerHTML = div.id +`<div class="dayText" id='${day.getFormatDate()}'></div>`;
+            div.id = String(day.getDate()).padStart(2, '0')+'/'+String((day.getMonth()+1)).padStart(2, '0')
+            div.innerHTML = String(day.getDate()).padStart(2, '0')+'/'+String((day.getMonth()+1)).padStart(2, '0') +`<div class="dayText" id='dia-${day.getFormatDate()}'></div>`;
             div.innerHTML;
             if(day.getMonth() == mes.value){
                 div.style = 'background : #F3F3F3;'
@@ -232,9 +232,9 @@
 
         myPromisse.then((resolve)=>{
             if(resolve.trim() != ""){
-                const json = JSON.parse(resolve);                
+                const json = JSON.parse(resolve);     
                 for(let i=0; i<json.length; i++){
-                    const square = pageScreen.querySelector('#'+json[i].data_agd.substr(0,10));
+                    const square = pageScreen.querySelector('#dia-'+json[i].data_agd.substr(0,10));
                     square.innerHTML = json[i].obs;
                     square.title = json[i].obs;
                     square.parentNode.style.background = "#f8f693"

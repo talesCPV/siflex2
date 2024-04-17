@@ -35,3 +35,7 @@
 12/04/2024 19:57 tales@flexibus.com.br : Menu Alterado (PCP, tool_pcp.html, pop-up, PCP)
 16/04/2024 20:31 tales@flexibus.com.br : Alteracao de nome de Setor (EQUIPE DE FRENTE -> FRENTE)
 17/04/2024 14:47 tales@flexibus.com.br : Menu Alterado (Setores, adm_setores.html, pop-up, Setores)
+17/04/2024 20:11 tales@flexibus.com.br : Menu Alterado (Cargos, adm_cargos.html, pop-up, Cargos)
+17/04/2024 20:35 tales@flexibus.com.br : Inclusao de Feriado: 01/05 - DIA DO TRABALHO
+17/04/2024 21:01 tales@flexibus.com.br : Funcionario Editado J.BAZILIO -> J.BAZILIO
+17/04/2024 21:02 tales@flexibus.com.br : Funcionario Editado GABRIEL LUIZ PEREIRA -> GABRIEL LUIZ PEREIRA

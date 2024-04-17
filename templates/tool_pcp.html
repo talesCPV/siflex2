@@ -189,11 +189,15 @@
                 const td = document.createElement('td')
                 if(j==0){
                     td.innerHTML =   `${dia[i]} ${week.getDate().toString().padStart(2,0)}/${(week.getMonth()+1).toString().padStart(2,0)}` 
-                    td.classList = i<5 ? 'day-name' : 'day-name week-end'
+                    td.classList = 'day-name' 
+
+                    const feriados = pageData.feriados.filter(e => e.mes === (week.getMonth()+1).toString())
+                    const he = feriados.filter(e => e.dia === (week.getDate()).toString())
+                    td.classList.add( i>4 || he.length > 0 ? 'week-end' : null)
+
                     row.appendChild(td)
                 }else{                    
                     if(pageData.setores[j-1].sel){
-                   
                         const data = new Object
                             data.nome = pageData.setores[j-1].nome
                             data.data = week.getFormatDate()
@@ -242,6 +246,12 @@
         }
     }
 
+    pageFunc.feriados = ()=>{
+        queryDB({},'ADM-6').then((resolve)=>{
+            pageData.feriados = JSON.parse(resolve)
+        })
+    }
+
     pageScreen.querySelector('#btnBusca').addEventListener('click',()=>{
         pageFunc.viewWeek()
     })
@@ -264,6 +274,9 @@
     })
 
     pageScreen.querySelector('#tblSetor').addEventListener('click',(e)=>{
+        const tbl = pageScreen.querySelector('#tblSetor')
+        pageData.setores = []
+
         if(e.target.type!='checkbox'){
             if(e.target.type!='submit'){
                 const ckb = e.target.parentNode.childNodes[1].childNodes[0]
@@ -277,34 +290,30 @@
                     rows[row.rowIndex-1].data.ord = aux
                     rows[row.rowIndex].parentNode.insertBefore(rows[row.rowIndex], rows[row.rowIndex-1]);
                 }
-                
             }
         }
 
-        const tbl = pageScreen.querySelector('#tblSetor')
-        pageData.setores = []
         for(let i=1; i<tbl.rows.length; i++){
             tbl.rows[i].data.sel = tbl.rows[i].cells[1].childNodes[0].checked
-//            if(tbl.rows[i].cells[1].childNodes[0].checked ){
-                pageData.setores.push(tbl.rows[i].data)
-//            }
+            pageData.setores.push(tbl.rows[i].data)
         }
-        setConfig('pcp' , JSON.stringify(pageData.setores))   
+
+        setConfig('pcp' , JSON.stringify(pageData.setores))
     })
 
     function sortTable(){
         const rows = pageScreen.querySelector('#tblSetor').rows
         for(let i=1;  i<rows.length; i++){
             for(let j=rows.length-1; j>i; j--){
-                let rowindex = rows[j].rowIndex
+                const rowindex = rows[j].rowIndex
                 if(Number(rows[j].data.ord) < Number(rows[j-1].data.ord)){
                     rows[rowindex].parentNode.insertBefore(rows[rowindex], rows[rowindex-1]);
-                }else{
-                    rowindex--
                 }
             }
         }
     }
+
+    pageFunc.feriados()
 
     getConfig('pcp')
     .then((response)=>{

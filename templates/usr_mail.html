@@ -187,9 +187,9 @@
 
             for(let i=0; i<json.length; i++){        
                 const opt = document.createElement('option')
-                opt.data = json[i]
+                opt.data = json[i]       
                 opt.style["font-weight"] = json[i].nao_lida=='0' ? 'lighter' : 'bold'
-                opt.innerHTML = json[i].data.date()+' '+json[i].data.time()+' '+(send ? json[i].de : json[i].para) + ' - ' + json[i].txt.substring(0,60)
+                opt.innerHTML = json[i].data.date()+' '+json[i].data.time()+' '+(send ? json[i].mail_from : json[i].mail_to) + ' - ' + json[i].txt.substring(0,60)
                 mail.appendChild(opt)
             }
             send ? checkUserMail() : null
