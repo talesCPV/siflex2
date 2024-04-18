@@ -1,7 +1,15 @@
 <template>
     <style>
-
+        table{
+            font-size: 0.8em;
+            line-height: 10px;
+            color: rgb(47, 79, 79);
+        }
      
+        td,th {
+            text-align: center;
+            border: 1px solid #dddddd;
+        }
     </style>
   
     <fieldset class="fds-busca relogio">
@@ -48,17 +56,15 @@
         const params = new Object;
             params.inicio = pageScreen.querySelector('#edtIni').value
             params.final = pageScreen.querySelector('#edtFin').value
-            params.func = func
-            
-        const myPromisse = queryDB(params,'REL-0');
+            params.func = func         
+        const myPromisse = queryDB(params,'REL-0')
         myPromisse.then((resolve)=>{
-            const json = JSON.parse(resolve)   
-console.log(json)         
-            makeCalendar()
-            for(let i=0; i<json.length;i++){
-//                console.log(json[i])
-            }         
-        });
+            const json = JSON.parse(resolve)
+            for(let i=0; i<pageData.funcionarios.length; i++){
+                pageData.funcionarios[i].horas = json.filter(obj => obj.id_func == pageData.funcionarios[i].id)
+            }      
+            makeCalendar()       
+        })
     }
 
     pageFunc.fillFunc = ()=>{      
@@ -70,15 +76,16 @@ console.log(json)
             params.ativo = pageScreen.querySelector('#ckbAtv').checked ? 1 : 0                      
         const myPromisse = queryDB(params,'FUN-0');
         myPromisse.then((resolve)=>{
-            const json = JSON.parse(resolve)
-console.log(json)
+            const json = JSON.parse(resolve)  
+//console.log(json)
+            pageData.funcionarios = json
             let func_id = ''
-            const func = []
+            
             for(let i=0; i<json.length;i++){
                 func_id += (i!=0 ? ',' : '') + json[i].id
-                func.push(json[i].nome.split(' ')[0])
+//                func.push(json[i].nome.split(' ')[0])
             }   
-            makeCalendar(func)
+
             pageFunc.fillRelogio(func_id)
         });
     }
@@ -89,8 +96,10 @@ console.log(json)
         pageScreen.querySelector('#edtFin').value = `${today.getFullYear()}-${(month+1).toString().padStart(2, "0")}-25`
     }
 
-    function makeCalendar(func){
-console.log(func)        
+    function makeCalendar(){
+
+        const tbl = pageScreen.querySelector('#tblRelogio')
+        tbl.innerHTML = ''
         const td_ini = new Date(pageScreen.querySelector('#edtIni').value)
         td_ini.change()
         const td_fin = new Date(pageScreen.querySelector('#edtFin').value)
@@ -98,17 +107,32 @@ console.log(func)
 
         const range = ((td_fin - td_ini) / 86400000) +1
 
+        const head_1 = document.createElement('tr')
+        const head_2 = document.createElement('tr')
+        head_1.innerHTML = '<th colspan="2"></th>'
+        head_2.innerHTML = '<th colspan="2">DATA</th>'
+        let cell = ''
+        for(let i=0; i<pageData.funcionarios.length; i++){
+            head_1.innerHTML += `<th colspan="2">${pageData.funcionarios[i].nome.split(' ')[0]}</th>`
+            head_2.innerHTML += '<th>Ent.</th><th>Sai.</th>'
+            cell   += `<td class="ent-${pageData.funcionarios[i].id}"></td><td class="sai-${pageData.funcionarios[i].id}"></td>`
+        }
+        tbl.appendChild(head_1)
+        tbl.appendChild(head_2)
 
         for(let i=0; i<range; i++){
-            const dt = td_ini.getFullYear()+'-'+(td_ini.getMonth()+1).toString().padStart(2,0)+'-'+td_ini.getDate().toString().padStart(2,0)
-//            console.log(dt)
+            const tr = document.createElement('tr')
+            tr.classList = 'row-'+td_ini.getFormatDate()
 
-            
+            if(td_ini<today){
+                console.log(td_ini.getFormatBR())
+            }
 
-
+            tr.innerHTML = `<th>${td_ini.getFormatBR()}</th><th>${td_ini.getWeekDay()}</th>${cell}` 
+            tbl.appendChild(tr)
             td_ini.change()
         }
-
+  
     }
 
 
