@@ -10,6 +10,11 @@
             text-align: center;
             border: 1px solid #dddddd;
         }
+
+        .weekend {
+            background-color: #fac4c7 !important;
+        }
+
     </style>
   
     <fieldset class="fds-busca relogio">
@@ -51,6 +56,11 @@
     const pageFunc = main_data.rh_relogio_ponto.func
     const pageScreen = document.querySelector('#card-rh_relogio_ponto')
 
+    pageFunc.feriados = ()=>{
+        queryDB({},'ADM-6').then((resolve)=>{
+            pageData.feriados = JSON.parse(resolve)
+        })
+    }
 
     pageFunc.fillRelogio = (func)=>{      
         const params = new Object;
@@ -67,7 +77,7 @@
         })
     }
 
-    pageFunc.fillFunc = ()=>{      
+    pageFunc.fillFunc = ()=>{
         const query = getVal('relogio')
         const params = new Object;
             params.field = query[0]
@@ -91,6 +101,7 @@
     }
 
     function startPage(){
+        pageFunc.feriados()
         const month = (today.getDate() <= 25 ? today.getMonth() : today.getMonth()+1)
         pageScreen.querySelector('#edtIni').value = `${today.getFullYear()}-${month.toString().padStart(2, "0")}-26`
         pageScreen.querySelector('#edtFin').value = `${today.getFullYear()}-${(month+1).toString().padStart(2, "0")}-25`
@@ -111,11 +122,9 @@
         const head_2 = document.createElement('tr')
         head_1.innerHTML = '<th colspan="2"></th>'
         head_2.innerHTML = '<th colspan="2">DATA</th>'
-        let cell = ''
         for(let i=0; i<pageData.funcionarios.length; i++){
             head_1.innerHTML += `<th colspan="2">${pageData.funcionarios[i].nome.split(' ')[0]}</th>`
             head_2.innerHTML += '<th>Ent.</th><th>Sai.</th>'
-            cell   += `<td class="ent-${pageData.funcionarios[i].id}"></td><td class="sai-${pageData.funcionarios[i].id}"></td>`
         }
         tbl.appendChild(head_1)
         tbl.appendChild(head_2)
@@ -124,10 +133,17 @@
             const tr = document.createElement('tr')
             tr.classList = 'row-'+td_ini.getFormatDate()
 
-            if(td_ini<today){
-                console.log(td_ini.getFormatBR())
+            const ent = ['Sab','Dom'].includes(td_ini.getWeekDay()) || td_ini>=today ? '00:00' : '07:00'
+            const sai = ['Sab','Dom'].includes(td_ini.getWeekDay()) || td_ini>=today ? '00:00' :  td_ini.getWeekDay() == 'Sex' ? '16:00' : '17:00'
+            let cell = ''
+            for(let j=0; j<pageData.funcionarios.length; j++){
+                cell   += `<td class="ent-${pageData.funcionarios[j].id}">${ent}</td><td class="sai-${pageData.funcionarios[j].id}">${sai}</td>`
             }
 
+            const feriados = pageData.feriados.filter(e => e.mes === (td_ini.getMonth()+1).toString())
+            const he = feriados.filter(e => e.dia === (td_ini.getDate()).toString())
+
+            tr.classList.add(['Sab','Dom'].includes(td_ini.getWeekDay()) ||  he.length > 0 ?'weekend':'workday')
             tr.innerHTML = `<th>${td_ini.getFormatBR()}</th><th>${td_ini.getWeekDay()}</th>${cell}` 
             tbl.appendChild(tr)
             td_ini.change()
