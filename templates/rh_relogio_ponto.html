@@ -20,8 +20,13 @@
             color: #c8dce4;
         }
 
-        td[class*='ent']:hover, td[class*='sai']:hover, td[class*='ent']:hover + td, td[class*='sai']:hover,  td:has(+ td[class*='sai']:hover){
-            background-color: yellow;
+        td[class*='ent']:hover, td[class*='sai']:hover,
+        td[class*='ent']:hover + td, 
+        td[class*='sai']:hover,  
+        td:has(+ td[class*='sai']:hover), 
+        tr:has(td:hover),
+        table:has(td:hover)  > tr:has(th[class*='func-11']) > th[class*='func-']{
+            background-color: yellow !important;
             color: black;
         }
 
@@ -132,7 +137,7 @@
         head_1.innerHTML = '<th colspan="2"></th>'
         head_2.innerHTML = '<th colspan="2">DATA</th>'
         for(let i=0; i<pageData.funcionarios.length; i++){
-            head_1.innerHTML += `<th colspan="2">${pageData.funcionarios[i].nome.split(' ')[0]}</th>`
+            head_1.innerHTML += `<th colspan="2" class="func-${pageData.funcionarios[i].id}">${pageData.funcionarios[i].nome.split(' ')[0]}</th>`
             head_2.innerHTML += '<th>Ent.</th><th>Sai.</th>'
         }
         tbl.appendChild(head_1)
@@ -147,19 +152,23 @@
             tr.classList.add(['Sab','Dom'].includes(td_ini.getWeekDay()) ||  he.length > 0 ?'weekend':'workday')
             tr.innerHTML = `<th>${td_ini.getFormatBR()}</th><th>${td_ini.getWeekDay()}</th>`
 
-            function add_td(id_func,classname='ent'){                
+            function add_td(func,classname='ent'){
                 const td = document.createElement('td')
-                td.id_func = id_func
+                td.id_func = func.id
+                td.dt_ent = td_ini.getFormatDate()
+                td.dt_sai = td_ini.getFormatDate()
                 td.classList = classname
                 td.innerHTML = classname=='ent' ? tr.classList.contains('weekend') || td_ini>=today ? '00:00' : '07:00' : tr.classList.contains('weekend') || td_ini>=today ? '00:00' :  td_ini.getWeekDay() == 'Sex' ? '16:00' : '17:00'
                 td.addEventListener('click',(e)=>{
                     const obj = new Object                    
                     obj.data = e.target.parentNode.dt
                     obj.id_func = e.target.id_func
-                    obj.ent = e.target.cellIndex%2 ? e.target.parentNode.cells[e.target.cellIndex-1].innerHTML : e.target.parentNode.cells[e.target.cellIndex].innerHTML
-                    obj.sai = e.target.cellIndex%2 ? e.target.parentNode.cells[e.target.cellIndex].innerHTML : e.target.parentNode.cells[e.target.cellIndex+1].innerHTML
-                    console.log(obj)
-// chamar openHTML aqui !!!
+                    obj.hr_ent = e.target.cellIndex%2 ? e.target.parentNode.cells[e.target.cellIndex-1].innerHTML : e.target.parentNode.cells[e.target.cellIndex].innerHTML
+                    obj.hr_sai = e.target.cellIndex%2 ? e.target.parentNode.cells[e.target.cellIndex].innerHTML : e.target.parentNode.cells[e.target.cellIndex+1].innerHTML
+                    obj.dt_ent = e.target.cellIndex%2 ? e.target.parentNode.cells[e.target.cellIndex-1].dt_ent : e.target.parentNode.cells[e.target.cellIndex].dt_ent
+                    obj.dt_sai = e.target.cellIndex%2 ? e.target.parentNode.cells[e.target.cellIndex].dt_sai : e.target.parentNode.cells[e.target.cellIndex+1].dt_sai
+                    closeModal('rh_add_relogio_ponto')
+                    openHTML('rh_add_relogio_ponto.html','pop-up',`${func.nome} - ${obj.data.date()}`,obj,600)
                 })
 
                 return td
@@ -167,8 +176,8 @@
 
             for(let j=0; j<pageData.funcionarios.length; j++){
 
-                tr.appendChild(add_td(pageData.funcionarios[j].id,'ent'))
-                tr.appendChild(add_td(pageData.funcionarios[j].id,'sai'))
+                tr.appendChild(add_td(pageData.funcionarios[j],'ent'))
+                tr.appendChild(add_td(pageData.funcionarios[j],'sai'))
             }
 
             tbl.appendChild(tr)
@@ -188,6 +197,8 @@
 
                 cell_ent.innerHTML = he.hr_ent.substr(0,5)
                 cell_sai.innerHTML = he.hr_sai.substr(0,5)
+                cell_ent.dt_ent = he.dt_ent
+                cell_sai.dt_sai = he.dt_sai
                 
                 cell_ent.data = he
 

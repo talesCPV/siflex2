@@ -1,0 +1,49 @@
+<template>
+    <style>
+
+     
+    </style>
+  
+    <fieldset>
+        <legend>Horas</legend>
+        <div class="inline">
+            <label for="hrEnt">Entrada</label>
+            <input type="time" id="hrEnt">
+            <input type="date" id="dtEnt">
+        </div>
+        <div class="inline">
+            <label for="hrSai">Saída</label>
+            <input type="time" id="hrSai">
+            <input type="date" id="dtSai">
+        </div>
+        <div class="line">
+            <button id="btnSave">Salvar</button>
+        </div>
+
+    </fieldset>
+
+
+</template>
+<script>
+    const pageData = main_data.rh_add_relogio_ponto.data
+    const pageFunc = main_data.rh_add_relogio_ponto.func
+    const pageScreen = document.querySelector('#card-rh_add_relogio_ponto')
+
+    pageScreen.querySelector('#hrEnt').value =  pageData.hr_ent
+    pageScreen.querySelector('#dtEnt').value =  pageData.dt_ent
+    pageScreen.querySelector('#hrSai').value =  pageData.hr_sai
+    pageScreen.querySelector('#dtSai').value =  pageData.dt_sai
+
+    pageScreen.querySelector('#btnSave').addEventListener('click',()=>{
+        const params = new Object        
+            params.entrada = pageScreen.querySelector('#dtEnt').value+' '+pageScreen.querySelector('#hrEnt').value+':00'
+            params.saida = pageScreen.querySelector('#dtSai').value+' '+pageScreen.querySelector('#hrSai').value+':00'
+            params.id_func = ''
+        const myPromisse = queryDB(params,'REL-1')
+        myPromisse.then((resolve)=>{
+            
+        })
+    })
+
+
+</script>

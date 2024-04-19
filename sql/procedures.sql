@@ -879,3 +879,21 @@ DELIMITER $$
 	END $$
 DELIMITER ;
 
+ DROP PROCEDURE sp_set_relogio_ponto;
+DELIMITER $$
+	CREATE PROCEDURE sp_set_relogio_ponto(
+		IN Iallow varchar(80),
+		IN Ihash varchar(64),
+        IN Ient datetime,
+        IN Isai datetime,
+        IN Iid_func int(11)
+    )
+BEGIN
+		CALL sp_allow(Iallow,Ihash);
+		IF(@allow)THEN
+			SET @id = (SELECT IF(COUNT(*) = 0,"DEFAULT",id) AS id FROM tb_hora_extra WHERE DATE(entrada) = DATE(Ient) AND id_func = Iid_func);
+			INSERT INTO tb_pcp_2 (id,id_func,entrada,saida) VALUES (@id,Iid_func,Ient,Isai)
+			ON DUPLICATE KEY UPDATE entrada=Ient, saida=Isai;
+        END IF;
+	END $$
+	DELIMITER ;

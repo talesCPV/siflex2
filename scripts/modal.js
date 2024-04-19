@@ -174,9 +174,10 @@ function closeModal(id='all'){
         }
     }else{
         id = (id=='')? mod_main.querySelectorAll('.modal').length-1 : id    
-//        mod_main.querySelector('#modal-'+id).remove()
-        mod_main.querySelector('#card-'+id).remove()
-        delete main_data[id]
+        try{
+            mod_main.querySelector('#card-'+id).remove()
+            delete main_data[id]    
+        }catch{ null }
     }
     mod_main.style.display = (document.querySelectorAll('.modal-content').length < 1) ? "none" : 'block'
     main_data.dashboard.up_page = ''

@@ -54,6 +54,7 @@
 
         /* RELOGIO DE PONTO */
         "REL-0"  => 'CALL sp_view_relogio_ponto(@access,@hash,"x00","x01","x02");', // DATA INICIO, DATA FINAL,FUNC
+        "REL-1"  => 'CALL sp_set_relogio_ponto(@access,@hash,"x00","x01",x02);', // Entrada, Saída. Id_func
 
         /* ANÁLISE DE FROTA */
         "ANA-0" => 'CALL sp_view_analise_frota(@access,@hash,"x00","x01","x02","x03","x04","x05");', // FIELD,SIGNAL, VALUE, EXEC, DT_INI, DT_FIN
