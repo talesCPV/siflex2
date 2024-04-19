@@ -20,6 +20,12 @@
             color: #c8dce4;
         }
 
+        td[class*='ent']:hover, td[class*='sai']:hover, td[class*='ent']:hover + td, td[class*='sai']:hover,  td:has(+ td[class*='sai']:hover){
+            background-color: yellow;
+            color: black;
+        }
+
+
     </style>
   
     <fieldset class="fds-busca relogio">
@@ -92,13 +98,11 @@
         const myPromisse = queryDB(params,'FUN-0');
         myPromisse.then((resolve)=>{
             const json = JSON.parse(resolve)  
-//console.log(json)
             pageData.funcionarios = json
             let func_id = ''
             
             for(let i=0; i<json.length;i++){
                 func_id += (i!=0 ? ',' : '') + json[i].id
-//                func.push(json[i].nome.split(' ')[0])
             }   
 
             pageFunc.fillRelogio(func_id)
@@ -134,26 +138,39 @@
         tbl.appendChild(head_1)
         tbl.appendChild(head_2)
 
-        console.log(document.styleSheets[document.styleSheets.length-1])
-
         for(let i=0; i<range; i++){
-            const tr = document.createElement('tr')
-            tr.id = 'row-'+td_ini.getFormatDate()
-
-            const ent = ['Sab','Dom'].includes(td_ini.getWeekDay()) || td_ini>=today ? '00:00' : '07:00'
-            const sai = ['Sab','Dom'].includes(td_ini.getWeekDay()) || td_ini>=today ? '00:00' :  td_ini.getWeekDay() == 'Sex' ? '16:00' : '17:00'
-            let cell = ''
-            for(let j=0; j<pageData.funcionarios.length; j++){
-                cell   += `<td class="cell-${i}_${j} ent-${pageData.funcionarios[j].id}">${ent}</td><td class="cell-${i}_${j} sai-${pageData.funcionarios[j].id}">${sai}</td>`
-//                document.styleSheets[document.styleSheets.length-1].addRule(`.cell-${i}_${j}:hover ~ .cell-${i}_${j}{background-color: yellow;}`);
-            }
-
-
             const feriados = pageData.feriados.filter(e => e.mes === (td_ini.getMonth()+1).toString())
             const he = feriados.filter(e => e.dia === (td_ini.getDate()).toString())
-
+            const tr = document.createElement('tr')
+            tr.id = 'row-'+td_ini.getFormatDate()
+            tr.dt = td_ini.getFormatDate()
             tr.classList.add(['Sab','Dom'].includes(td_ini.getWeekDay()) ||  he.length > 0 ?'weekend':'workday')
-            tr.innerHTML = `<th>${td_ini.getFormatBR()}</th><th>${td_ini.getWeekDay()}</th>${cell}` 
+            tr.innerHTML = `<th>${td_ini.getFormatBR()}</th><th>${td_ini.getWeekDay()}</th>`
+
+            function add_td(id_func,classname='ent'){                
+                const td = document.createElement('td')
+                td.id_func = id_func
+                td.classList = classname
+                td.innerHTML = classname=='ent' ? tr.classList.contains('weekend') || td_ini>=today ? '00:00' : '07:00' : tr.classList.contains('weekend') || td_ini>=today ? '00:00' :  td_ini.getWeekDay() == 'Sex' ? '16:00' : '17:00'
+                td.addEventListener('click',(e)=>{
+                    const obj = new Object                    
+                    obj.data = e.target.parentNode.dt
+                    obj.id_func = e.target.id_func
+                    obj.ent = e.target.cellIndex%2 ? e.target.parentNode.cells[e.target.cellIndex-1].innerHTML : e.target.parentNode.cells[e.target.cellIndex].innerHTML
+                    obj.sai = e.target.cellIndex%2 ? e.target.parentNode.cells[e.target.cellIndex].innerHTML : e.target.parentNode.cells[e.target.cellIndex+1].innerHTML
+                    console.log(obj)
+// chamar openHTML aqui !!!
+                })
+
+                return td
+            }
+
+            for(let j=0; j<pageData.funcionarios.length; j++){
+
+                tr.appendChild(add_td(pageData.funcionarios[j].id,'ent'))
+                tr.appendChild(add_td(pageData.funcionarios[j].id,'sai'))
+            }
+
             tbl.appendChild(tr)
             td_ini.change()
         }
@@ -176,13 +193,7 @@
 
                 cell_ent.classList.add('hora-extra')
                 cell_sai.classList.add('hora-extra')
-
-
-
-console.log(he)
-
-                 
-
+// Calcular horas aqui !!
             }
         }
 
@@ -191,7 +202,6 @@ console.log(he)
 
 
     pageScreen.querySelector('#btnBusca').addEventListener('click',()=>{
-//        pageFunc.fillRelogio()
         pageFunc.fillFunc()
         
     })
