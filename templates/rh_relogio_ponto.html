@@ -11,6 +11,10 @@
             border: 1px solid #dddddd;
         }
 
+        .tb-horas{
+            display: none;
+        }
+
         .weekend {
             background-color: #fac4c7 !important;
         }
@@ -36,7 +40,11 @@
     <fieldset class="fds-busca relogio">
         <legend>Busca</legend>
         <div class="inline">
-            <label for="edtBusca">por:</label>
+
+            <div class="line-ckb">
+                <label for="ckbAtv">Ativo</label>
+                <input type="checkbox" id="ckbAtv" checked>
+            </div>  
             <select id="cmbBusca">
                 <option value="nome" signal="LIKE">Nome</option>
                 <option value="cargo" signal="LIKE">Cargo</option>
@@ -44,12 +52,10 @@
                 <option value="horista" signal="=" val="1" selected>Horista</option>
                 <option value="horista" signal="=" val="0">Mensalista</option>
             </select>
+           
             <input type="text" id="edtBusca" onkeypress="return getEnter(event, 'btnBusca')">
             <button id="btnBusca" class="btn-round" ><span class="mdi mdi-magnify"></span></button>
-            <div class="line-ckb">
-                <label for="ckbAtv">Ativo</label>
-                <input type="checkbox" id="ckbAtv" checked>
-            </div>  
+ 
         </div>
         <div class="inline fdata">
             <label for="ckbData">entre:</label>
@@ -59,8 +65,8 @@
         </div>
     </fieldset>  
 
-    <fieldset class="calendar">
-        <legend>Dias</legend>
+    <fieldset class="tb-horas">
+        <legend>Horas</legend>
         <table id="tblRelogio"></table>
     </fieldset>
 
@@ -102,7 +108,7 @@
             params.ativo = pageScreen.querySelector('#ckbAtv').checked ? 1 : 0                      
         const myPromisse = queryDB(params,'FUN-0');
         myPromisse.then((resolve)=>{
-            const json = JSON.parse(resolve)  
+            const json = JSON.parse(resolve)            
             pageData.funcionarios = json
             let func_id = ''
             
@@ -163,12 +169,14 @@
                     const obj = new Object                    
                     obj.data = e.target.parentNode.dt
                     obj.id_func = e.target.id_func
-                    obj.hr_ent = e.target.cellIndex%2 ? e.target.parentNode.cells[e.target.cellIndex-1].innerHTML : e.target.parentNode.cells[e.target.cellIndex].innerHTML
-                    obj.hr_sai = e.target.cellIndex%2 ? e.target.parentNode.cells[e.target.cellIndex].innerHTML : e.target.parentNode.cells[e.target.cellIndex+1].innerHTML
-                    obj.dt_ent = e.target.cellIndex%2 ? e.target.parentNode.cells[e.target.cellIndex-1].dt_ent : e.target.parentNode.cells[e.target.cellIndex].dt_ent
-                    obj.dt_sai = e.target.cellIndex%2 ? e.target.parentNode.cells[e.target.cellIndex].dt_sai : e.target.parentNode.cells[e.target.cellIndex+1].dt_sai
+                    obj.ent = e.target.cellIndex%2 ? e.target.parentNode.cells[e.target.cellIndex-1] : e.target.parentNode.cells[e.target.cellIndex]
+                    obj.sai = e.target.cellIndex%2 ? e.target.parentNode.cells[e.target.cellIndex] : e.target.parentNode.cells[e.target.cellIndex+1]
+//                    obj.hr_ent = e.target.cellIndex%2 ? e.target.parentNode.cells[e.target.cellIndex-1].innerHTML : e.target.parentNode.cells[e.target.cellIndex].innerHTML
+//                    obj.hr_sai = e.target.cellIndex%2 ? e.target.parentNode.cells[e.target.cellIndex].innerHTML : e.target.parentNode.cells[e.target.cellIndex+1].innerHTML
+//                    obj.dt_ent = e.target.cellIndex%2 ? e.target.parentNode.cells[e.target.cellIndex-1].dt_ent : e.target.parentNode.cells[e.target.cellIndex].dt_ent
+//                    obj.dt_sai = e.target.cellIndex%2 ? e.target.parentNode.cells[e.target.cellIndex].dt_sai : e.target.parentNode.cells[e.target.cellIndex+1].dt_sai
                     closeModal('rh_add_relogio_ponto')
-                    openHTML('rh_add_relogio_ponto.html','pop-up',`${func.nome} - ${obj.data.date()}`,obj,600)
+                    openHTML('rh_add_relogio_ponto.html','pop-up',`${func.nome} - ${obj.data.date()}`,obj,500)
                 })
 
                 return td
@@ -184,6 +192,8 @@
             td_ini.change()
         }
   
+        pageScreen.querySelector('.tb-horas').style.display =  pageData.funcionarios.length > 0 ? 'block' : 'none'
+
         for(let i=0; i<pageData.funcionarios.length; i++){
             for(let j=0; j<pageData.funcionarios[i].horas.length; j++){                
                 const he = pageData.funcionarios[i].horas[j]

@@ -1,6 +1,9 @@
 <template>
     <style>
-
+        .add-he{
+            width: auto !important;
+            cursor: pointer;
+        }
      
     </style>
   
@@ -8,16 +11,17 @@
         <legend>Horas</legend>
         <div class="inline">
             <label for="hrEnt">Entrada</label>
-            <input type="time" id="hrEnt">
-            <input type="date" id="dtEnt">
+            <input class="add-he" type="time" id="hrEnt" onfocusout="fillTime(this)">
+            <input class="add-he" type="date" id="dtEnt" >
         </div>
         <div class="inline">
             <label for="hrSai">Saída</label>
-            <input type="time" id="hrSai">
-            <input type="date" id="dtSai">
+            <input class="add-he" type="time" id="hrSai" onfocusout="fillTime(this)">
+            <input class="add-he" type="date" id="dtSai" >
         </div>
         <div class="line">
             <button id="btnSave">Salvar</button>
+            <button id="btnDel">Limpar</button>
         </div>
 
     </fieldset>
@@ -29,20 +33,43 @@
     const pageFunc = main_data.rh_add_relogio_ponto.func
     const pageScreen = document.querySelector('#card-rh_add_relogio_ponto')
 
-    pageScreen.querySelector('#hrEnt').value =  pageData.hr_ent
-    pageScreen.querySelector('#dtEnt').value =  pageData.dt_ent
-    pageScreen.querySelector('#hrSai').value =  pageData.hr_sai
-    pageScreen.querySelector('#dtSai').value =  pageData.dt_sai
+    pageScreen.querySelector('#hrEnt').value =  pageData.ent.innerHTML
+    pageScreen.querySelector('#dtEnt').value =  pageData.ent.dt_ent
+    pageScreen.querySelector('#hrSai').value =  pageData.sai.innerHTML
+    pageScreen.querySelector('#dtSai').value =  pageData.sai.dt_sai
 
     pageScreen.querySelector('#btnSave').addEventListener('click',()=>{
         const params = new Object        
             params.entrada = pageScreen.querySelector('#dtEnt').value+' '+pageScreen.querySelector('#hrEnt').value+':00'
             params.saida = pageScreen.querySelector('#dtSai').value+' '+pageScreen.querySelector('#hrSai').value+':00'
-            params.id_func = ''
+            params.id_func = pageData.id_func
         const myPromisse = queryDB(params,'REL-1')
         myPromisse.then((resolve)=>{
-            
+            pageData.ent.classList.add('hora-extra')
+            pageData.ent.innerHTML = pageScreen.querySelector('#hrEnt').value 
+            pageData.ent.dt_ent = pageScreen.querySelector('#dtEnt').value
+            pageData.sai.classList.add('hora-extra')
+            pageData.sai.innerHTML = pageScreen.querySelector('#hrSai').value
+            pageData.sai.dt_sai = pageScreen.querySelector('#dtSai').value
+            closeModal('rh_add_relogio_ponto')
         })
+    })
+
+    pageScreen.querySelector('#btnDel').addEventListener('click',()=>{
+        if(confirm('Deseja Limpar este evento?')){
+            const params = new Object        
+                params.entrada = pageScreen.querySelector('#dtEnt').value
+                params.id_func = pageData.id_func
+            const myPromisse = queryDB(params,'REL-2')
+            myPromisse.then((resolve)=>{
+                pageData.ent.classList.remove('hora-extra')
+                pageData.ent.innerHTML = '00:00' 
+                pageData.sai.classList.remove('hora-extra')
+                pageData.sai.innerHTML = '00:00'
+                closeModal('rh_add_relogio_ponto')
+            })
+        }
+
     })
 
 
