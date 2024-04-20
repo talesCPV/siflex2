@@ -27,9 +27,10 @@
         td[class*='ent']:hover, td[class*='sai']:hover,
         td[class*='ent']:hover + td, 
         td[class*='sai']:hover,  
-        td:has(+ td[class*='sai']:hover), 
+        td:has(+ td[class*='sai']:hover),
+/*        table:has(td:hover)  > tr:has(th[class*='func']) > th[class*='func'], */
         tr:has(td:hover),
-        table:has(td:hover)  > tr:has(th[class*='func-11']) > th[class*='func-']{
+        .mark{
             background-color: yellow !important;
             color: black;
         }
@@ -58,8 +59,6 @@
  
         </div>
         <div class="inline fdata">
-            <label for="ckbData">entre:</label>
-            <input type="checkbox" id="ckbData" checked>
             <input type="date" id="edtIni" onkeypress="return getEnter(event, 'btnBusca')">
             <input type="date" id="edtFin" onkeypress="return getEnter(event, 'btnBusca')">
         </div>
@@ -171,14 +170,16 @@
                     obj.id_func = e.target.id_func
                     obj.ent = e.target.cellIndex%2 ? e.target.parentNode.cells[e.target.cellIndex-1] : e.target.parentNode.cells[e.target.cellIndex]
                     obj.sai = e.target.cellIndex%2 ? e.target.parentNode.cells[e.target.cellIndex] : e.target.parentNode.cells[e.target.cellIndex+1]
-//                    obj.hr_ent = e.target.cellIndex%2 ? e.target.parentNode.cells[e.target.cellIndex-1].innerHTML : e.target.parentNode.cells[e.target.cellIndex].innerHTML
-//                    obj.hr_sai = e.target.cellIndex%2 ? e.target.parentNode.cells[e.target.cellIndex].innerHTML : e.target.parentNode.cells[e.target.cellIndex+1].innerHTML
-//                    obj.dt_ent = e.target.cellIndex%2 ? e.target.parentNode.cells[e.target.cellIndex-1].dt_ent : e.target.parentNode.cells[e.target.cellIndex].dt_ent
-//                    obj.dt_sai = e.target.cellIndex%2 ? e.target.parentNode.cells[e.target.cellIndex].dt_sai : e.target.parentNode.cells[e.target.cellIndex+1].dt_sai
                     closeModal('rh_add_relogio_ponto')
                     openHTML('rh_add_relogio_ponto.html','pop-up',`${func.nome} - ${obj.data.date()}`,obj,500)
                 })
 
+                td.addEventListener('mouseover',(e)=>{
+                    tbl.rows[0].cells[Math.floor((e.target.cellIndex)/2)].classList.add('mark')
+                })
+                td.addEventListener('mouseout',(e)=>{
+                    tbl.rows[0].cells[Math.floor((e.target.cellIndex)/2)].classList.remove('mark')
+                })
                 return td
             }
 
@@ -215,10 +216,29 @@
                 cell_ent.classList.add('hora-extra')
                 cell_sai.classList.add('hora-extra')
 // Calcular horas aqui !!
+
+                he.hr_normal = 0
+                he.hr_extra = 0
+                he.hr_ad_not = 0
+                he.hr_ad_not_ext = 0
+                he.faltas = 0
+
+                const dt_ent = new Date(he.entrada)
+                const dt_sai = new Date(he.saida)
+                const hr_trab = ((dt_sai.getTime()-dt_ent.getTime())/3600000) -1
+                console.log(dt_ent.getFormatBR())
+                console.log(hr_trab)
+
+
+                const feriado = pageData.feriados.filter(e => e.mes === (dt_ent.getMonth()+1).toString()).filter(f => f.dia === (dt_ent.getDate()).toString()).length
+
+                he.hr_normal = ([0,6].includes(dt_ent.getDay()) || feriado) ? 0 : dt_ent.getDay() == 5 ? 8 : 9
+                console.log(he.hr_normal)
+
+//                console.log(dt.getFormatBR() + (feriado ? ' Feriado' : ' Dia Normal'))
+
             }
         }
-
-
     }
 
 
