@@ -24,6 +24,10 @@
             color: #c8dce4;
         }
 
+        .falta{
+            background-color: #e06454 ;
+    
+        }
         td[class*='ent']:hover, td[class*='sai']:hover,
         td[class*='ent']:hover + td, 
         td[class*='sai']:hover,  
@@ -94,7 +98,7 @@
             for(let i=0; i<pageData.funcionarios.length; i++){
                 pageData.funcionarios[i].horas = json.filter(obj => obj.id_func == pageData.funcionarios[i].id)
             }      
-            makeCalendar()       
+            pageFunc.makeCalendar()       
         })
     }
 
@@ -119,14 +123,7 @@
         });
     }
 
-    function startPage(){
-        pageFunc.feriados()
-        const month = (today.getDate() <= 25 ? today.getMonth() : today.getMonth()+1)
-        pageScreen.querySelector('#edtIni').value = `${today.getFullYear()}-${month.toString().padStart(2, "0")}-26`
-        pageScreen.querySelector('#edtFin').value = `${today.getFullYear()}-${(month+1).toString().padStart(2, "0")}-25`
-    }
-
-    function makeCalendar(){
+    pageFunc.makeCalendar =()=>{
 
         const tbl = pageScreen.querySelector('#tblRelogio')
         tbl.innerHTML = ''
@@ -192,7 +189,7 @@
             tbl.appendChild(tr)
             td_ini.change()
         }
-  
+
         pageScreen.querySelector('.tb-horas').style.display =  pageData.funcionarios.length > 0 ? 'block' : 'none'
 
         for(let i=0; i<pageData.funcionarios.length; i++){
@@ -215,32 +212,42 @@
 
                 cell_ent.classList.add('hora-extra')
                 cell_sai.classList.add('hora-extra')
-// Calcular horas aqui !!
-
-                he.hr_normal = 0
-                he.hr_extra = 0
-                he.hr_ad_not = 0
-                he.hr_ad_not_ext = 0
-                he.faltas = 0
+        // Calcular horas aqui !!
 
                 const dt_ent = new Date(he.entrada)
                 const dt_sai = new Date(he.saida)
-                const hr_trab = ((dt_sai.getTime()-dt_ent.getTime())/3600000) -1
-                console.log(dt_ent.getFormatBR())
-                console.log(hr_trab)
-
-
                 const feriado = pageData.feriados.filter(e => e.mes === (dt_ent.getMonth()+1).toString()).filter(f => f.dia === (dt_ent.getDate()).toString()).length
+                const hr_trab = ((dt_sai.getTime()-dt_ent.getTime())/3600000) - (((dt_sai.getTime()-dt_ent.getTime())/3600000) > 6 ? 1 : 0)
 
                 he.hr_normal = ([0,6].includes(dt_ent.getDay()) || feriado) ? 0 : dt_ent.getDay() == 5 ? 8 : 9
-                console.log(he.hr_normal)
+                he.hr_extra = hr_trab > he.hr_normal ? hr_trab - he.hr_normal : 0
+                he.faltas = hr_trab < he.hr_normal ? he.hr_normal - hr_trab : 0
+                he.hr_ad_not = 0
+                he.hr_ad_not_ext = 0
 
-//                console.log(dt.getFormatBR() + (feriado ? ' Feriado' : ' Dia Normal'))
+                if(he.faltas){
+                    cell_ent.classList.add('falta')
+                    cell_sai.classList.add('falta')
+                }
 
+
+                console.log('Data:'+dt_ent.getFormatBR())
+                console.log('Horas Trabalhadas:'+hr_trab)
+                console.log('Horas Normais:'+he.hr_normal)
+                console.log('Horas Extras:'+he.hr_extra)
+                console.log('Adicional Noturno:'+he.hr_ad_not)
+                console.log('HE + AD NOT:'+he.hr_ad_not_ext)
+                console.log('Faltas:'+he.faltas)
             }
         }
     }
 
+    function startPage(){
+        pageFunc.feriados()
+        const month = (today.getDate() <= 25 ? today.getMonth() : today.getMonth()+1)
+        pageScreen.querySelector('#edtIni').value = `${today.getFullYear()}-${month.toString().padStart(2, "0")}-26`
+        pageScreen.querySelector('#edtFin').value = `${today.getFullYear()}-${(month+1).toString().padStart(2, "0")}-25`
+    }
 
     pageScreen.querySelector('#btnBusca').addEventListener('click',()=>{
         pageFunc.fillFunc()

@@ -33,6 +33,8 @@
     const pageFunc = main_data.rh_add_relogio_ponto.func
     const pageScreen = document.querySelector('#card-rh_add_relogio_ponto')
 
+    console.log(`Registro de Hora Deletado: ${pageScreen.querySelector('.modal-title').querySelector('p').innerHTML.split(' - ')[0]} Entrada: ${pageData.ent.dt_ent.date()} as ${pageData.ent.innerHTML}, Saída: ${pageData.sai.dt_sai.date()} as ${pageData.sai.innerHTML}`)
+
     pageScreen.querySelector('#hrEnt').value =  pageData.ent.innerHTML
     pageScreen.querySelector('#dtEnt').value =  pageData.ent.dt_ent
     pageScreen.querySelector('#hrSai').value =  pageData.sai.innerHTML
@@ -44,28 +46,22 @@
             params.saida = pageScreen.querySelector('#dtSai').value+' '+pageScreen.querySelector('#hrSai').value+':00'
             params.id_func = pageData.id_func
         const myPromisse = queryDB(params,'REL-1')
-        myPromisse.then((resolve)=>{
-            pageData.ent.classList.add('hora-extra')
-            pageData.ent.innerHTML = pageScreen.querySelector('#hrEnt').value 
-            pageData.ent.dt_ent = pageScreen.querySelector('#dtEnt').value
-            pageData.sai.classList.add('hora-extra')
-            pageData.sai.innerHTML = pageScreen.querySelector('#hrSai').value
-            pageData.sai.dt_sai = pageScreen.querySelector('#dtSai').value
+        myPromisse.then((resolve)=>{         
+            setLog(`Novo Registro de Hora: ${pageScreen.querySelector('.modal-title').querySelector('p').innerHTML.split(' - ')[0]} Entrada: ${pageScreen.querySelector('#dtEnt').value.date()} as ${pageScreen.querySelector('#hrEnt').value}, Saída: ${pageScreen.querySelector('#dtSai').value.date()} as ${pageScreen.querySelector('#hrSai').value}`)
+            main_data.rh_relogio_ponto.func.fillFunc()
             closeModal('rh_add_relogio_ponto')
         })
     })
 
     pageScreen.querySelector('#btnDel').addEventListener('click',()=>{
-        if(confirm('Deseja Limpar este evento?')){
+        if(confirm('Deseja limpar este registro?')){
             const params = new Object        
                 params.entrada = pageScreen.querySelector('#dtEnt').value
                 params.id_func = pageData.id_func
             const myPromisse = queryDB(params,'REL-2')
             myPromisse.then((resolve)=>{
-                pageData.ent.classList.remove('hora-extra')
-                pageData.ent.innerHTML = '00:00' 
-                pageData.sai.classList.remove('hora-extra')
-                pageData.sai.innerHTML = '00:00'
+                setLog(`Registro de Hora Deletado: ${pageScreen.querySelector('.modal-title').querySelector('p').innerHTML.split(' - ')[0]} Entrada: ${pageData.ent.dt_ent.date()} as ${pageData.ent.innerHTML}, Saída: ${pageData.sai.dt_sai.date()} as ${pageData.sai.innerHTML}`)         
+                main_data.rh_relogio_ponto.func.fillFunc()
                 closeModal('rh_add_relogio_ponto')
             })
         }
