@@ -1,7 +1,5 @@
 <?php
 
-
-
     if (IsSet($_POST["cod"]) && IsSet($_POST["params"]) && IsSet($_POST["access"]) && IsSet($_POST["hash"])){
 
         include_once "connect.php";
@@ -50,7 +48,6 @@
 	    $conexao->close();        
 
         print json_encode($rows);
-
     }
 
 ?>
