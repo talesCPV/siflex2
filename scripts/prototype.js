@@ -84,6 +84,18 @@ Date.prototype.getFormatBR = function(){
     return (`${this.getDate().toString().padStart(2,'0')}/${(this.getMonth()+1).toString().padStart(2,'0')}/${this.getFullYear()}`)
 }
 
+Date.prototype.tomorrow = function(){
+    const tmw = new Date(this)
+        tmw.change(1)
+        return  tmw.getFormatDate()
+}
+
+Date.prototype.yesterday = function(){
+    const tmw = new Date(this)
+        tmw.change(-1)
+        return  tmw.getFormatDate()
+}
+
 Date.prototype.getFullHour = function(){
     return (`${this.getHours().toString().padStart(2,'0')}:${this.getMinutes().toString().padStart(2,'0')}:${this.getSeconds().toString().padStart(2,'0')}`)
 }
