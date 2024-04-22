@@ -17,6 +17,7 @@ then
     git add templates/
     git add index.html
     git add commit.sh
+    git add teste.html
 
     git commit -m "by_script"
 

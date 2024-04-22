@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>teste</title>
+    <style>
+
+        .frm, .panel{
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 10px;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .frm div{
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+        }
+
+        .frm div label{
+            min-width: 100px;
+        }
+
+        button{
+            padding: 10px;
+            max-width: 310px;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <div class="frm">
+        <div>
+            <label for="edt_dt_ini">Entrada</label>
+            <input type="date" id="edt_dt_ini" value="2024-04-03">    
+            <input type="time" id="edt_hr_ini" value="07:00">
+        </div>
+        <div>
+            <label for="edt_dt_fin">Saída</label>
+            <input type="date" id="edt_dt_fin" value="2024-04-03">    
+            <input type="time" id="edt_hr_fin" value="17:00">    
+        </div>
+        <div>
+            <label for="ckb_alm">Almoço</label>
+            <input type="checkbox" id="ckb_alm" checked>
+            <button id="btn_calc">Calcular</button>
+        </div>
+        
+    </div>
+
+    <div class="panel">
+
+    </div>
+
+</body>
+<script>
+
+    const dia = new Object
+    const panel = document.querySelector('.panel')
+
+    function formatTime(tm){
+        return(parseFloat((tm).toFixed(2)))
+    }
+
+    function adn_not(dt_ini, dt_fin){
+        
+    }
+
+    document.querySelector('#btn_calc').addEventListener('click',()=>{
+
+        const dt_ini = new Date(document.querySelector('#edt_dt_ini').value +' '+document.querySelector('#edt_hr_ini').value)
+        const dt_fin = new Date(document.querySelector('#edt_dt_fin').value +' '+document.querySelector('#edt_hr_fin').value)
+        const almoco = document.querySelector('#ckb_alm').checked
+
+
+        const HN = [0,6].includes(dt_ini.getDay()) ? 0 : dt_ini.getDay()==5 ? 8 : 9
+        const HT = formatTime((dt_fin-dt_ini)/3600000) -  (almoco ? 1 : 0)
+        const HE = HT > HN ? formatTime(HT-HN) : 0
+        const Faltas = HT > HN ? 0 : formatTime(HN-HT)
+        let AN = 0
+        if(dt_ini.getHours() >= 22 || dt_ini.getHours() <= 6){
+
+        }
+
+
+        panel.innerHTML = `Horas Trabalhadas : ${HT}<br>
+                           Horas Normais : ${HN}<br>
+                           Horas Extra : ${HE}<br>
+                           Adiconal Noturno : ${0}<br>
+                           H. Extra + Adn Not : ${0}<br>
+                           Faltas : ${Faltas}<br>`
+
+    })
+
+</script>
+</html>
