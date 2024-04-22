@@ -56,6 +56,10 @@ String.prototype.time = function(){
 Date.prototype.change = function(N=1){
     this.setDate(this.getDate()+N)
  }
+
+Date.prototype.addHour = function(N=1){
+    this.setHours(this.getHours()+N)
+}
  
 Date.prototype.addMin = function(N=1){
     this.setTime(this.getTime() + N*60000)

@@ -48,3 +48,8 @@
 21/04/2024 03:45 tales@flexibus.com.br : Registro de Hora Deletado: LUCIMAR DIAS CALIXTO DA SILVA Entrada: 23/04/2024 as 07:00, Saida: 23/04/2024 as 15:00
 21/04/2024 03:50 tales@flexibus.com.br : Novo Registro de Hora: LUCIMAR DIAS CALIXTO DA SILVA Entrada: 23/04/2024 as undefined, Saida: 23/04/2024 as 12:30
 21/04/2024 03:50 tales@flexibus.com.br : Registro de Hora Deletado: LUCIMAR DIAS CALIXTO DA SILVA Entrada: 23/04/2024 as 07:00, Saida: 23/04/2024 as 12:30
+22/04/2024 19:39 tales@flexibus.com.br : Novo Registro de Hora: ONDINA DE FATIMA SOUSA Entrada: 19/04/2024 as 07:00, Saida: 19/04/2024 as 17:00
+22/04/2024 19:39 tales@flexibus.com.br : Novo Registro de Hora: ONDINA DE FATIMA SOUSA Entrada: 19/04/2024 as 07:00, Saida: 19/04/2024 as 15:00
+22/04/2024 19:40 tales@flexibus.com.br : Novo Registro de Hora: ONDINA DE FATIMA SOUSA Entrada: 19/04/2024 as 07:00, Saida: 19/04/2024 as 23:00
+22/04/2024 19:52 tales@flexibus.com.br : Novo Registro de Hora: ONDINA DE FATIMA SOUSA Entrada: 19/04/2024 as 07:00, Saida: 19/04/2024 as 15:00
+22/04/2024 19:53 tales@flexibus.com.br : Registro de Hora Deletado: ONDINA DE FATIMA SOUSA Entrada: 19/04/2024 as 07:00, Saida: 19/04/2024 as 15:00

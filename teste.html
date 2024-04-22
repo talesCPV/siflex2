@@ -65,51 +65,75 @@
     const dia = new Object
     const panel = document.querySelector('.panel')
 
-    function formatTime(tm){
-        return(parseFloat((tm).toFixed(2)))
-    }
+    function count_hour(dt_ini, dt_fin, vac=0, almoco=1){
 
-    function adn_not(dt_ini, dt_fin){
-        let adn = 0
-        let point = new Date(dt_ini.getFullDateTime())
-
-        while (point < dt_fin){
-
-            if(point.getHours() < 6 || point.getHours() >= 22){
-                const next = new Date( (point.getHours() < 6 ? point.getFormatDate() : point.tomorrow()) +' 06:00:00')
-                adn += (next < dt_fin ? next : dt_fin) - point
-                point = next
-            }else{
-                point = new Date(point.getFormatDate() +' 22:00:00')
-            }
+        const out = new Object
+        
+        function formatTime(tm){
+            return(parseFloat((tm).toFixed(2)))
         }
-        return adn/3600000
+
+        function adn_not(dt_ini, dt_fin){
+            let adn = 0
+            let point = new Date(dt_ini.getFullDateTime())
+
+            while (point < dt_fin){
+
+                if(point.getHours() < 6 || point.getHours() >= 22){
+                    const next = new Date( (point.getHours() < 6 ? point.getFormatDate() : point.tomorrow()) +' 06:00:00')
+                    adn += (next < dt_fin ? next : dt_fin) - point
+                    point = next
+                }else{
+                    point = new Date(point.getFormatDate() +' 22:00:00')
+                }
+            }
+            return formatTime(adn/3600000)
+        }
+
+        out.HN = (vac || [0,6].includes(dt_ini.getDay())) ? 0 : dt_ini.getDay()==5 ? 8 : 9
+        out.HT = formatTime((dt_fin-dt_ini)/3600000) - almoco
+        out.Faltas = out.HT > out.HN ? 0 : formatTime(out.HN - out.HT)
+        out.Almoco = almoco
+        const only_HE = new Date(dt_ini)
+        only_HE.addHour(out.HN + almoco)
+        out.HE_ADN = adn_not(only_HE,dt_fin)
+        out.ADN = adn_not(dt_ini,dt_fin) - out.HE_ADN
+        out.HE = out.HT > out.HN ? formatTime(out.HT - out.HN - out.HE_ADN) : 0
+
+        return out
     }
+
+
+
+
+
 
     document.querySelector('#btn_calc').addEventListener('click',()=>{
 
         const dt_ini = new Date(document.querySelector('#edt_dt_ini').value +' '+document.querySelector('#edt_hr_ini').value)
         const dt_fin = new Date(document.querySelector('#edt_dt_fin').value +' '+document.querySelector('#edt_hr_fin').value)
-        const almoco = document.querySelector('#ckb_alm').checked
+        const almoco = document.querySelector('#ckb_alm').checked ? 1 : 0
 
-
+/*
 
         const HN = [0,6].includes(dt_ini.getDay()) ? 0 : dt_ini.getDay()==5 ? 8 : 9
-        const HT = formatTime((dt_fin-dt_ini)/3600000) -  (almoco ? 1 : 0)
-        const HE = HT > HN ? formatTime(HT-HN) : 0
-        const ADN = adn_not(dt_ini,dt_fin)
+        const HT = formatTime((dt_fin-dt_ini)/3600000) -  almoco
         const Faltas = HT > HN ? 0 : formatTime(HN-HT)
-        let AN = 0
-        if(dt_ini.getHours() >= 22 || dt_ini.getHours() <= 6){
+        const only_HE = new Date(dt_ini)
+        only_HE.addHour(HN+almoco)
+        const HE_ADN = adn_not(only_HE,dt_fin)
+        const HE = HT > HN ? formatTime(HT - HN - HE_ADN) : 0
+        const ADN = adn_not(dt_ini,dt_fin) - HE_ADN
+ */
+        const he = count_hour(dt_ini, dt_fin, vac=0, alm=almoco)
+//        console.log(he)
 
-        }
-
-        panel.innerHTML = `Horas Trabalhadas : ${HT}<br>
-                           Horas Normais : ${HN}<br>
-                           Horas Extra : ${HE}<br>
-                           Adiconal Noturno : ${ADN}<br>
-                           H. Extra + Adn Not : ${0}<br>
-                           Faltas : ${Faltas}<br>`
+        panel.innerHTML = `Horas Trabalhadas : ${he.HT}<br>
+                           Horas Normais : ${he.HN}<br>
+                           Horas Extra : ${he.HE}<br>
+                           Adiconal Noturno : ${he.ADN}<br>
+                           H. Extra + Adn Not : ${he.HE_ADN}<br>
+                           Faltas : ${he.Faltas}<br>`
 
     })
 

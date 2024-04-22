@@ -33,8 +33,6 @@
     const pageFunc = main_data.rh_add_relogio_ponto.func
     const pageScreen = document.querySelector('#card-rh_add_relogio_ponto')
 
-    console.log(`Registro de Hora Deletado: ${pageScreen.querySelector('.modal-title').querySelector('p').innerHTML.split(' - ')[0]} Entrada: ${pageData.ent.dt_ent.date()} as ${pageData.ent.innerHTML}, Saída: ${pageData.sai.dt_sai.date()} as ${pageData.sai.innerHTML}`)
-
     pageScreen.querySelector('#hrEnt').value =  pageData.ent.innerHTML
     pageScreen.querySelector('#dtEnt').value =  pageData.ent.dt_ent
     pageScreen.querySelector('#hrSai').value =  pageData.sai.innerHTML
