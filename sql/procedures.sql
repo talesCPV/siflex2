@@ -848,6 +848,116 @@ DELIMITER $$
 	END $$
 	DELIMITER ;
 
+ DROP PROCEDURE sp_view_pcp;
+DELIMITER $$
+	CREATE PROCEDURE sp_view_pcp(
+		IN Iallow varchar(80),
+		IN Ihash varchar(64),
+        IN Idt date
+    )
+	BEGIN
+		CALL sp_allow(Iallow,Ihash);
+		IF(@allow)THEN
+			SET @ini = (SELECT IF(dayofweek(Idt) = 1,DATE_ADD(Idt, INTERVAL -6 DAY),DATE_ADD(Idt, INTERVAL 2-dayofweek(Idt) DAY)));
+			SET @fin = (SELECT IF(dayofweek(Idt) = 1,Idt,DATE_ADD(Idt, INTERVAL 8-dayofweek(Idt) DAY)));        
+			SELECT * FROM tb_pcp_2 WHERE data_serv BETWEEN @ini AND @fin ORDER BY data_serv; 
+		ELSE
+			SELECT 0 AS id, "" AS nome;
+        END IF;
+	END $$
+	DELIMITER ;
+
+ DROP PROCEDURE sp_set_pcp;
+DELIMITER $$
+	CREATE PROCEDURE sp_set_pcp(
+		IN Iallow varchar(80),
+		IN Ihash varchar(64),
+        IN Idt date,
+        IN Iid_setor int(11),
+        IN Ivalor varchar(300)
+    )
+BEGIN
+		CALL sp_allow(Iallow,Ihash);
+		IF(@allow)THEN
+			IF(Ivalor = "")THEN
+				DELETE FROM tb_pcp_2 WHERE data_serv = Idt AND id_setor = Iid_setor;
+            ELSE
+				INSERT INTO tb_pcp_2 (data_serv, id_setor,valor) VALUES (Idt,Iid_setor,Ivalor)
+				ON DUPLICATE KEY UPDATE valor=Ivalor;
+            END IF;
+        END IF;
+	END $$
+	DELIMITER ;
+
+/* COTAÇÕES */
+
+ DROP PROCEDURE sp_view_cotacao;
+DELIMITER $$
+	CREATE PROCEDURE sp_view_cotacao(
+		IN Iallow varchar(80),
+		IN Ihash varchar(64),
+		IN Ifield varchar(30),
+        IN Isignal varchar(4),
+		IN Ivalue varchar(50),
+        IN Idt_ini date,
+        IN Idt_fin date
+    )
+	BEGIN
+		CALL sp_allow(Iallow,Ihash);
+		IF(@allow)THEN
+
+			SET @quer =CONCAT('SELECT COT.*, ITN.id_prod            
+								FROM vw_cotacoes AS COT 
+								LEFT JOIN vw_cot_itens AS ITN 
+                                ON COT.id = ITN.id_ped 
+                                WHERE ',Ifield,' ',Isignal,' ',Ivalue,' 
+                                AND data_ped BETWEEN "',Idt_ini,'" 
+                                AND "',Idt_fin,'" 
+                                ORDER BY data_ped;');
+			PREPARE stmt1 FROM @quer;
+			EXECUTE stmt1;
+		ELSE
+			SELECT 0 AS id, "" AS nome;
+        END IF;
+	END $$
+	DELIMITER ;
+
+ DROP PROCEDURE sp_set_pedido;
+DELIMITER $$
+	CREATE PROCEDURE sp_set_pedido(
+		IN Iallow varchar(80),
+		IN Ihash varchar(64),
+        IN Iid_ped int(11),
+        IN Iid_emp int(11),
+        IN Idata_ped date,
+        IN Idata_ent date,
+        IN Iresp varchar(30),
+        IN Icomp varchar(30),
+        IN Inum_ped varchar(60),
+        IN Istatus varchar(7),
+        IN Idesconto double,
+        IN Icond_pgto varchar(300),
+        IN Iobs varchar(300)
+    )
+	BEGIN
+		CALL sp_allow(Iallow,Ihash);
+		IF(@allow)THEN
+			IF(Inum_ped="")THEN
+				SET @pedido = (SELECT CONCAT(SUBSTRING(CURDATE(),3,2),SUBSTRING(CURDATE(),6,2),SUBSTRING(CURDATE(),9,2),"-",(SELECT (COUNT(*)+1) AS new_ped FROM tb_pedido WHERE data_ped = CURDATE())));
+			ELSE 
+				SET @pedido = Inum_ped;
+			END IF;
+            
+            INSERT INTO tb_pedido (id,origem,id_emp,data_ped,data_ent,resp,comp,num_ped,desconto,cond_pgto,obs)
+            VALUES (Iid_ped,"SAN",Iid_emp,Idata_ped,Idata_ent,Iresp,Icomp,@pedido,Idesconto,Icond_pgto,Iobs)
+            ON DUPLICATE KEY UPDATE
+            data_ped=Idata_ped, data_ent=Idata_ent, num_ped=Inum_ped, desconto=Idesconto, cond_pgto=Icond_pgto,
+            obs=Iobs, status=Istatus;
+            
+        END IF;
+    
+	END $$
+	DELIMITER ;
 /* RELOGIO DE PONTO */
 
  DROP PROCEDURE sp_view_relogio_ponto;

@@ -76,6 +76,38 @@ ORDER BY mes,dia;
 
 SELECT * FROM vw_feriado; 
 
+DROP VIEW vw_cot_itens;
+-- CREATE VIEW vw_cot_itens AS
+	SELECT ITN.id_ped, GROUP_CONCAT(PRD.cod SEPARATOR ',') AS id_prod
+	FROM tb_item_ped AS ITN
+	INNER JOIN tb_produto AS PRD
+	ON ITN.id_prod = PRD.id
+	GROUP BY ITN.id_ped;
+
+SELECT * FROM vw_cot_itens; 
+
+DROP VIEW vw_cot_preco;
+ CREATE VIEW vw_cot_preco AS
+	SELECT PED.*, TRUNCATE(IFNULL(SUM(ITN.preco * ITN.qtd),0),2) AS VALOR
+	FROM tb_pedido AS PED
+	LEFT JOIN tb_item_ped AS ITN
+	ON ITN.id_ped = PED.id
+	GROUP BY PED.id;
+
+SELECT * FROM vw_cot_preco; 
+
+DROP VIEW vw_cotacoes;
+ CREATE VIEW vw_cotacoes AS
+	SELECT COT.*, COALESCE(EMP.fantasia,"") AS EMPRESA
+	FROM vw_cot_preco AS COT
+	LEFT JOIN tb_empresa AS EMP
+	ON COT.id_emp = EMP.id;
+
+SELECT * FROM vw_cotacoes; 
+
+SELECT (COUNT(*)+1) AS new_ped FROM tb_pedido WHERE data_ped = "2024-04-25";
+
+
 -- 	DROP VIEW vw_date_range;
  	CREATE VIEW vw_date_range AS
 SELECT date, WEEKOFYEAR(date) AS semana, DAYOFWEEK(date) AS dia_semana FROM 
@@ -87,4 +119,11 @@ SELECT date, WEEKOFYEAR(date) AS semana, DAYOFWEEK(date) AS dia_semana FROM
  (SELECT 0 i UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t4) v;
  
  SELECT * FROM vw_date_range WHERE date BETWEEN '2024-02-01' AND '2024-02-29';
+ 
+ SELECT CURDATE();
+ SELECT SUBSTRING(CURDATE(),3,2);
+ SELECT SUBSTRING(CURDATE(),6,2);
+ SELECT SUBSTRING(CURDATE(),9,2);
+ 
+ SELECT CONCAT(SUBSTRING(CURDATE(),3,2),SUBSTRING(CURDATE(),6,2),SUBSTRING(CURDATE(),9,2),"-",(SELECT (COUNT(*)+1) AS new_ped FROM tb_pedido WHERE data_ped = CURDATE()));
  
