@@ -28,14 +28,14 @@
         <div class="inline">
             <select id="cmbBusca">
                 <optgroup label="Geral">
-                    <option value="true"     signal="=" val="true"   >Todos      </option>                        
-                    <option value="status"   signal="=" val="ABERTO" >Cotações   </option>
-                    <option value="status"   signal="=" val="FECHADO">Pedidos    </option>
-                    <option value="status"   signal="=" val="PAGO"   >Faturados  </option>
-                    <option value="status"   signal="=" val="INTERNO">Uso Interno</option>
+                    <option value="id"     signal=">" val="0"   >Todos      </option>                        
+                    <option value="status"   signal="=" val="'ABERTO'" >Cotações   </option>
+                    <option value="status"   signal="=" val="'FECHADO'">Pedidos    </option>
+                    <option value="status"   signal="=" val="'PAGO'"   >Faturados  </option>
+                    <option value="status"   signal="=" val="'INTERNO'">Uso Interno</option>
                     <option value="id"       signal="IN"   >Código</option>
                     <option value="num_ped"  signal="LIKE">Número</option>
-                    <option value="prod.cod" signal="="   >Cod. do Produto</option>
+                    <option value="id_prod"  signal="LIKE"  >Cod. do Produto</option>
                     <option value="EMPRESA"  signal="LIKE"   >Cliente</option>
                     <option value="id_emp"   signal="IN"   >Cod. do Cliente</option>      
                 </optgroup>
@@ -78,7 +78,6 @@
         const myPromisse = queryDB(params,'COT-0');
         myPromisse.then((resolve)=>{            
             const json = JSON.parse(resolve)
-console.log(json)
             const tbl = document.getElementById('tblCot')
             tbl.innerHTML = ''
             json.length > 0 ? tbl.head('Cod.|mobHide,Num.,Cliente.,Data,Status|mobHide,Valor R$|mobHide') : 0
@@ -95,7 +94,7 @@ console.log(json)
     pageScreen.querySelector('#edtFin').value =  today.finMonth()
 
     pageScreen.querySelector('#btnNovo').addEventListener('click',()=>{
-        openHTML('newCot.html','pop-up','Nova Cotação','new')
+        openHTML('com_new_cot.html','pop-up','Nova Cotação')
     })
 
 

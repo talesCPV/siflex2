@@ -446,5 +446,6 @@ function getVal(fds){
     const signal = sel.options[sel.selectedIndex].getAttribute('signal')
     let value = sel.options[sel.selectedIndex].hasAttribute('val') ? sel.options[sel.selectedIndex].getAttribute('val') : doc.querySelector('#edtBusca').value.trim()
         value = signal=='LIKE' ? `'%${value}%'` : signal=='IN' ? `(${value})` : value
+
     return [field,signal,value]
 }
