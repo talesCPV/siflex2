@@ -53,3 +53,7 @@
 22/04/2024 19:40 tales@flexibus.com.br : Novo Registro de Hora: ONDINA DE FATIMA SOUSA Entrada: 19/04/2024 as 07:00, Saida: 19/04/2024 as 23:00
 22/04/2024 19:52 tales@flexibus.com.br : Novo Registro de Hora: ONDINA DE FATIMA SOUSA Entrada: 19/04/2024 as 07:00, Saida: 19/04/2024 as 15:00
 22/04/2024 19:53 tales@flexibus.com.br : Registro de Hora Deletado: ONDINA DE FATIMA SOUSA Entrada: 19/04/2024 as 07:00, Saida: 19/04/2024 as 15:00
+24/04/2024 14:44 tales@flexibus.com.br : Menu Incluido (Comercial)
+24/04/2024 14:45 tales@flexibus.com.br : Menu Incluido (Cotacoes)
+24/04/2024 14:45 tales@flexibus.com.br : Menu Alterado (Cotacoes, com_cotacoes.html, pop-up, Cotacoes)
+24/04/2024 14:47 tales@flexibus.com.br : Menu Alterado (Cotacoes, com_cotacoes.html, pop-up, Cotacoes e Pedidos)

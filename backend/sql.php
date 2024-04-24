@@ -71,6 +71,9 @@
         "TOOL-0" => 'CALL sp_view_pcp(@access, @hash, "x00");', // data
         "TOOL-1" => 'CALL sp_set_pcp(@access, @hash, "x00",x01,"x02");', // data, id_setor, valor
 
+        /* COTAÇÕES */
+        "COT-0" => 'CALL sp_view_cotacao(@access,@hash,"x00","x01","x02","x03","x04");', // FIELD,SIGNAL, VALUE, DT_INI, DT_FIN
+
 
     );
 

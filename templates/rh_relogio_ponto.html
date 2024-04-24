@@ -44,7 +44,7 @@
     </style>
   
     <fieldset class="fds-busca relogio">
-        <legend>Busca</legend>
+        <legend>Filtro</legend>
         <div class="inline">
 
             <div class="line-ckb">
@@ -204,7 +204,7 @@
         pageScreen.querySelector('.tb-resumo').style.display =  pageData.funcionarios.length > 0 ? 'block' : 'none'
 
         const tbl_resumo = pageScreen.querySelector('#tblResumo')
-        tbl_resumo.head('Nome,Horas,H. Extra,Ad. Not, He+Adn,Faltas,H. Total')
+        tbl_resumo.head('Nome,H. Normais,H. Extra,Ad. Not, He+Adn,Faltas,H. Total')
         for(let i=0; i<pageData.funcionarios.length; i++){            
             pageData.funcionarios[i].resumo = {'Nome':pageData.funcionarios[i].nome,'HT':h_trab,'HN':h_trab, 'Faltas':0,'HE':0,'ADN':0,'HE_ADN':0}
             for(let j=0; j<pageData.funcionarios[i].horas.length; j++){                

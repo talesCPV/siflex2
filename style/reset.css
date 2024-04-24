@@ -136,6 +136,11 @@
         min-width: unset !important;
     }
 
+    .busca-itens{
+        display: flex;
+        width: 100%;
+    }
+
     .inline span{
         width: auto;
         min-width: unset !important;
@@ -164,10 +169,15 @@
         display: flex;
         flex-direction: row;
         align-items: center;
+        min-width: unset !important;
     }
 
     .line-ckb input[type=checkbox]{
         height: fit-content;
+    }
+
+    .line-ckb label{
+        padding: 0 !important;
     }
 
     .form-base{
@@ -271,5 +281,9 @@
         .btnAdd:before {
             content: 'Novo ';
           }
+
+        .busca-itens{
+            flex-direction: row-reverse;
+        }
 
     }
