@@ -73,7 +73,7 @@
 
         /* COTAÇÕES */
         "COT-0" => 'CALL sp_view_cotacao(@access,@hash,"x00","x01","x02","x03","x04");', // FIELD,SIGNAL, VALUE, DT_INI, DT_FIN
-        "COT-1" => 'CALL sp_set_pedido(@access,@hash,x00,x01,"x02","x03","x04","x05","x06","x07","x08","X09");', //ID_PED,ID_EMP, DT_PED, DT_ENTREGA,VENDEDOR,COMPRADOR,NUM_PED,STATUS,DESCONTO,COND_PGTO,OBS
+        "COT-1" => 'CALL sp_set_pedido(@access,@hash,"x00",x01,"x02","x03","x04","x05","x06","x07","x08","x09");', //ID_PED,ID_EMP, DT_PED, DT_ENTREGA,VENDEDOR,COMPRADOR,NUM_PED,DESCONTO,COND_PGTO,OBS
 
     );
 

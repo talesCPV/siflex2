@@ -11,7 +11,7 @@
     <fieldset>
         <legend>Dados da Cotação</legend>
         <div class="inline">
-            <label for="edtNumPed">Num. Pedido *</label>
+            <label for="edtNumPed">Num. Pedido</label>
             <input type="text" id="edtNumPed" readonly>
             <label for="edtData">Data *</label>
             <input type="date" id="edtData">             
@@ -19,8 +19,11 @@
             <input type="text" id="edtDesc" onkeyup="return valFloat(this)" value="0">             
         </div>        
         <div class="inline">
-            <label for="cmbCli">Cliente</label>
-            <select id="cmbCli"></select>
+            <label for="edtCliente">Cliente *</label>
+            <div class="edtbtn">
+                <input type="text" id="edtCliente" readonly>
+                <button id="btnCliente" class="btn-round"><span class="mdi mdi-magnify"></span></button>
+            </div>
         </div>
         <div class="inline">
             <label for="edtCond">Cond. Pgto.</label>
@@ -38,12 +41,12 @@
             <label for="edtEntrega">Entrega</label>
             <input type="date" id="edtEntrega">
         </div>     
-
-        <button id="btnCad">Cadastrar</button>
-        <button id="btnDel">Deletar</button>
+        <div class="line">
+            <button id="btnSalvar">Cadastrar</button>
+            <button id="btnDel">Deletar</button>
+        </div>
 
     </fieldset>
-
 
 </template>
 <script>
@@ -53,90 +56,64 @@
     const pageScreen = document.querySelector('#card-com_new_cot')
 
     pageScreen.querySelector('#edtData').value = today.getFormatDate()
-    pageScreen.querySelector('#edtEntrega').value = today.finMonth()
+    pageScreen.querySelector('#edtEntrega').value = today.overday(30)
+    pageScreen.querySelector('#edtVend').value = localStorage.getItem('nome').toUpperCase()
 
-/*    
-    const params = new Object;
-        params.hash = localStorage.getItem('hash');
-        params.field = 'tipo'
-        params.signal = '='
-        params.value = 'CLI'     
+    pageFunc.buscaEmp = (emp)=>{
+        pageData.id_emp = emp.id
+        pageScreen.querySelector('#edtCliente').value = emp.fantasia.toUpperCase()
+        console.log(emp)
+    }
 
-    fillCombo('cmbCli',params,11,['id','cod_nome'],typeof main_data.newCot.data === 'object' ? main_data.newCot.data.id_emp :'' )
-*/
-    if(main_data.newCot.data === 'new'){
+    pageScreen.querySelector('#btnCliente').addEventListener('click',()=>{        
+        openHTML('busca_emp.html','pop-up','Selecione o Cliente',{'org':'com_new_cot'},600)
+    })
+
+
+    if(Object.keys(pageData).length == 0){ 
+        pageData.id =  'DEFAULT'
+/*        
         getConfig('config').then((txt)=>{    
             const json =  JSON.parse(txt)
             document.querySelector('#edtCond').value = json.cond_pgto
         })        
-        const params = new Object;
-            params.num_ped = today.getCod()
-        const myPromisse = queryDB(params,29);
-        myPromisse.then((resolve)=>{
-            const last = JSON.parse(resolve)
-            const dg = parseInt(last[0].dg) + 1  
-            document.querySelector('#edtNumPed').value = today.getCod()+'-'+dg
-            document.querySelector('#edtNumPed').readOnly = true             
-        })
-        document.querySelector('#edtVend').value = localStorage.getItem('nome').trim() == '' ? localStorage.getItem('username') : localStorage.getItem('nome')     
+*/        
+
     }else{
-        document.querySelector('#edtNumPed').value = main_data.newCot.data.num_ped
-        document.querySelector('#edtData').value = main_data.newCot.data.data_ped
-        document.querySelector('#edtDesc').value = main_data.newCot.data.desconto
-        document.querySelector('#edtObs').value = main_data.newCot.data.obs
-        document.querySelector('#edtCond').value = main_data.newCot.data.cond_pgto
-        document.querySelector('#edtVend').value = main_data.newCot.data.resp
-        document.querySelector('#edtComp').value = main_data.newCot.data.comp
-        document.querySelector('#edtEntrega').value = main_data.newCot.data.data_ent
-        document.querySelector('#btnDel').style.display = 'block'
-        document.querySelector('#btnCad').innerHTML = 'Salvar'
-        document.querySelector('#edtNumPed').readOnly = false
+        pageScreen.querySelector('#edtNumPed').value = pageData.num_ped
+        pageScreen.querySelector('#edtData').value = pageData.data_ped
+        pageScreen.querySelector('#edtDesc').value = pageData.desconto
+        pageScreen.querySelector('#edtObs').value = pageData.obs
+        pageScreen.querySelector('#edtCond').value = pageData.cond_pgto
+        pageScreen.querySelector('#edtVend').value = pageData.resp
+        pageScreen.querySelector('#edtComp').value = pageData.comp
+        pageScreen.querySelector('#edtEntrega').value = pageData.data_ent
+        pageScreen.querySelector('#btnDel').style.display = 'block'
+        pageScreen.querySelector('#btnSalvar').innerHTML = 'Salvar'
+        pageScreen.querySelector('#edtNumPed').readOnly = false
     }
 
-    document.querySelector('#btnCad').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnSalvar').addEventListener('click',()=>{
 
-        if(checkField(['edtData'])){
-//ID_PED,ID_EMP, DT_PED, DT_ENTREGA,VENDEDOR,COMPRADOR,NUM_PED,STATUS,DESCONTO,COND_PGTO,OBS            
+        if(checkField(['edtData','edtCliente'])){
             const params = new Object;
-                params.id = main_data.newCot.data === 'new' ? 'DEFAULT' : main_data.newCot.data.id 
-                params.id_emp = document.querySelector('#cmbCli').value
+                params.id = pageData.id 
+                params.id_emp = pageData.id_emp 
                 params.data_ped = document.querySelector('#edtData').value
                 params.data_ent = document.querySelector('#edtEntrega').value
                 params.resp = document.querySelector('#edtVend').value.trim()
                 params.comp = document.querySelector('#edtComp').value.trim().toUpperCase()
                 params.num_ped = document.querySelector('#edtNumPed').value.trim()
+                params.desconto = document.querySelector('#edtDesc').value
                 params.cond_pgto = document.querySelector('#edtCond').value.trim()
                 params.obs = document.querySelector('#edtObs').value.trim()
-                params.desconto = document.querySelector('#edtDesc').value
-            const myPromisse = queryDB(params,28);
+            const myPromisse = queryDB(params,'COT-1');
             myPromisse.then((resolve)=>{
-                if(main_data.newCot.data == 'new'){
-                    const myPromisseLastID = queryDB(params,34)
-                    myPromisseLastID.then((resolve)=>{
-                        const sel = document.querySelector('#cmbCli')
-                        params.mode = 'new'
-                        params.fantasia = sel.options[sel.selectedIndex].text
-                        const json = JSON.parse(resolve)
-                        params.id = json[0].last_ped
-                        params.status = 'ABERTO'
-                        openHTML('viewCot.html','pop-up','Cotação-'+params.num_ped, params)
-                        closeModal()
-                    })
-                }else{
-                    main_data.newCot.data.id_emp = document.querySelector('#cmbCli').value
-                    main_data.newCot.data.data_ped = document.querySelector('#edtData').value
-                    main_data.newCot.data.data_ent = document.querySelector('#edtEntrega').value
-                    main_data.newCot.data.resp = document.querySelector('#edtVend').value.trim()
-                    main_data.newCot.data.comp = document.querySelector('#edtComp').value.trim().toUpperCase()
-                    main_data.newCot.data.num_ped = document.querySelector('#edtNumPed').value.trim()
-                    main_data.newCot.data.origem = 'SAN'
-                    main_data.newCot.data.cond_pgto = document.querySelector('#edtCond').value.trim()
-                    main_data.newCot.data.obs = document.querySelector('#edtObs').value.trim()
-                    main_data.newCot.data.desconto = document.querySelector('#edtDesc').value
-                    document.querySelector('#btnBusca').click()
-                    main_data.viewCot.open()
-                    closeModal()
-                }
+
+                console.log(resolve)
+               
+                closeModal('com_new_cot')
+
             })
         }
         

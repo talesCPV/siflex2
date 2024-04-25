@@ -89,57 +89,21 @@
         });
     }
 
-
-    pageScreen.querySelector('#edtIni').value =  today.iniMonth()
-    pageScreen.querySelector('#edtFin').value =  today.finMonth()
-
     pageScreen.querySelector('#btnNovo').addEventListener('click',()=>{
         openHTML('com_new_cot.html','pop-up','Nova Cotação')
     })
 
 
     pageScreen.querySelector('#btnBusca').addEventListener('click',()=>{
-        pageFunc.fillCot()
-/*        
-        const sel = document.querySelector('#cmbBusca')
-        const field = sel.value
-        const signal = sel.options[sel.selectedIndex].getAttribute('signal')
-        const ckb = document.querySelector('#ckbData').checked
-        let value = sel.options[sel.selectedIndex].hasAttribute('val') ? sel.options[sel.selectedIndex].getAttribute('val') : document.querySelector('#edtBusca').value.trim()
-        value = signal=='LIKE' ? `"%${value}%"` : signal=='IN' ? `(${value})` : sel.value=='true'? sel.value : `"${value}"`
-//        value = signal=='LIKE' ? `"%${value}%"` : sel.value=='true'? sel.value : `"${value}"`
-
-        const tbl = document.getElementById('tblCot')
-        const params = new Object;
-            params.field = field
-            params.signal = signal
-            params.value = value
-            params.ini = ckb ? document.querySelector('#edtIni').value : '2000-01-01';
-            params.fin = ckb ? document.querySelector('#edtFin').value : '2100-12-31';        
-
-        const myPromisse = queryDB(params,27);
-
-        myPromisse.then((resolve)=>{
-            if(resolve.trim() != ""){
-                const json = JSON.parse(resolve);
-                let total = 0
-                tbl.innerHTML=''
-                document.querySelector('#lblTotal').style.display = json.length > 0 ? 'block' : 'none'
-                json.length > 0 ? tbl.head('Cod.|mobHide,Num.,Cliente.,Data,Status|mobHide,Valor R$|mobHide') : 0
-                for(let i=0; i<json.length;i++){                                       
-                    total +=  parseFloat(json[i].venda)
-                    tbl.plot(json[i],'id|mobHide,num_ped,fantasia,data_ped,status|mobHide,venda|mobHide','int,str,Upp,date,change FECHADO=PED ABERTO=COT PAGO=FAT INTERNO=USO_INT. .=**,R$.',true)                    
-                }                
-                document.querySelector('#lblTotal').innerHTML =  'Total '+ viewMoneyBR(total.toFixed(2))
-            }        
-        })
-*/        
+        pageFunc.fillCot()      
     })
 
     pageScreen.querySelector('#tblCot').addEventListener('click',(e)=>{
         data = e.target.parentNode.data
-        data.mode = 'edit'      
-        openHTML('viewCot.html','pop-up','Cotação',data)
+        openHTML('com_view_cot.html','pop-up','Cotação',data)
     })
+
+    pageScreen.querySelector('#edtIni').value = today.iniMonth()
+    pageScreen.querySelector('#edtFin').value = today.finMonth()
 
 </script>

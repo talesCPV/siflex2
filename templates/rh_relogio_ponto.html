@@ -266,7 +266,7 @@
             while (point < dt_fin){
 
                 if(point.getHours() < 5 || point.getHours() >= 22){
-                    const next = new Date( (point.getHours() < 5 ? point.getFormatDate() : point.tomorrow()) +' 05:00:00')
+                    const next = new Date( (point.getHours() < 5 ? point.getFormatDate() : point.overday(1)) +' 05:00:00')
                     adn += (next < dt_fin ? next : dt_fin) - point
                     point = next
                 }else{
