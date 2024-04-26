@@ -38,8 +38,22 @@ String.prototype.maxWidth = (N=0)=>{
 }
 
 String.prototype.money = function(D=2){
-    const str = this.valueOf()
-    return ('R$'+ parseFloat(str).toFixed(D))
+
+    const text = this.valueOf().replace(',','.')    
+    const num = text.split('.')[0].replace(/\D/g, "")
+    let after_dot
+    try{
+        after_dot = text.split('.')[1].replace(/\D/g, "").padEnd(2,0).substring(0,2)
+    }catch{
+        after_dot = '00'
+    }
+
+    let before_dot = ''
+    for(let i=num.length-1; i>=0; i--){        
+        before_dot = num[i] + before_dot        
+        before_dot = (num.length-i)%3==0 && i>0 && i< num.length-1 ? '.'+before_dot : before_dot
+    }
+    return 'R$'+before_dot+'.'+after_dot
 }
 
 String.prototype.date = function(){

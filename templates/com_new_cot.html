@@ -110,8 +110,8 @@
             const myPromisse = queryDB(params,'COT-1');
             myPromisse.then((resolve)=>{
 
-                console.log(resolve)
-               
+               const json = JSON.parse(resolve)
+                openHTML('com_view_cot.html','pop-up','Cotação',json)
                 closeModal('com_new_cot')
 
             })

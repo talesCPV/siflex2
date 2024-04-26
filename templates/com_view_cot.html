@@ -26,7 +26,7 @@
                 <td id="tdEmp"></td><td id="tdEmi"></td><td id="tdVend"  class="mobHide"></td><td id="tdComp"  class="mobHide"></td><td id="tdEnt"></td><td id="tdVal"></td>
             </tr>
         </table>
-        <div class="inline">
+        <div class="line">
             <button id="btnEdit" disabled>Editar</button>
             <button id="btnDel" disabled>Deletar</button>
             <button id="btnFecha" disabled>Encerrar</button>
@@ -36,7 +36,9 @@
     <fieldset>
         <legend>Ítens</legend>
         <table id="tblItens"></table>
-        <button id="btnAdd" disabled>Adicionar Ítens</button>
+        <div class="line">
+            <button id="btnAdd" disabled>Adicionar Ítens</button>
+        </div>
     </fieldset>
     <fieldset id="fdsRelat">
         <legend>Relatórios</legend>
@@ -45,8 +47,10 @@
                 <label for="ckbValor">Mostrar Valor</label>
                 <input type="checkbox" id="ckbValor" checked>
             </div>
-            <button id="btnCot">Cotação</button>
-            <button id="btnRecMat">Recibo de Material</button>
+            <div class="line">
+                <button id="btnCot">Cotação</button>
+                <button id="btnRecMat">Recibo de Material</button>
+            </div>
         </div>
     </fieldset>
 
@@ -57,33 +61,87 @@
     const pageFunc = main_data.com_view_cot.func
     const pageScreen = document.querySelector('#card-com_view_cot')
 
+    pageFunc.startPage = ()=>{
+        pageScreen.querySelector('#tdEmp').innerHTML = pageData.EMPRESA.toUpperCase()
+        pageScreen.querySelector('#tdEmi').innerHTML = pageData.data_ped != null ? pageData.data_ped.date() : '*'
+        pageScreen.querySelector('#tdVend').innerHTML = pageData.resp != null ? pageData.resp.toUpperCase() : '*'
+        pageScreen.querySelector('#tdComp').innerHTML = pageData.comp != null ? pageData.comp.toUpperCase(): '*'
+        pageScreen.querySelector('#tdEnt').innerHTML = pageData.data_ent != null ? pageData.data_ent.date() : '*'
+        pageScreen.querySelector('#tdVal').innerHTML = pageData.VALOR != null ? pageData.VALOR.money() : '*'
 
+        if(pageData.status == 'ABERTO'){
+            pageScreen.querySelector('#btnEdit').disabled = false
+            pageScreen.querySelector('#btnDel').disabled = false
+            pageScreen.querySelector('#btnAdd').disabled = false
+            pageScreen.querySelector('#btnFecha').innerHTML = 'Encerrar'
+        }else{
+            pageScreen.querySelector('#btnFecha').innerHTML = 'Upload NF' 
+            pageScreen.querySelector('#btnEdit').disabled = true
+            pageScreen.querySelector('#btnDel').disabled = true
+            pageScreen.querySelector('#btnAdd').disabled = true
+            pageData.status == 'PAGO' ? pageScreen.querySelector('#btnVerNF').style.display = 'block' : null
+        }
+
+        pageFunc.fillItens()
+
+    }
+
+    pageFunc.fillItens = ()=>{
+        const params = new Object;
+            params.ped_id = pageData.id
+        const myPromisse = queryDB(params,'COT-2');
+        myPromisse.then((resolve)=>{
+            const json = JSON.parse(resolve)
+            const tbl = pageScreen.querySelector('#tblItens')
+            tbl.innerHTML = ''
+            if(json.length>0){
+                tbl.head('Cod.|mobHide,Descrição,Und.|mobHide,Qtd.,Preço Unit.,Sub Total')
+                for(let i=0; i<json.length; i++){
+                    tbl.plot(json[i],'cod_prod|mobHide,descricao,unidade|mobHide,qtd,preco,TOTAL','str,Upp,Upp,str,R$.,R$.')
+                }
+            }
+        })
+    }
+
+    pageFunc.buscaProd = (data)=>{
+        console.log(data)
+    }
+
+    pageScreen.querySelector('#btnAdd').addEventListener('click',()=>{
+        openHTML('busca_prod.html','pop-up','Adicione um Produto ou Serviço',{'org':'com_view_cot'},600)        
+    })
+
+
+
+    pageFunc.startPage()
+
+/*
     main_data.viewCot.open = function open(){
-        document.querySelector('#tdEmp').innerHTML = main_data.viewCot.data.fantasia.toUpperCase()
-        document.querySelector('#tdEmi').innerHTML = main_data.viewCot.data.data_ped != null ? dataBR(main_data.viewCot.data.data_ped) : '*'
-        document.querySelector('#tdVend').innerHTML = main_data.viewCot.data.resp != null ? main_data.viewCot.data.resp.toUpperCase() : '*'
-        document.querySelector('#tdComp').innerHTML = main_data.viewCot.data.comp != null ? main_data.viewCot.data.comp.toUpperCase(): '*'
-        document.querySelector('#tdEnt').innerHTML = main_data.viewCot.data.data_ent != null ? dataBR(main_data.viewCot.data.data_ent): '*'
+        pageScreen.querySelector('#tdEmp').innerHTML = main_data.viewCot.data.fantasia.toUpperCase()
+        pageScreen.querySelector('#tdEmi').innerHTML = main_data.viewCot.data.data_ped != null ? dataBR(main_data.viewCot.data.data_ped) : '*'
+        pageScreen.querySelector('#tdVend').innerHTML = main_data.viewCot.data.resp != null ? main_data.viewCot.data.resp.toUpperCase() : '*'
+        pageScreen.querySelector('#tdComp').innerHTML = main_data.viewCot.data.comp != null ? main_data.viewCot.data.comp.toUpperCase(): '*'
+        pageScreen.querySelector('#tdEnt').innerHTML = main_data.viewCot.data.data_ent != null ? dataBR(main_data.viewCot.data.data_ent): '*'
 
         if(main_data.viewCot.data.status == 'ABERTO'){
-            document.querySelector('#btnEdit').disabled = false
-            document.querySelector('#btnDel').disabled = false
-            document.querySelector('#btnAdd').disabled = false
-            document.querySelector('#btnFecha').innerHTML = 'Encerrar'
+            pageScreen.querySelector('#btnEdit').disabled = false
+            pageScreen.querySelector('#btnDel').disabled = false
+            pageScreen.querySelector('#btnAdd').disabled = false
+            pageScreen.querySelector('#btnFecha').innerHTML = 'Encerrar'
         }else{
-            document.querySelector('#btnFecha').innerHTML = 'Upload NF' 
-            document.querySelector('#btnEdit').disabled = true
-            document.querySelector('#btnDel').disabled = true
-            document.querySelector('#btnAdd').disabled = true
+            pageScreen.querySelector('#btnFecha').innerHTML = 'Upload NF' 
+            pageScreen.querySelector('#btnEdit').disabled = true
+            pageScreen.querySelector('#btnDel').disabled = true
+            pageScreen.querySelector('#btnAdd').disabled = true
             if(main_data.viewCot.data.status == 'PAGO'){
-                document.querySelector('#btnVerNF').style.display = 'block'
+                pageScreen.querySelector('#btnVerNF').style.display = 'block'
             }
         }
     }
-    main_data.viewCot.btnEncerra = document.querySelector('#btnFecha')
-    main_data.viewCot.fdsRelat = document.querySelector('#fdsRelat')
-    main_data.viewCot.tblItens = document.querySelector('#tblItens')
-    main_data.viewCot.tdVal = document.querySelector('#tdVal')
+    main_data.viewCot.btnEncerra = pageScreen.querySelector('#btnFecha')
+    main_data.viewCot.fdsRelat = pageScreen.querySelector('#fdsRelat')
+    main_data.viewCot.tblItens = pageScreen.querySelector('#tblItens')
+    main_data.viewCot.tdVal = pageScreen.querySelector('#tdVal')
 
     main_data.viewCot.fillItens = function fillItens(){
         const params = new Object;
@@ -107,11 +165,11 @@
     main_data.viewCot.open()
     main_data.viewCot.fillItens()
 
-    document.querySelector('#btnEdit').addEventListener('click',()=>{        
+    pageScreen.querySelector('#btnEdit').addEventListener('click',()=>{        
         openHTML('newCot.html','pop-up',(main_data.viewCot.data.status=='ABERTO'?'Cotação-':'Pedido-') + main_data.viewCot.num_ped, main_data.viewCot.data)
     })
 
-    document.querySelector('#btnDel').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnDel').addEventListener('click',()=>{
         
         if (confirm('Deseja realmente deletar esta Cotação?')) {            
             const params_itens = new Object;
@@ -128,7 +186,7 @@
                 const myPromisse_ped = queryDB(params_ped,31);
                 myPromisse_ped.then((resolve)=>{
                     if(main_data.viewCot.data.mode == 'edit'){
-                        document.querySelector('#btnBusca').click()
+                        pageScreen.querySelector('#btnBusca').click()
                     }
                     closeModal('viewCot')                 
                 })               
@@ -136,7 +194,7 @@
         }                
     })
 
-    document.querySelector('#btnAdd').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnAdd').addEventListener('click',()=>{
 
         main_data.viewCot.data.addItem = function(data){
             if(data.qtd > data.estoque){
@@ -168,7 +226,7 @@
         openHTML('addProd.html','pop-up','Adicione um Produto ou Serviço',main_data.viewCot.data,[100,30])
     })
 
-    document.querySelector('#btnFecha').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnFecha').addEventListener('click',()=>{
         if(main_data.viewCot.data.status == 'ABERTO'){
             if (confirm('Deseja realmente encerrar esta cotação?')) { 
                 const params = new Object;
@@ -203,7 +261,7 @@
         
     })
 
-    document.querySelector('#tblItens').addEventListener('click',(e)=>{
+    pageScreen.querySelector('#tblItens').addEventListener('click',(e)=>{
         if(main_data.viewCot.data.status == 'ABERTO'){
             const data = e.target.parentNode.data
             data.mode = 'edit'
@@ -251,22 +309,22 @@
             const myPromisse = queryDB(params,24);
 
             myPromisse.then((resolve)=>{            
-                print_cotacao(main_data.viewCot.data,document.querySelector('#tblItens'),JSON.parse(resolve)[0],tipo)       
+                print_cotacao(main_data.viewCot.data,pageScreen.querySelector('#tblItens'),JSON.parse(resolve)[0],tipo)       
             })
     }
 
 
-    document.querySelector('#btnCot').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnCot').addEventListener('click',()=>{
         cot_pdf('cot')
     })
 
-    document.querySelector('#btnRecMat').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnRecMat').addEventListener('click',()=>{
         cot_pdf('rec')
     })
 
-    document.querySelector('#btnVerNF').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnVerNF').addEventListener('click',()=>{
         window.open('../'+main_data.viewCot.data.path, '_blank');
     })
 
-
+*/
 </script>
