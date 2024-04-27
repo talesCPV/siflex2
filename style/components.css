@@ -34,6 +34,7 @@
         border-radius: 50%;
         width: 40px;
         height: 40px;
+        min-width: unset !important;
         font-size: 1.4em;
         display: flex;
         align-items: center;

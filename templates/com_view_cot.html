@@ -37,7 +37,7 @@
         <legend>Ítens</legend>
         <table id="tblItens"></table>
         <div class="line">
-            <button id="btnAdd" disabled>Adicionar Ítens</button>
+            <button id="btnAdd" class="btn-round" disabled><span class="mdi mdi-plus-thick"></span></button> 
         </div>
     </fieldset>
     <fieldset id="fdsRelat">
@@ -94,24 +94,38 @@
             const json = JSON.parse(resolve)
             const tbl = pageScreen.querySelector('#tblItens')
             tbl.innerHTML = ''
+            let tot = 0
             if(json.length>0){
                 tbl.head('Cod.|mobHide,Descrição,Und.|mobHide,Qtd.,Preço Unit.,Sub Total')
                 for(let i=0; i<json.length; i++){
                     tbl.plot(json[i],'cod_prod|mobHide,descricao,unidade|mobHide,qtd,preco,TOTAL','str,Upp,Upp,str,R$.,R$.')
+                    tot += parseFloat(json[i].TOTAL)
                 }
+                pageScreen.querySelector('#tdVal').innerHTML = tot.toString().money() 
             }
         })
     }
 
     pageFunc.buscaProd = (data)=>{
-        console.log(data)
+        data.qtd = prompt(`Digite a Quantidade: (em estoque: ${data.estoque} ${data.unidade})`)
+
+        const params = new Object;
+            params.id = 'DEFAULT'
+            params.id_prod = data.id
+            params.id_ped = pageData.id
+            params.qtd = data.qtd
+            params.valor = data.preco_comp
+            params.und = data.unidade
+            params.serv = data.tipo
+        const myPromisse = queryDB(params,'COT-3');
+        myPromisse.then((resolve)=>{
+            pageFunc.fillItens()
+        })
     }
 
     pageScreen.querySelector('#btnAdd').addEventListener('click',()=>{
         openHTML('busca_prod.html','pop-up','Adicione um Produto ou Serviço',{'org':'com_view_cot'},600)        
     })
-
-
 
     pageFunc.startPage()
 
