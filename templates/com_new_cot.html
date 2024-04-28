@@ -42,8 +42,8 @@
             <input type="date" id="edtEntrega">
         </div>     
         <div class="line">
-            <button id="btnSalvar">Cadastrar</button>
-            <button id="btnDel">Deletar</button>
+            <button id="btnSalvar"><span class="mdi mdi-content-save-check"></span>Cadastrar</button>
+            <button id="btnDel"><span class="mdi mdi-delete-outline"></span>Deletar</button>
         </div>
 
     </fieldset>
@@ -55,10 +55,6 @@
     const pageFunc = main_data.com_new_cot.func
     const pageScreen = document.querySelector('#card-com_new_cot')
 
-    pageScreen.querySelector('#edtData').value = today.getFormatDate()
-    pageScreen.querySelector('#edtEntrega').value = today.overday(30)
-    pageScreen.querySelector('#edtVend').value = localStorage.getItem('nome').toUpperCase()
-
     pageFunc.buscaEmp = (emp)=>{
         pageData.id_emp = emp.id
         pageScreen.querySelector('#edtCliente').value = emp.fantasia.toUpperCase()
@@ -69,29 +65,43 @@
         openHTML('busca_emp.html','pop-up','Selecione o Cliente',{'org':'com_new_cot'},600)
     })
 
+    pageFunc.startPage = ()=>{
 
-    if(Object.keys(pageData).length == 0){ 
-        pageData.id =  'DEFAULT'
-/*        
-        getConfig('config').then((txt)=>{    
-            const json =  JSON.parse(txt)
-            document.querySelector('#edtCond').value = json.cond_pgto
-        })        
-*/        
 
-    }else{
-        pageScreen.querySelector('#edtNumPed').value = pageData.num_ped
-        pageScreen.querySelector('#edtData').value = pageData.data_ped
-        pageScreen.querySelector('#edtDesc').value = pageData.desconto
-        pageScreen.querySelector('#edtObs').value = pageData.obs
-        pageScreen.querySelector('#edtCond').value = pageData.cond_pgto
-        pageScreen.querySelector('#edtVend').value = pageData.resp
-        pageScreen.querySelector('#edtComp').value = pageData.comp
-        pageScreen.querySelector('#edtEntrega').value = pageData.data_ent
-        pageScreen.querySelector('#btnDel').style.display = 'block'
-        pageScreen.querySelector('#btnSalvar').innerHTML = 'Salvar'
-        pageScreen.querySelector('#edtNumPed').readOnly = false
+
+
+        if(Object.keys(pageData).length == 0){ 
+            pageData.id =  'DEFAULT'
+
+            pageScreen.querySelector('#edtData').value = today.getFormatDate()
+            pageScreen.querySelector('#edtEntrega').value = today.overday(30)
+            pageScreen.querySelector('#edtVend').value = localStorage.getItem('nome').toUpperCase()
+
+    /*        
+            getConfig('config').then((txt)=>{    
+                const json =  JSON.parse(txt)
+                document.querySelector('#edtCond').value = json.cond_pgto
+            })        
+    */        
+
+        }else{
+            
+            pageScreen.querySelector('#edtNumPed').value = pageData.num_ped
+            pageScreen.querySelector('#edtData').value = pageData.data_ped
+            pageScreen.querySelector('#edtDesc').value = pageData.desconto
+            pageScreen.querySelector('#edtCliente').value = pageData.EMPRESA.toUpperCase()
+            pageScreen.querySelector('#edtObs').value = pageData.obs
+            pageScreen.querySelector('#edtCond').value = pageData.cond_pgto
+            pageScreen.querySelector('#edtVend').value = pageData.resp
+            pageScreen.querySelector('#edtComp').value = pageData.comp
+            pageScreen.querySelector('#edtEntrega').value = pageData.data_ent
+            pageScreen.querySelector('#btnDel').style.display = 'block'
+            pageScreen.querySelector('#btnSalvar').innerHTML = '<span class="mdi mdi-content-save-check"></span>Salvar'
+            pageScreen.querySelector('#edtNumPed').readOnly = false
+        }
     }
+
+
 
     pageScreen.querySelector('#btnSalvar').addEventListener('click',()=>{
 
@@ -119,5 +129,6 @@
         
     })
 
+    pageFunc.startPage()
 
 </script>

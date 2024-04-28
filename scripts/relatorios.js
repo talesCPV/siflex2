@@ -373,12 +373,12 @@ function print_prod(obj){
 
 }
 
-function print_cotacao(ped,itens,emp,tipo='cot'){
-   
+function print_cotacao(ped,tipo='cot'){
+ 
     const show_val = document.querySelector('#ckbValor').checked
 
     jsPDF.autoTableSetDefaults({
-        headStyles: { fillColor: [37, 68, 65] },
+        headStyles: { fillColor: [67,180,126] },
     })
 
     doc = new jsPDF();
@@ -396,20 +396,20 @@ function print_cotacao(ped,itens,emp,tipo='cot'){
     addLine()
     doc.setFontSize(11)
     doc.setFont(undefined, 'bold')
-    doc.text('Cliente:' + ped.fantasia.trim().toUpperCase() ,10,txt.y)
+    doc.text('Cliente:' + ped.EMPRESA.trim().toUpperCase() ,10,txt.y)
     doc.setFont(undefined, 'normal')
     doc.setFontSize(10)
     addLine()
-    emp.endereco.trim() != '' ? doc.text('End. '+ emp.endereco.trim().toUpperCase()+','+emp.num.trim(),10,txt.y) :0 
-    emp.cidade.trim()!= '' ? doc.text(emp.cidade.trim().toUpperCase()+'-'+emp.estado,120,txt.y) :0 
-    emp.endereco.trim() == '' && emp.cidade.trim() == '' ? 0 : addLine()
-    emp.cep == null || emp.cep.trim() == '' ? 0 : doc.text('CEP:'+ getCEP(emp.cep),10,txt.y)
-    emp.tel == null || emp.tel.trim() == '' ? 0 : doc.text('Tel:'+ getFone(emp.tel),80,txt.y)
-    emp.cnpj== null || emp.cnpj.trim()== '' ? 0 : doc.text('CNPJ:'+ getCNPJ(emp.cnpj),120,txt.y)
-    emp.ie  == null || emp.ie.trim()  == '' ? 0 : doc.text('IE:'+ getIE(emp.ie),172,txt.y)
+    ped.END.trim() != '' ? doc.text('End. '+ ped.END.trim().toUpperCase()+','+ped.NUM.trim(),10,txt.y) :0 
+    ped.CIDADE.trim()!= '' ? doc.text(ped.CIDADE.trim().toUpperCase()+'-'+ped.UF,120,txt.y) :0 
+    ped.END.trim() == '' && ped.CIDADE.trim() == '' ? 0 : addLine()
+    ped.CEP == null || ped.CEP.trim() == '' ? 0 : doc.text('CEP:'+ getCEP(ped.CEP),10,txt.y)
+    ped.TEL == null || ped.TEL.trim() == '' ? 0 : doc.text('Tel:'+ getFone(ped.TEL),80,txt.y)
+    ped.CNPJ== null || ped.CNPJ.trim()== '' ? 0 : doc.text('CNPJ:'+ getCNPJ(ped.CNPJ),120,txt.y)
+    ped.IE  == null || ped.IE.trim()  == '' ? 0 : doc.text('IE:'+ getIE(ped.IE),172,txt.y)
     addLine()
     ped.comp != null ? doc.text('Comprador:'+ped.comp.trim().toUpperCase(),10,txt.y) :0    
-    ped.resp != null ? doc.text('Vendedor:'+ ped.resp.trim().split(' ')[0].toUpperCase(),80,txt.y) :0
+    ped.resp != null ? doc.text('Vendedor:'+ ped.resp.trim().toUpperCase(),80,txt.y) :0
     doc.text('Prev. Entrega:'+ dataBR(ped.data_ent),157,txt.y)
     addLine(0.7)
     if(ped.obs != null && ped.obs.trim() != ''){
@@ -438,18 +438,15 @@ function print_cotacao(ped,itens,emp,tipo='cot'){
 
 //    TABELA
     let tbl_body = []
-    let total = 0
     let head
-    for(let i=1; i< itens.rows.length;i++){
-        const data = itens.rows[i].data
+    for(let i=0; i< ped.itens.length; i++){
         if(show_val){
-            tbl_body.push([data.cod_prod,data.descricao.maxWidth(40).toUpperCase(),data.und,data.qtd,viewMoneyBR(parseFloat(data.preco).toFixed(2)),viewMoneyBR(data.total)])
+            tbl_body.push([ped.itens[i].cod_prod,ped.itens[i].descricao.substr(0,40).toUpperCase(),ped.itens[i].und,ped.itens[i].qtd,viewMoneyBR(parseFloat(ped.itens[i].preco).toFixed(2)),viewMoneyBR(ped.itens[i].TOTAL)])
             head= [["Cod","Descrição",'Und.','Qtd.',"Preço Unit.",'Sub Total.']]
         }else{
-            tbl_body.push([data.cod_prod,data.descricao.maxWidth(50).toUpperCase(),data.und,data.qtd])
+            tbl_body.push([ped.itens[i].cod_prod,ped.itens[i].descricao.substr(0,50).toUpperCase(),ped.itens[i].und,ped.itens[i].qtd])
             head= [["Cod","Descrição",'Und.','Qtd.']]
         }
-        total += parseFloat(data.total)
     }
 
     doc.autoTable({
@@ -467,14 +464,14 @@ function print_cotacao(ped,itens,emp,tipo='cot'){
     if(show_val){  
         if(ped.desconto != '0') {
             addLine(0.5)
-            right_text('Subtotal '+ viewMoneyBR(total.toFixed(2)),17)
+            right_text('Subtotal '+ viewMoneyBR(ped.VALOR.toFixed(2)),17)
             addLine()
             right_text('Desconto '+ viewMoneyBR(parseFloat(ped.desconto).toFixed(2)),17)
             addLine(0.4)
             line(txt.y,'h',150,15)
             addLine()
         }        
-        right_text('Total '+ viewMoneyBR((total - parseFloat(ped.desconto)).toFixed(2)),17)
+        right_text('Total '+ viewMoneyBR((ped.total - parseFloat(ped.desconto)).toFixed(2)),17)
     }
 
 //  ASS. RECIBO DE MATERIAL

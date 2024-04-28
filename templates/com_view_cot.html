@@ -14,6 +14,14 @@
             display: none;
         }
 
+        .mdi{
+            font-size: 1.5em;
+        }
+
+        .btn-round .mdi{
+            font-size: 1em;
+        }
+
     </style>
     
     <fieldset id="fdsPed">
@@ -22,34 +30,32 @@
             <tr>
                 <th>Empresa</th><th>Emissão</th><th class="mobHide">Vendedor</th><th  class="mobHide">Comprador</th><th>Entrega</th><th>Valor</th>
             </tr>
-            <tr>
+            <tr id="empEdit">
                 <td id="tdEmp"></td><td id="tdEmi"></td><td id="tdVend"  class="mobHide"></td><td id="tdComp"  class="mobHide"></td><td id="tdEnt"></td><td id="tdVal"></td>
             </tr>
         </table>
         <div class="line">
-            <button id="btnEdit" disabled>Editar</button>
-            <button id="btnDel" disabled>Deletar</button>
-            <button id="btnFecha" disabled>Encerrar</button>
-            <button id="btnVerNF">Ver NF</button>
+            <button id="btnFecha" disabled><span class="mdi mdi-folder-wrench-outline"></span> Encerrar</button>
+            <button id="btnVerNF"><span class="mdi mdi-file-check-outline"></span> Ver NF</button>
         </div>
     </fieldset>
     <fieldset>
         <legend>Ítens</legend>
         <table id="tblItens"></table>
         <div class="line">
-            <button id="btnAdd" class="btn-round" disabled><span class="mdi mdi-plus-thick"></span></button> 
+            <button id="btnAdd" disabled><span class="mdi mdi-plus-thick"></span> Adicionar</button> 
         </div>
     </fieldset>
     <fieldset id="fdsRelat">
         <legend>Relatórios</legend>
-        <div class="inline">
+        <div class="line">
             <div class="ckBOX">
                 <label for="ckbValor">Mostrar Valor</label>
                 <input type="checkbox" id="ckbValor" checked>
             </div>
             <div class="line">
-                <button id="btnCot">Cotação</button>
-                <button id="btnRecMat">Recibo de Material</button>
+                <button id="btnCot"><span class="mdi mdi-file-document-outline"></span> Cotação</button>
+                <button id="btnRecMat"><span class="mdi mdi-file-document-check-outline"></span> Recibo de Material</button>
             </div>
         </div>
     </fieldset>
@@ -70,14 +76,10 @@
         pageScreen.querySelector('#tdVal').innerHTML = pageData.VALOR != null ? pageData.VALOR.money() : '*'
 
         if(pageData.status == 'ABERTO'){
-            pageScreen.querySelector('#btnEdit').disabled = false
-            pageScreen.querySelector('#btnDel').disabled = false
             pageScreen.querySelector('#btnAdd').disabled = false
-            pageScreen.querySelector('#btnFecha').innerHTML = 'Encerrar'
+            pageScreen.querySelector('#btnFecha').innerHTML = '<span class="mdi mdi-folder-wrench-outline"></span> Encerrar'
         }else{
             pageScreen.querySelector('#btnFecha').innerHTML = 'Upload NF' 
-            pageScreen.querySelector('#btnEdit').disabled = true
-            pageScreen.querySelector('#btnDel').disabled = true
             pageScreen.querySelector('#btnAdd').disabled = true
             pageData.status == 'PAGO' ? pageScreen.querySelector('#btnVerNF').style.display = 'block' : null
         }
@@ -91,17 +93,20 @@
             params.ped_id = pageData.id
         const myPromisse = queryDB(params,'COT-2');
         myPromisse.then((resolve)=>{
-            const json = JSON.parse(resolve)
+            pageData.itens = JSON.parse(resolve)
             const tbl = pageScreen.querySelector('#tblItens')
             tbl.innerHTML = ''
-            let tot = 0
-            if(json.length>0){
+            pageData.total = 0
+            if(pageData.itens.length>0){
                 tbl.head('Cod.|mobHide,Descrição,Und.|mobHide,Qtd.,Preço Unit.,Sub Total')
-                for(let i=0; i<json.length; i++){
-                    tbl.plot(json[i],'cod_prod|mobHide,descricao,unidade|mobHide,qtd,preco,TOTAL','str,Upp,Upp,str,R$.,R$.')
-                    tot += parseFloat(json[i].TOTAL)
+                for(let i=0; i<pageData.itens.length; i++){
+                    tbl.plot(pageData.itens[i],'cod_prod|mobHide,descricao,unidade|mobHide,qtd,preco,TOTAL','str,Upp,Upp,str,R$.,R$.')
+                    pageData.total += parseFloat(pageData.itens[i].TOTAL)
                 }
-                pageScreen.querySelector('#tdVal').innerHTML = tot.toString().money() 
+                pageScreen.querySelector('#tdVal').innerHTML = pageData.total.toString().money() 
+                pageScreen.querySelector('#fdsRelat').style.display = 'block'
+            }else{
+                pageScreen.querySelector('#fdsRelat').style.display = 'none'
             }
         })
     }
@@ -125,6 +130,18 @@
 
     pageScreen.querySelector('#btnAdd').addEventListener('click',()=>{
         openHTML('busca_prod.html','pop-up','Adicione um Produto ou Serviço',{'org':'com_view_cot'},600)        
+    })
+
+    pageScreen.querySelector('#btnCot').addEventListener('click',()=>{
+        print_cotacao(pageData,'cot')       
+    })
+
+    pageScreen.querySelector('#btnRecMat').addEventListener('click',()=>{
+        print_cotacao(pageData,'rec')
+    })
+    
+    pageScreen.querySelector('#empEdit').addEventListener('click',()=>{        
+        openHTML('com_new_cot.html','pop-up',(pageData.status=='ABERTO'?'Cotação-':'Pedido-') + pageData.num_ped, pageData)
     })
 
     pageFunc.startPage()
