@@ -29,25 +29,26 @@
     const pageData = main_data.com_edit_prod.data
     const pageFunc = main_data.com_edit_prod.func
     const pageScreen = document.querySelector('#card-com_edit_prod')
-console.log(pageData)
+    const parentData = main_data.com_view_cot.data.itens[pageData.rowindex]
 
     pageScreen.querySelector('#lgdItem').innerHTML = pageData.descricao
     pageScreen.querySelector('#edtQtd').value = pageData.qtd
     pageScreen.querySelector('#edtPreco').value = parseFloat(pageData.preco).toFixed(2)
 
-
     pageScreen.querySelector('#btnSaveItem').addEventListener('click',()=>{
-        pageData.qtd = pageScreen.querySelector('#edtQtd').value
-        pageData.preco = pageScreen.querySelector('#edtPreco').value
-        pageData.edt(pageData)
-
+        parentData.qtd = pageScreen.querySelector('#edtQtd').value
+        parentData.preco = pageScreen.querySelector('#edtPreco').value
+        parentData.TOTAL = (parseFloat(parentData.qtd) * parseFloat(parentData.preco)).toFixed(2)
+        main_data.com_view_cot.func.fillItens()
+        closeModal('com_edit_prod')
     })
 
     pageScreen.querySelector('#btnDelItem').addEventListener('click',()=>{
 
         if (confirm('Deseja realmente deletar este ítem?')) {
-            pageData.del(pageData.id)
-        }    
+            main_data.com_view_cot.func.delItem(pageData.id)
+        }
+        closeModal('com_edit_prod')
     
     })
 

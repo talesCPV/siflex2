@@ -87,31 +87,37 @@
             pageScreen.querySelector('#btnFecha').innerHTML = 'VER NF' 
         }
 
-        pageFunc.fillItens()
+        pageFunc.buscaItens()
 
     }
 
-    pageFunc.fillItens = ()=>{
+    pageFunc.buscaItens = ()=>{
         const params = new Object;
             params.ped_id = pageData.id
         const myPromisse = queryDB(params,'COT-2');
         myPromisse.then((resolve)=>{
             pageData.itens = JSON.parse(resolve)
-            const tbl = pageScreen.querySelector('#tblItens')
-            tbl.innerHTML = ''
-            pageData.total = 0
-            if(pageData.itens.length>0){
-                tbl.head('Cod.|mobHide,Descrição,Und.|mobHide,Qtd.,Preço Unit.,Sub Total')
-                for(let i=0; i<pageData.itens.length; i++){
-                    tbl.plot(pageData.itens[i],'cod_prod|mobHide,descricao,unidade|mobHide,qtd,preco,TOTAL','str,Upp,Upp,str,R$.,R$.')
-                    pageData.total += parseFloat(pageData.itens[i].TOTAL)
-                }
-                pageScreen.querySelector('#tdVal').innerHTML = pageData.total.toString().money() 
-                pageScreen.querySelector('#fdsRelat').style.display = 'block'
-            }else{
-                pageScreen.querySelector('#fdsRelat').style.display = 'none'
-            }
+            pageFunc.fillItens()
         })
+    }
+
+    pageFunc.fillItens = ()=>{
+
+        const tbl = pageScreen.querySelector('#tblItens')
+        tbl.innerHTML = ''
+        pageData.total = 0
+        if(pageData.itens.length>0){
+            tbl.head('Cod.|mobHide,Descrição,Und.|mobHide,Qtd.,Preço Unit.,Sub Total')
+            for(let i=0; i<pageData.itens.length; i++){
+                tbl.plot(pageData.itens[i],'cod_prod|mobHide,descricao,unidade|mobHide,qtd,preco,TOTAL','str,Upp,Upp,str,R$.,R$.')
+                pageData.total += parseFloat(pageData.itens[i].TOTAL)
+            }
+            pageScreen.querySelector('#tdVal').innerHTML = pageData.total.toString().money() 
+            pageScreen.querySelector('#fdsRelat').style.display = 'block'
+        }else{
+            pageScreen.querySelector('#fdsRelat').style.display = 'none'
+        }
+      
     }
 
     pageFunc.buscaProd = (data)=>{
@@ -127,8 +133,13 @@
             params.serv = data.tipo
         const myPromisse = queryDB(params,'COT-3');
         myPromisse.then((resolve)=>{
-            pageFunc.fillItens()
+            pageFunc.buscaItens()
+            main_data.com_cotacoes.func.fillCot()
         })
+    }
+
+    pageFunc.delItem = (id)=>{
+
     }
 
     pageScreen.querySelector('#btnFecha').addEventListener('click',()=>{
@@ -163,7 +174,10 @@
 
     pageScreen.querySelector('#tblItens').addEventListener('click',(e)=>{
         data = e.target.parentNode.data
-       openHTML('com_edit_prod.html','pop-up','Alteração do Ítem',data,500)
+        data.rowindex = e.target.parentNode.rowIndex -1
+        data.row = e.target.parentNode
+
+        openHTML('com_edit_prod.html','pop-up','Alteração do Ítem',data,500)
     })
 
 
