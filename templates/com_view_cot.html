@@ -77,11 +77,14 @@
 
         if(pageData.status == 'ABERTO'){
             pageScreen.querySelector('#btnAdd').disabled = false
+            pageScreen.querySelector('#btnFecha').disabled = false
             pageScreen.querySelector('#btnFecha').innerHTML = '<span class="mdi mdi-folder-wrench-outline"></span> Encerrar'
-        }else{
+        }else if(pageData.status == 'FECHADO'){
             pageScreen.querySelector('#btnFecha').innerHTML = 'Upload NF' 
             pageScreen.querySelector('#btnAdd').disabled = true
             pageData.status == 'PAGO' ? pageScreen.querySelector('#btnVerNF').style.display = 'block' : null
+        }else{
+            pageScreen.querySelector('#btnFecha').innerHTML = 'VER NF' 
         }
 
         pageFunc.fillItens()
@@ -128,6 +131,20 @@
         })
     }
 
+    pageScreen.querySelector('#btnFecha').addEventListener('click',()=>{
+        if(confirm('Transformar esta cotação em pedido?')){
+            const params = new Object;
+                params.id = pageData.id
+                params.status = 'FECHADO'
+            const myPromisse = queryDB(params,'COT-5');
+            myPromisse.then((resolve)=>{
+                pageData.status = 'FECHADO'
+                pageFunc.startPage()
+                main_data.com_cotacoes.func.fillCot()
+            })
+        }
+    })
+
     pageScreen.querySelector('#btnAdd').addEventListener('click',()=>{
         openHTML('busca_prod.html','pop-up','Adicione um Produto ou Serviço',{'org':'com_view_cot'},600)        
     })
@@ -143,6 +160,15 @@
     pageScreen.querySelector('#empEdit').addEventListener('click',()=>{        
         openHTML('com_new_cot.html','pop-up',(pageData.status=='ABERTO'?'Cotação-':'Pedido-') + pageData.num_ped, pageData)
     })
+
+    pageScreen.querySelector('#tblItens').addEventListener('click',(e)=>{
+        data = e.target.parentNode.data
+       openHTML('com_edit_prod.html','pop-up','Alteração do Ítem',data,500)
+    })
+
+
+    
+
 
     pageFunc.startPage()
 

@@ -188,6 +188,15 @@ HTMLTableElement.prototype.plot = function(obj, fields,type='',file=false, mark=
                         }
                     }
                     break; 
+                case 'ico': // Troca palavra escolhida por outra valor_original=valor_desejado
+                    op = type[i].split(' ')
+                    html = ''
+                    for(let j=1; j<op.length; j++){
+                        if((obj[arr[0]] == op[j].split('=')[0])||(j==op.length-1 && html=='')||obj[arr[0]] == null ){
+                            html =  `<span class="mdi ${op[j].split('=')[1] == '**' ? obj[arr[0]] : op[j].split('=')[1]}"></span>`
+                        }
+                    }
+                    break;                     
                 case 'ckb': // insere checkbox                      
                     html = `<input type="checkbox" id="tblCkb_${this.rows.length-1}" class="tbl-ckb" ${parseInt(obj[arr[0]])? '' : 'checked'}>`
                     break;

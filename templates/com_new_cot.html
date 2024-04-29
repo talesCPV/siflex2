@@ -129,6 +129,20 @@
         
     })
 
+    pageScreen.querySelector('#btnDel').addEventListener('click',()=>{
+        if(confirm('Deseja realmente deletar esta cotação?')){
+            const params = new Object
+                params.id = pageData.id
+            const myPromisse = queryDB(params,'COT-4')
+            myPromisse.then((resolve)=>{
+                console.log(resolve)
+                closeModal('com_new_cot')
+                closeModal('com_view_cot')
+                main_data.com_cotacoes.func.fillCot()
+            })
+        }
+    })
+
     pageFunc.startPage()
 
 </script>

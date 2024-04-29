@@ -20,6 +20,10 @@
             width: 100%;
         }
 
+        tr .mdi{
+            font-size: 1.5em;
+        }
+
     </style>
 
     <fieldset class="fds-busca cotacao">
@@ -80,12 +84,10 @@
             const json = JSON.parse(resolve)
             const tbl = document.getElementById('tblCot')
             tbl.innerHTML = ''
-            json.length > 0 ? tbl.head('Cod.|mobHide,Num.,Cliente.,Data,Status|mobHide,Valor R$|mobHide') : 0
+            json.length > 0 ? tbl.head('Cod.|mobHide,Num.,Cliente.,Data,Status|mobHide,Valor R$|mobHide,NF|mobHide') : 0
             for(let i=0; i<json.length;i++){
-//                total +=  parseFloat(json[i].venda)
-                tbl.plot(json[i],'id|mobHide,num_ped,EMPRESA,data_ped,status|mobHide,VALOR|mobHide','int,str,Upp,date,change FECHADO=PED ABERTO=COT PAGO=FAT INTERNO=USO_INT. .=**,R$.',true)                    
+                tbl.plot(json[i],'id|mobHide,num_ped,EMPRESA,data_ped,status|mobHide,VALOR|mobHide,status|mobHide','int,str,Upp,date,change FECHADO=PED ABERTO=COT PAGO=FAT INTERNO=USO_INT. .=**,R$.,ico PAGO=mdi-file-check-outline .=mdi-file-document-remove-outline',true)
             }   
-
         });
     }
 
