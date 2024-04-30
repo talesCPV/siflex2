@@ -119,8 +119,10 @@
                 params.obs = document.querySelector('#edtObs').value.trim()
             const myPromisse = queryDB(params,'COT-1');
             myPromisse.then((resolve)=>{
-
-               const json = JSON.parse(resolve)
+               const json = JSON.parse(resolve)[0]
+console.log(json)
+                json.EMPRESA = pageScreen.querySelector('#edtCliente').value
+                closeModal('com_view_cot')   
                 openHTML('com_view_cot.html','pop-up','Cotação',json)
                 closeModal('com_new_cot')
 

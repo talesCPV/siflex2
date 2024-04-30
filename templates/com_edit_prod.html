@@ -35,21 +35,34 @@
     pageScreen.querySelector('#edtQtd').value = pageData.qtd
     pageScreen.querySelector('#edtPreco').value = parseFloat(pageData.preco).toFixed(2)
 
+    pageFunc.saveItem = (qtd,preco)=>{
+        const params = new Object
+        params.id = pageData.id
+        params.id_prod = pageData.id_prod
+        params.id_ped = pageData.id_ped
+        params.qtd = qtd
+        params.preco = preco
+        params.und = pageData.und
+        const myPromisse = queryDB(params,'COT-3')
+        myPromisse.then((resolve)=>{
+            main_data.com_view_cot.func.fillItens()
+            closeModal('com_edit_prod')
+        })
+    }
+
+
     pageScreen.querySelector('#btnSaveItem').addEventListener('click',()=>{
-        parentData.qtd = pageScreen.querySelector('#edtQtd').value
-        parentData.preco = pageScreen.querySelector('#edtPreco').value
-        parentData.TOTAL = (parseFloat(parentData.qtd) * parseFloat(parentData.preco)).toFixed(2)
-        main_data.com_view_cot.func.fillItens()
-        closeModal('com_edit_prod')
+        const qtd = pageScreen.querySelector('#edtQtd').value
+        const preco = pageScreen.querySelector('#edtPreco').value
+        pageFunc.saveItem(qtd,preco)
     })
 
     pageScreen.querySelector('#btnDelItem').addEventListener('click',()=>{
 
         if (confirm('Deseja realmente deletar este ítem?')) {
-            main_data.com_view_cot.func.delItem(pageData.id)
+            pageFunc.saveItem(0,0)
         }
-        closeModal('com_edit_prod')
-    
+
     })
 
 
