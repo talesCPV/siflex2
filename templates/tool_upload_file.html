@@ -1,24 +1,39 @@
 
 <template>
     <style>
-
+        .col{
+            display: flex;
+            flex-direction: column;
+        }
     </style>
   
     <fieldset>
         <legend>Selecione o arquivo</legend>
-        <input  name="up_file" id="up_file" type="file" accept=".jpg,.jpeg,.png">  
-        <button id="btnUpload">Salvar</button>
+        <div class="col">
+            <input  name="up_file" id="up_file" type="file" accept=".jpg,.jpeg,.png">  
+            <div class="line">
+                <button id="btnUpload"><span class="mdi mdi-content-save-check"></span>Salvar</button>
+            </div>
+        </div>
     </fieldset>
 
 
 </template>
 <script>
 
-    function uploadFile(fileID,path,filename){
-        const up_data = new FormData();        
-            up_data.append("up_file",  document.getElementById(fileID).files[0]);
-            up_data.append("path", path);
-            up_data.append("filename", filename);
+    const pageData = main_data.tool_upload_file.data
+    const pageFunc = main_data.tool_upload_file.func
+    const pageScreen = document.querySelector('#card-tool_upload_file')
+
+    pageFunc.start = ()=>{
+        pageScreen.querySelector('#up_file').accept =  '.'+pageData.name.split('.')[1]
+    }
+
+    pageFunc.uploadFile = ()=>{
+        const up_data = new FormData()
+            up_data.append("up_file",  pageScreen.querySelector('#up_file').files[0])
+            up_data.append("path", pageData.path)
+            up_data.append("filename", pageData.name)
 
         const myRequest = new Request("backend/upload.php",{
             method : "POST",
@@ -29,41 +44,20 @@
             fetch(myRequest)
             .then(function (response){
                 if (response.status === 200) { 
-                    resolve(response.text());             
-                } else { 
-                    reject(new Error("Houve algum erro na comunicação com o servidor"));                    
+                    console.log(response)
+                    resolve(response.text())
+                } else {
+                    reject(new Error("Houve algum erro na comunicação com o servidor"))
                 } 
-            });
-        }); 
-
-        return myPromisse
+                closeModal('tool_upload_file')
+            })
+        })
     }
 
-    document.querySelector('#up_file').accept =  main_data.uploadFile.data.ext
-    
-    document.querySelector('#btnUpload').addEventListener('click',()=>{
-        const upload = uploadFile('up_file',main_data.uploadFile.data.path,main_data.uploadFile.data.filename)
-
-        upload.then(function (resolve){
-            if(resolve != '0'){
-                console.log(resolve) 
-                if(main_data.uploadFile.data.hasOwnProperty('func')){
-                    main_data.uploadFile.data.func(resolve)
-                }else{
-                    const myPromisse = queryDB(main_data.uploadFile.data.params,main_data.uploadFile.data.query);
-                    myPromisse.then((resolve)=>{
-                        document.querySelector('#btnBusca').click()
-                        data.path = '../../nf/servico/'
-                        listNF('../../nf/servico','pdf')
-
-                        closeModal('uploadFile')
-                    })
-                }
-            }
-        })
+    pageScreen.querySelector('#btnUpload').addEventListener('click',()=>{
+        const upload = pageFunc.uploadFile()
     })
 
-
-
+    pageFunc.start()
 
 </script>

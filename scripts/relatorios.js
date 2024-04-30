@@ -464,7 +464,7 @@ function print_cotacao(ped,tipo='cot'){
     if(show_val){  
         if(ped.desconto != '0') {
             addLine(0.5)
-            right_text('Subtotal '+ viewMoneyBR(ped.VALOR.toFixed(2)),17)
+            right_text('Subtotal '+ viewMoneyBR(parseFloat(ped.VALOR).toFixed(2)),17)
             addLine()
             right_text('Desconto '+ viewMoneyBR(parseFloat(ped.desconto).toFixed(2)),17)
             addLine(0.4)

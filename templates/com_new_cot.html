@@ -58,7 +58,6 @@
     pageFunc.buscaEmp = (emp)=>{
         pageData.id_emp = emp.id
         pageScreen.querySelector('#edtCliente').value = emp.fantasia.toUpperCase()
-        console.log(emp)
     }
 
     pageScreen.querySelector('#btnCliente').addEventListener('click',()=>{        
@@ -101,8 +100,6 @@
         }
     }
 
-
-
     pageScreen.querySelector('#btnSalvar').addEventListener('click',()=>{
 
         if(checkField(['edtData','edtCliente'])){
@@ -120,12 +117,15 @@
             const myPromisse = queryDB(params,'COT-1');
             myPromisse.then((resolve)=>{
                const json = JSON.parse(resolve)[0]
-console.log(json)
                 json.EMPRESA = pageScreen.querySelector('#edtCliente').value
                 closeModal('com_view_cot')   
                 openHTML('com_view_cot.html','pop-up','Cotação',json)
                 closeModal('com_new_cot')
-
+                try{
+                    main_data.com_cotacoes.func.fillCot()
+                }catch{
+                    console.error('Janela COTAÇÕES fechada pelo usuário!')
+                }
             })
         }
         

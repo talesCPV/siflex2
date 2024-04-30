@@ -13,12 +13,12 @@
     <div class="inline">
         <label for="edtQtd">Qtd</label>
         <input type="text" id="edtQtd" onkeyup="return valFloat(this,0)">
-        <label for="edtPreco">Preço</label>
+        <label for="edtPreco">Preço R$</label>
         <input type="text" id="edtPreco" onkeyup="return valFloat(this)">
     </div>
     <div class="line">
-        <button id="btnSaveItem">Salvar</button>
-        <button id="btnDelItem">Deletar</button>
+        <button id="btnSaveItem"><span class="mdi mdi-content-save-check"></span>Salvar</button>
+        <button id="btnDelItem"><span class="mdi mdi-delete-outline"></span>Deletar</button>
     </div>
 </fieldset>
 
@@ -29,7 +29,6 @@
     const pageData = main_data.com_edit_prod.data
     const pageFunc = main_data.com_edit_prod.func
     const pageScreen = document.querySelector('#card-com_edit_prod')
-    const parentData = main_data.com_view_cot.data.itens[pageData.rowindex]
 
     pageScreen.querySelector('#lgdItem').innerHTML = pageData.descricao
     pageScreen.querySelector('#edtQtd').value = pageData.qtd
@@ -45,7 +44,12 @@
         params.und = pageData.und
         const myPromisse = queryDB(params,'COT-3')
         myPromisse.then((resolve)=>{
-            main_data.com_view_cot.func.fillItens()
+            try{
+                main_data.com_cotacoes.func.fillCot()
+                main_data.com_view_cot.func.fillItens()
+            }catch{
+                console.error('Janela COTAÇÕES fechada pelo usuário!')
+            }
             closeModal('com_edit_prod')
         })
     }
