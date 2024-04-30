@@ -82,8 +82,8 @@
             pageScreen.querySelector('#btnFecha').innerHTML = 'Upload NF' 
             pageScreen.querySelector('#btnAdd').disabled = true
             pageData.status == 'FAT' ? pageScreen.querySelector('#btnVerNF').style.display = 'block' : null
-        }else{
-            pageScreen.querySelector('#btnFecha').innerHTML = 'VER NF' 
+        }else if(pageData.status == 'FAT'){
+            pageScreen.querySelector('#btnFecha').innerHTML = '<span class="mdi mdi-file-check-outline"></span> PDF NFe'
         }
         pageFunc.fillItens()
     }
@@ -129,32 +129,48 @@
         })
     }
 
+    pageFunc.uploadCallBack= (promisse)=>{
+        promisse.then((response)=>{
+            pageFunc.changeStatus('FAT')            
+        })
+    }
+
+    pageFunc.changeStatus = (stt)=>{
+        const params = new Object;
+            params.id = pageData.id
+            params.status = stt
+        const myPromisse = queryDB(params,'COT-5');
+        myPromisse.then((resolve)=>{
+            try{
+                pageData.status = stt
+                pageFunc.startPage()
+                main_data.com_cotacoes.func.fillCot()
+            }catch{
+                console.error('Pagina COTAÇÕES fechada pelo usuário!')
+            }
+        })
+    }
+
     pageScreen.querySelector('#btnFecha').addEventListener('click',()=>{
 
         switch(pageData.status){
             case 'COT':
                 if(confirm('Transformar esta cotação em pedido?')){
-                    const params = new Object;
-                        params.id = pageData.id
-                        params.status = 'PED'
-                    const myPromisse = queryDB(params,'COT-5');
-                    myPromisse.then((resolve)=>{
-                        pageData.status = 'PED'
-                        pageFunc.startPage()
-                        main_data.com_cotacoes.func.fillCot()
-                    })
+                    pageFunc.changeStatus('PED')
                 }
             break
             case 'PED':
                 const file = new Object
                     file.path = '../NFe/'
-                    file.name = `NF-${pageData.id}.pdf`                    
+                    file.name = `NF-${pageData.id}.pdf`
+                    file.org = 'com_view_cot'
                 openHTML('tool_upload_file.html','pop-up','Upload de NF', file,500)
             break
-            
+            case 'FAT':                
+                const url = `../NFe/NF-${pageData.id}.pdf`
+                window.open(url, '_blank')
+            break            
         }
-
-
     })
 
     pageScreen.querySelector('#btnAdd').addEventListener('click',()=>{

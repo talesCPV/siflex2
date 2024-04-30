@@ -43,12 +43,12 @@
         const myPromisse = new Promise((resolve,reject) =>{
             fetch(myRequest)
             .then(function (response){
-                if (response.status === 200) { 
-                    console.log(response)
+                if (response.status === 200){
                     resolve(response.text())
-                } else {
+                    main_data[pageData.org].func.uploadCallBack(myPromisse) 
+                }else{
                     reject(new Error("Houve algum erro na comunicação com o servidor"))
-                } 
+                }                 
                 closeModal('tool_upload_file')
             })
         })
