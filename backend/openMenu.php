@@ -59,7 +59,8 @@ function userMenu(){
 }
 
   $out = [];
-
+  $qtd_lin = 0;
+  
 	if (IsSet($_POST["hash"])){
 	  $path = "../config/menu.json";
 	  $hash = $_POST["hash"];

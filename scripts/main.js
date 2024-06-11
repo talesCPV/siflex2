@@ -162,15 +162,19 @@ function openMenu(){
     })
 
     myPromisse.then((resolve)=>{
-//console.log(resolve)        
-        const menu_data = JSON.parse(resolve)
-        const menu = document.querySelector('.menu')
-        menu.innerHTML = ''//usr_menu
-        pushMenu(menu, menu_data)
-        checkUserMail()
-        addShortcut()
-
-    });
+//console.log(resolve)
+        try{
+            const menu_data = JSON.parse(resolve)
+            const menu = document.querySelector('.menu')
+            menu.innerHTML = ''//usr_menu
+            pushMenu(menu, menu_data)
+            checkUserMail()
+            addShortcut()        
+        }catch{
+            localStorage.clear()
+            this.location.reload(true)
+        }
+    })
 
     function pushMenu(menu, obj){
 //        menu.innerHTML = ''
@@ -304,6 +308,7 @@ function addShortcut(){
 
                     /* icon click */
                     if(!move && e.button == 0){
+                        main_data.dashboard.data.access = json[i].access 
                         openHTML(json[i].link,json[i].janela,json[i].label,{},json[i].width)
                     }
 
