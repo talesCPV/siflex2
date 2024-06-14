@@ -28,7 +28,8 @@ function print_etq(data){
     doc.text(data.cod.padStart(13,'0') , x_+15,40);
     doc.text(data.cod_cli.padStart(13,'0') , x_+55,40);
 
-    doc.save('etiqueta.pdf')
+//    doc.save('etiqueta.pdf')
+    openPDF(doc,'etiqueta.pdf')
 }
 
 function print_pcp(tbl){
@@ -85,7 +86,8 @@ function print_pcp(tbl){
         }        
     });
 
-    doc.save('pcp.pdf')
+//    doc.save('pcp.pdf')
+    openPDF(doc,'pcp.pdf')
 }
 
 function carrosRelat(tbl, dt){
@@ -281,7 +283,8 @@ function carrosRelat(tbl, dt){
 */
 
 
-    doc.save('RelAnaFrot.pdf')
+//    doc.save('RelAnaFrot.pdf')
+    openPDF(doc,'RelAnaFrot.pdf')
 
 }
 
@@ -331,7 +334,8 @@ function print_finan(obj){
 
     doc.text('Total    '+viewMoneyBR(total.toFixed(2)), 155,txt.y);
 
-    doc.save('RelFinan.pdf')
+//    doc.save('RelFinan.pdf')
+    openPDF(doc,'RelFinan.pdf')
 
 }
 
@@ -369,7 +373,8 @@ function print_prod(obj){
 
     txt.y = doc.previousAutoTable.finalY
 
-    doc.save('relatProd.pdf')
+//    doc.save('relatProd.pdf')
+    openPDF(doc,'relatProd.pdf')
 
 }
 
@@ -497,7 +502,8 @@ function print_cotacao(ped,tipo='cot'){
         box(ped.cond_pgto.trim(),10,txt.y,170,0.7)    
     }
 
-    doc.save('cotacao.pdf')
+//    doc.save('cotacao.pdf')
+    openPDF(doc,'cotacao.pdf')
 
 }
 
@@ -595,8 +601,8 @@ function print_pedcomp(){
         right_text('Total '+ viewMoneyBR((total).toFixed(2)),17)
     }
 
-    doc.save('pedcompra.pdf')
-
+//    doc.save('pedcompra.pdf')
+    openPDF(doc,'pedcompra.pdf')
 }
 
 function timbrado(titulo,texto){
@@ -648,8 +654,8 @@ function timbrado(titulo,texto){
         doc.text(texto.ass,txt.x,txt.y)
     }
 
-    doc.save('timbrado.pdf')
-
+//    doc.save('timbrado.pdf')
+    openPDF(doc,'timbrado.pdf')
 
 }
 
@@ -1028,8 +1034,8 @@ function holerite(func,tipo='holerite'){
             drawFrame(150,'EMPRESTIMO')
         }
             
-        doc.save('holerite.pdf')
-
+//        doc.save('holerite.pdf')
+        openPDF(doc,'holerite.pdf')
     })
 
 }
