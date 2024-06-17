@@ -99,6 +99,10 @@ function NFeConf(file){
     saveFile(file,path='/../config/NFe.json')
 }
 
+function NFsConf(file){
+    saveFile(file,path='/../config/NFs.json')
+}
+
 function saveFile(file,path){
     const data = new URLSearchParams();
         data.append("file", JSON.stringify(file));
@@ -143,42 +147,7 @@ function uploadNFe(txt, filename){
             }
         }
         document.querySelector('#tab-export').click()
-    })
-
-/*
-    const data = new URLSearchParams();        
-        data.append("txt",txt);
-        data.append("filename",filename);
-        data.append("folder",'NFe/txt');
-
-    const myRequest = new Request("backend/nfe_SAVE.php",{
-        method : "POST",
-        body : data
-    });
-    fetch(myRequest).then(()=>{
-        const myRequest2 = new Request("backend/nfe_TXT2XML.php",{
-            method : "POST",
-            body : data
-        })
-        fetch(myRequest2).then(()=>{
-            alert('NFe exportada com sucesso!!')
-            listNF('NFe/txt')
-            listNF('NFe/xml','xml')
-            if (confirm(`Deseja lançar od boletos?`)) {
-                for(let i=0; i<pageData.config.Y07.length; i++){
-                    const pgto = new Object            
-                    pgto.sac = pageData.config.E.xNome.split(' ')[0]
-                    pgto.nf = pageData.config.B.nNF
-                    pgto.ref =  (i+1).toString().padStart(2,"0") +'/'+ (pageData.config.Y07.length).toString().padStart(2,"0")
-                    pgto.venc = pageData.config.Y07[i].Y07.date
-                    pgto.val = pageData.config.Y07[i].Y07.valor
-                    addBoleto(pgto)
-                }
-            }
-            document.querySelector('#tab-export').click()
-        })            
-    })
-*/        
+    })    
 }
 
 function uploadFile(file,path,filename){

@@ -207,11 +207,6 @@
                     <option value="2">emissão de NF-e avulsa, pelo contribuinte com seu certificado digital, através do site do Fisco</option>
                     <option value="3">emissão NF-e pelo contribuinte com aplicativo fornecido pelo Fisco</option>
                 </select>
-
-                <div class="ckBOX">
-                    <label for="ckbSimpRem">Simples Remessa </label>                 
-                    <input type='checkbox' id='ckbSimpRem' /> 
-                </div>  
             </div>                
 
                 <button id="btnSaveFiscal">Salvar</button>                
@@ -237,7 +232,7 @@
                         </optgroup>
                     </select>
                     <div class="busca-itens">
-                        <input type="text" id="edtBusca" placeholder="Digite sua Busca" onkeypress="return getEnter(event, 'btnBusca')">
+                        <input type="text" id="edtBusca" placeholder="Digite sua Busca" onkeypress="return getEnter(event, 'btnBuscaPed')">
                         <button id="btnBuscaPed" class="btn-round"><span class="mdi mdi-magnify"></span></button>
                     </div>
                 </div>
@@ -246,8 +241,8 @@
                         <label for="ckbData">Início/Final</label>
                         <input type="checkbox" id="ckbData" checked>
                     </div>
-                    <input type="date" id="edtIni" onkeypress="return getEnter(event, 'btnBusca')">
-                    <input type="date" id="edtFin" onkeypress="return getEnter(event, 'btnBusca')">
+                    <input type="date" id="edtIni" onkeypress="return getEnter(event, 'btnBuscaPed')">
+                    <input type="date" id="edtFin" onkeypress="return getEnter(event, 'btnBuscaPed')">
                 </div>            
             </fieldset>
             <table id="tblBuscaPed"></table> 
@@ -539,9 +534,9 @@
 
     function geraNFeItens(){
         const tblItens = document.querySelector('#tblItens').rows
-        const regime = document.querySelector('#CRT').value
-        pageData.config.data = new Object
-        pageData.config.data.TOT_ICMS = 0
+        const regime = document.querySelector('#CRT').value        
+        pageData.ICMS = new Object
+        pageData.ICMS.TOT_ICMS = 0
         pageData.config.H = []
         for(let i=1; i< tblItens.length; i++){
             const item = new Object
@@ -559,7 +554,7 @@
             item.I.uCom = tblItens[i].data.und.split('\r')[0]
             item.I.qCom = parseFloat(tblItens[i].data.qtd).toFixed(4)
             item.I.vUnCom = parseFloat(tblItens[i].data.preco).toFixed(10)
-            item.I.vProd = parseFloat(tblItens[i].data.total).toFixed(2)
+            item.I.vProd = parseFloat(tblItens[i].data.TOTAL).toFixed(2)
             item.I.cEANTrib =  '|'
             item.I.uTrib = tblItens[i].data.und.split('\r')[0]
             item.I.qTrib = parseFloat(tblItens[i].data.qtd).toFixed(4)
@@ -578,7 +573,7 @@
             item.N = new Object
             if(regime == '3'){ 
                 // ICMS INTEGRAL
-                pageData.config.data.TOT_ICMS += parseFloat(tblItens[i].data.TOT_ICMS)
+                pageData.ICMS.TOT_ICMS += parseFloat(tblItens[i].data.TOT_ICMS)
                 item.N02= new Object
                 item.N02.orig = '0'
                 item.N02.CST = '00'
@@ -633,7 +628,7 @@
 //W02|vBC|vICMS|vICMSDeson|vFCPUFDest|vICMSUFDest|vICMSUFRemet|vFCP|vBCST|vST|vFCPST|vFCPSTRet|vProd|vFrete|vSeg|vDesc|vII|vIPI|vIPIDevol|vPIS|vCOFINS|vOutro|vNF|vTotTrib|
         pageData.config.W02 = new Object
         pageData.config.W02.vBC =  regime == '3' ? parseFloat(document.querySelector('#edtValorNF').value).toFixed(2) : '0.00'
-        pageData.config.W02.vICMS =  regime == '3' ? pageData.config.data.TOT_ICMS.toFixed(2) : '0.00'
+        pageData.config.W02.vICMS =  regime == '3' ? pageData.ICMS.TOT_ICMS.toFixed(2) : '0.00'
         pageData.config.W02.vICMSDeson = '0.00'
 //        pageData.config.W02.vFCPUFDest = '0.00'
 //        pageData.config.W02.vICMSUFDest = '0.00'
@@ -686,7 +681,7 @@
         pageData.config.Z = new Object
         pageData.config.Z.infAdFisco = ''
         pageData.config.Z.infCpl = document.querySelector('#txaTextoCompl').value
-    
+console.log(pageData.config)    
         NFeConf(pageData.config)
     }
 
