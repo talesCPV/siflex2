@@ -196,8 +196,8 @@ function startPage(){
         pageScreen.querySelector('#edtIni').value =  today.iniMonth()
         pageScreen.querySelector('#edtFin').value =  today.finMonth()
 
-        listNF('../NFe/txt')
-        listNF('../../nf/servico','pdf')
+        listNF('../NF/NFs/txt')
+        listNF('../NF/NFs/pdf','pdf')
         importData()
 
     }
@@ -300,36 +300,6 @@ function startPage(){
         pageData.config['CONF'].DtHrGerNf = now.getFullDate()
 
         NFsConf(pageData.config)
-        console.log(pageData.config)
-    }
-
-    function uploadNFs(txt, filename){
-        const data = new URLSearchParams();        
-            data.append("txt",txt);
-            data.append("filename",filename);
-            data.append("folder",'NFs/txt');
-        const myRequest = new Request("backend/nfe_SAVE.php",{
-            method : "POST",
-            body : data
-        });
-        fetch(myRequest).then(()=>{
-            const myRequest2 = new Request("backend/nfs_TXT2XML.php",{
-                method : "POST",
-                body : data
-            });
-            fetch(myRequest2).then(()=>{
-                alert('NFs exportada com sucesso!')
-                listNF('NFs/txt')
-                listNF('../../nf/servico','pdf')
-                if (confirm(`Deseja lançar od boletos?`)) {
-                    for(let i=0; i<pageData.config.fatura.length; i++){
-                        addBoleto(pageData.config.fatura[i])
-                    }
-                }
-                document.querySelector('#tab-export').click()
-            })          
-
-        })
     }
 
     function addBoleto(obj){
@@ -397,13 +367,10 @@ function startPage(){
     }
 
     document.querySelector('#brnGeraNFs').addEventListener('click',()=>{
-
         saveFiscal()
         const txt = getTXT()
-        console.log(txt)
         const filename = 'NFs-'+pageData.config['CONF'].numNFS
         uploadNFs(txt, filename)
-
     })
 
     document.querySelector('#btnSaveEmit').addEventListener('click',()=>{
@@ -441,7 +408,7 @@ function startPage(){
 
     document.querySelector('#txtFiles').addEventListener('dblclick',()=>{
         const file = document.getElementById('txtFiles').value
-        const path = 'assets/NFs/txt/' + file;
+        const path = '../NF/NFs/txt/' + file;
         var link = document.createElement("a");
             link.download = file;
             link.href = path;
@@ -453,7 +420,7 @@ function startPage(){
 
     document.querySelector('#pdfFiles').addEventListener('dblclick',()=>{
         const file = document.getElementById('pdfFiles').value
-        const path = '../../nf/servico/' + file;
+        const path = '../NF/NFs/pdf/' + file;
         var link = document.createElement("a");
             link.download = file;
             link.href = path;
@@ -518,7 +485,7 @@ function startPage(){
 
         const data = new Object
         data.ext = '.pdf'
-        data.path = '../../nf/servico/'
+        data.path = '../NF/NFs/pdf/'
         data.filename = ''
 
         openHTML('uploadFile.html','pop-up','Nota Fiscal de Serviço',data)
@@ -536,10 +503,8 @@ function startPage(){
             serv.innerHTML = ''
 
             info.innerHTML = rows.length > 2 ? 'Serviço aprovado conforme Pedidos:' : 'Serviço aprovado conforme Pedido:'
-            console.log(rows[0].data)
             addCliente(rows[1].data)
             for(let i=1; i<rows.length; i++){
-                console.log(rows[i].data)
                 serv.innerHTML += `\nCARRO:${rows[i].data.num_carro}\n` + rows[i].data.obs +'\n'
                 document.querySelector('#edtValor').value =  (parseFloat(document.querySelector('#edtValor').value)+parseFloat(rows[i].data.valor)).toFixed(2)
                 info.innerHTML += pedidos.includes(rows[i].data.pedido.trim()) ? '' : rows[i].data.pedido.trim()+' '

@@ -49,22 +49,23 @@ function uploadImage(fileID,path,filename){
 
 function listNF(path,ext='txt'){
 
-    const data = new URLSearchParams();        
-        data.append("dir",path);
+    const data = new URLSearchParams()
+        data.append("dir",path)
+        data.append("ext",ext)
     const myRequest = new Request("backend/show_dir.php",{
         method : "POST",
         body : data
-    });
+    })
     const myPromisse = new Promise((resolve,reject) =>{
         fetch(myRequest)
         .then(function (response){
-            if (response.status === 200) { 
-                resolve(response.text());             
-            } else { 
-                reject(new Error("Houve algum erro na comunicação com o servidor"));                    
-            } 
-        });
-    });        
+            if (response.status === 200) {
+                resolve(response.text())
+            } else {
+                reject(new Error("Houve algum erro na comunicação com o servidor"))
+            }
+        })
+    })
     myPromisse.then((txt)=>{
         const list = JSON.parse(txt)
         const sel = document.querySelector(`#${ext}Files`)
@@ -128,9 +129,6 @@ function saveFile(file,path){
 
 function uploadNFe(txt, filename){
 
-    console.log(txt)    
-    console.log(filename)
-
     saveFile(txt,path=`/../../NFe/txt/${filename}.txt`).then(()=>{
         alert('NFe exportada com sucesso!!')
         listNF('../NFe/txt')
@@ -148,6 +146,20 @@ function uploadNFe(txt, filename){
         }
         document.querySelector('#tab-export').click()
     })    
+}
+
+function uploadNFs(txt, filename){
+
+    saveFile(txt,path=`/../../NFs/txt/${filename}.txt`).then(()=>{
+        alert('NFs exportada com sucesso!!')
+        listNF('../NFs/txt')
+        if (confirm(`Deseja lançar od boletos?`)) {
+            for(let i=0; i<pageData.config.fatura.length; i++){
+                addBoleto(pageData.config.fatura[i])
+            }
+        }
+        document.querySelector('#tab-export').click()
+    }) 
 }
 
 function uploadFile(file,path,filename){

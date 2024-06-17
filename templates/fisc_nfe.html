@@ -379,10 +379,10 @@
                     <select id="txtFiles" size="20"></select>
                 </fieldset>
                 <fieldset>
-                    <legend>XML</legend>
-                    <select id="xmlFiles" size="20"></select>
+                    <legend>PDF</legend>
+                    <select id="pdfFiles" size="20"></select>
                 </fieldset>
-                <button id="btnAssina">Assina XML</button>
+<!--                <button id="btnAssina">Assina XML</button>-->
         </div>                
     </div>   
 
@@ -402,8 +402,8 @@
         pageScreen.querySelector('#edtIni').value =  today.iniMonth()
         pageScreen.querySelector('#edtFin').value =  today.finMonth()
 
-        listNF('../NFe/txt')
-        listNF('../NFe/xml','xml')
+        listNF('../NF/NFe/txt')
+        listNF('../NF/NFe/pdf','pdf')
         importData()
 
     }
@@ -411,15 +411,11 @@
 
 
 /* FUNÇÔES */    
-
+/*
     document.querySelector('#btnAssina').addEventListener('click',()=>{
 
         let filename = document.querySelector('#xmlFiles').value.split('/')
-        filename = filename[filename.length-1].split('.')[0]      
-        
-        
-        
-        console.log()
+        filename = filename[filename.length-1].split('.')[0]
 
         if(filename.substring(11,15) == ''){
             const data = new URLSearchParams();        
@@ -449,7 +445,7 @@
 
 
     })
-
+*/
 
     pageFunc.row_edit = (obj)=>{
         pageData.config.row_item.cells[1].innerHTML = obj.descricao
@@ -462,7 +458,7 @@
 
     function importData(){
 
-        const resp = getFile('/../config/NFe.json')
+        const resp = getFile('../NF/NFe/json/NFe.json')
         resp.then((txt)=>{
             pageData.config = JSON.parse(txt)
             fillData()
@@ -527,7 +523,6 @@
             tot += val
         }
         document.querySelector('#edtValorNF').value = tot.toFixed(2)
-        console.log(document.querySelector('#CRT').value)
         const txt_compl =  document.querySelector('#CRT').value == '3' ? `DOC. GERA DIREITO A CREDITO FISCAL DO ICMS NO VALOR DE  R$${(tot*0.18).toFixed(2)} CORRESPONDENTE A ALIQUOTA DE 18%. Aprovado conforme pedido(s) ${document.querySelector('#hdnPed').value}` : `DOC. EMITIDO POR ME OU EPP OPTANTE S.NACIONAL, NÃO GERA DIREITO A CREDITO FISCAL DE ISSQN E IPI, PERMITE O APROVEITAMENTO DE CREDITO DO ICMS NO VALOR DE  R$${(tot*0.0282).toFixed(2)} CORRESPONDENTE A ALIQUOTA DE 2,82% NOS TERMOS DO ARTIGO 23 DA LC 123. Aprovado conforme pedido(s) ${document.querySelector('#hdnPed').value}`
         document.querySelector('#txaTextoCompl').value = txt_compl
     }
@@ -680,8 +675,7 @@
         pageData.config.YA01.vPag = (valor - desc).toFixed(2)
         pageData.config.Z = new Object
         pageData.config.Z.infAdFisco = ''
-        pageData.config.Z.infCpl = document.querySelector('#txaTextoCompl').value
-console.log(pageData.config)    
+        pageData.config.Z.infCpl = document.querySelector('#txaTextoCompl').value   
         NFeConf(pageData.config)
     }
 
@@ -700,10 +694,6 @@ console.log(pageData.config)
             params.pgto = 'BOL'
         const myPromisse = queryDB(params,21);
     }
-
-pageFunc.getTXT = ()=>{
-   console.log(getTXT())
-}
 
     function getTXT(){
         let out = ''
@@ -850,7 +840,6 @@ pageFunc.getTXT = ()=>{
     document.querySelector('#tblBuscaPed').addEventListener('click',(e)=>{
         data = e.target.parentNode.data
         data.mode = 'NFe'
-console.log(data)
         if (confirm(`Carregar Ped.${data.num_ped} de ${data.EMPRESA.toUpperCase()}?`)) {
             function addCli(){
                 const cliente = document.querySelector('#cliente')
@@ -940,7 +929,7 @@ console.log(data)
     document.querySelector('#txtFiles').addEventListener('dblclick',()=>{
 
         const file = document.getElementById('txtFiles').value
-        const path = '../NFe/txt/' + file;
+        const path = '../NF/NFe/txt/' + file;
         
         var link = document.createElement("a");
             link.download = file;
@@ -951,10 +940,10 @@ console.log(data)
             delete link; 
     })
 
-    document.querySelector('#xmlFiles').addEventListener('dblclick',()=>{
+    document.querySelector('#pdfFiles').addEventListener('dblclick',()=>{
 
-        const file = document.getElementById('xmlFiles').value
-        const path = 'assets/NFe/xml/' + file;
+        const file = document.getElementById('pdfFiles').value
+        const path = '../NF/NFe/pdf/' + file;
         var link = document.createElement("a");
             link.download = file;
             link.href = path;
