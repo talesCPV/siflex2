@@ -160,3 +160,12 @@ CREATE TABLE tb_prod_reserva(
     FOREIGN KEY (id_user) REFERENCES tb_usuario(id),
     PRIMARY KEY (id_prod,id_proj)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS tb_pcp_2;
+CREATE TABLE tb_pcp_2 (
+  data_serv date NOT NULL,
+  id_setor int(11) NOT NULL,
+  valor varchar(300) DEFAULT NULL,
+  FOREIGN KEY (id_setor) REFERENCES tb_setor(id),
+  PRIMARY KEY (data_serv,id_setor)
+) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;

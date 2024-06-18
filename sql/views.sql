@@ -36,6 +36,10 @@ DROP VIEW vw_serv_exec;
         `SERV`.`obs` AS `obs`,
         `SERV`.`valor` AS `valor`,
         `EMP`.`fantasia` AS `empresa`,
+        EMP.nome AS razao_social,
+        EMP.bairro,
+        EMP.cep,
+        EMP.email,
         EMP.cnpj,
         EMP.endereco,
         EMP.num,
@@ -96,17 +100,47 @@ DROP VIEW vw_cot_preco;
 
 SELECT * FROM vw_cot_preco; 
 
-DROP VIEW vw_cotacoes;
- CREATE VIEW vw_cotacoes AS
-	SELECT COT.*, COALESCE(EMP.fantasia,"") AS EMPRESA
-	FROM vw_cot_preco AS COT
-	LEFT JOIN tb_empresa AS EMP
-	ON COT.id_emp = EMP.id;
+-- DROP VIEW vw_cotacoes;
+-- CREATE VIEW vw_cotacoes AS
+	    SELECT 
+        `COT`.`id` AS `id`,
+        `COT`.`id_emp` AS `id_emp`,
+        `COT`.`data_ped` AS `data_ped`,
+        `COT`.`data_ent` AS `data_ent`,
+        `COT`.`resp` AS `resp`,
+        `COT`.`comp` AS `comp`,
+        `COT`.`num_ped` AS `num_ped`,
+        `COT`.`status` AS `status`,
+        `COT`.`desconto` AS `desconto`,
+        `COT`.`cond_pgto` AS `cond_pgto`,
+        `COT`.`obs` AS `obs`,
+        `COT`.`origem` AS `origem`,
+        `COT`.`path` AS `path`,
+        `COT`.`VALOR` AS `VALOR`,
+        COALESCE(`EMP`.`fantasia`, '') AS `EMPRESA`,
+        COALESCE(`EMP`.`cnpj`, '') AS `CNPJ`,
+        COALESCE(`EMP`.`ie`, '') AS `IE`,
+        COALESCE(`EMP`.`endereco`, '') AS `END`,
+        COALESCE(`EMP`.`estado`, '') AS `UF`,
+        COALESCE(`EMP`.`cep`, '') AS `CEP`,
+        COALESCE(`EMP`.`bairro`, '') AS `BAIRRO`,
+        COALESCE(`EMP`.`cidade`, '') AS `CIDADE`,
+        COALESCE(`EMP`.`num`, '') AS `NUM`,
+        COALESCE(`EMP`.`tel`, '') AS `TEL`
+    FROM
+        (`vw_cot_preco` `COT`
+        LEFT JOIN `tb_empresa` `EMP` ON ((`COT`.`id_emp` = `EMP`.`id`)));
 
 SELECT * FROM vw_cotacoes; 
 
-SELECT (COUNT(*)+1) AS new_ped FROM tb_pedido WHERE data_ped = "2024-04-25";
+DROP VIEW vw_item_cot;
+ CREATE VIEW vw_item_cot AS
+SELECT ITN.*, ROUND((ITN.qtd*ITN.preco), 2) AS TOTAL, PRD.descricao, PRD.unidade, PRD.CFOP, PRD.ncm, PRD.cod AS cod_prod
+	FROM tb_item_ped AS ITN
+    INNER JOIN tb_produto AS PRD
+    ON ITN.id_prod = PRD.id;
 
+SELECT * FROM vw_item_cot;
 
 -- 	DROP VIEW vw_date_range;
  	CREATE VIEW vw_date_range AS

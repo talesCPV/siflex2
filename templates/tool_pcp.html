@@ -82,9 +82,11 @@
             min-height: 600px;
         }
 
-        .pcp-cell:hover{
-            background-color: rgb(73, 73, 238);
-            color: rgb(250, 243, 243);
+        .pcp-cell:hover,
+        tr:hover .day-name,
+        .mark{
+            background-color: yellow;
+            color: rgb(15, 14, 14);
         }
 
         #tblSetor{
@@ -211,6 +213,13 @@
                             data.content = td.innerHTML
                             openHTML('tool_view_PCP.html','pop-up',`${data.nome} - ${dia[i]} ${data.data_br}`,data,800)
                         })
+                        td.addEventListener('mouseover',(e)=>{
+                            tbl.rows[0].cells[(e.target.cellIndex)].classList.add('mark')
+                        })
+                        td.addEventListener('mouseout',(e)=>{
+                            tbl.rows[0].cells[(e.target.cellIndex)].classList.remove('mark')
+                        })
+
                         row.appendChild(td)
                     }
                 }

@@ -1,0 +1,58 @@
+
+<template>
+    <style>
+
+    </style>
+
+    <fieldset>
+        <legend>Detalhes do ítem</legend>
+
+        <div class="inline">
+            <label for="edtDesc">Descrição</label>
+            <input type="text" id="edtDesc">
+        </div>
+        <div class="inline">
+            <label for="edtQtd">Qtd</label>
+            <input type="text" id="edtQtd" onkeyup="valFloat(this)">
+            <label for="edtPreco">Preço unt. R$</label>
+            <input type="text" id="edtPreco" onkeyup="valFloat(this)">
+            <label for="edtCFOP">CFOP</label>
+            <input type="text" id="edtCFOP" onkeyup="valInt(this)" maxlength="4">
+            <label for="edtICMS">ICMS (%)</label>
+            <input type="text" id="edtICMS" onkeyup="valFloat(this)">
+        </div>
+        
+        <button id="btnSaveItem">Salvar</button>
+    </fieldset>
+
+
+</template>
+<script>
+
+    const pageData = main_data.fisc_NFeItens.data
+    const pageFunc = main_data.fisc_NFeItens.func
+    const pageScreen = document.querySelector('#card-fisc_NFeItens')
+
+console.log(pageData)
+
+    pageScreen.querySelector('#edtDesc').value = pageData.descricao
+    pageScreen.querySelector('#edtQtd').value = pageData.qtd
+    pageScreen.querySelector('#edtPreco').value = pageData.preco
+    pageScreen.querySelector('#edtCFOP').value = pageData.cfop
+    pageScreen.querySelector('#edtICMS').value = pageData.ICMS
+
+
+    pageScreen.querySelector('#btnSaveItem').addEventListener('click',()=>{
+        pageData.descricao = pageScreen.querySelector('#edtDesc').value
+        pageData.qtd = pageScreen.querySelector('#edtQtd').value
+        pageData.preco = parseFloat(pageScreen.querySelector('#edtPreco').value).toFixed(2)
+        pageData.cfop = pageScreen.querySelector('#edtCFOP').value
+        pageData.total = (parseFloat(pageScreen.querySelector('#edtQtd').value) * parseFloat(pageScreen.querySelector('#edtPreco').value)).toFixed(2)
+        pageData.ICMS = pageScreen.querySelector('#edtICMS').value
+        pageData.TOT_ICMS = (parseFloat(pageData.total) * (parseFloat(pageData.ICMS)/100)).toFixed(2)
+        main_data.fisc_nfe.func.row_edit(pageData)
+        closeModal('fisc_NFeItens')
+    })
+
+
+</script>

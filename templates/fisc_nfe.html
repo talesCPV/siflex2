@@ -411,55 +411,22 @@
 
 
 /* FUNÇÔES */    
-/*
-    document.querySelector('#btnAssina').addEventListener('click',()=>{
-
-        let filename = document.querySelector('#xmlFiles').value.split('/')
-        filename = filename[filename.length-1].split('.')[0]
-
-        if(filename.substring(11,15) == ''){
-            const data = new URLSearchParams();        
-                data.append("filename",filename);
-            const myRequest = new Request("backend/signNFe.php",{
-                method : "POST",
-                body : data
-            });
-            const myPromisse = new Promise((resolve,reject) =>{
-
-                fetch(myRequest)
-                .then(function (response){
-                    if (response.status === 200) { 
-                        resolve(response.text());             
-                    } else { 
-                        reject(new Error("Houve algum erro na comunicação com o servidor"));                    
-                    } 
-                })
-                .then(function (response){
-                    listNF('NFe/xml','xml')
-                })
-            })            
-        }else{
-            alert('XML já foi assinado!')
-        }
-
-
-
-    })
-*/
 
     pageFunc.row_edit = (obj)=>{
         pageData.config.row_item.cells[1].innerHTML = obj.descricao
         pageData.config.row_item.cells[2].innerHTML = obj.qtd
         pageData.config.row_item.cells[3].innerHTML = obj.preco
         pageData.config.row_item.cells[4].innerHTML = obj.total
+        pageData.config.row_item.cells[5].innerHTML = obj.TOT_ICMS
+        pageData.config.row_item.cells[6].innerHTML = obj.ICMS
         pageData.config.row_item.cells[7].innerHTML = obj.cfop
         somaNFeItens()
     }
 
     function importData(){
 
-        const resp = getFile('../NF/NFe/json/NFe.json')
-        resp.then((txt)=>{
+        const resp = getFile('/../../NF/NFe/json/NFe.json')
+        resp.then((txt)=>{           
             pageData.config = JSON.parse(txt)
             fillData()
 
@@ -833,7 +800,7 @@
         data = e.target.parentNode.data
         data.mode = 'edtItens'
         pageData.config.row_item = e.target.parentNode
-        openHTML('viewNFeItens.html','pop-up','Edição de Ítem de NFe',data)
+        openHTML('fisc_NFeItens.html','pop-up','Edição de Ítem de NFe',data)
 
     })
 

@@ -171,8 +171,10 @@ function openMenu(){
             checkUserMail()
             addShortcut()        
         }catch{
+            
             localStorage.clear()
             this.location.reload(true)
+            
         }
     })
 

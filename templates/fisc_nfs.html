@@ -182,7 +182,6 @@
 </template>
 <script>
 
-
     const pageData = main_data.fisc_nfs.data
     const pageFunc = main_data.fisc_nfs.func
     const pageScreen = document.querySelector('#card-fisc_nfs')
@@ -337,7 +336,7 @@ function startPage(){
 
     function importData(){
 
-        const resp = getFile('/../config/NFs.json')
+        const resp = getFile('/../../NF/NFs/json/NFs.json')
         resp.then((txt)=>{
             pageData.config = JSON.parse(txt)
             fillData()

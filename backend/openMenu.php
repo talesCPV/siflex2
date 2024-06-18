@@ -69,7 +69,7 @@ function userMenu(){
     include_once "connect.php";
     include_once "crip.php";
 
-    $query = "SELECT access FROM tb_usuario WHERE hash=\"$hash\";";
+    $query = "SELECT access FROM tb_user WHERE hash=\"$hash\";";
 
 // echo $query;    
 
