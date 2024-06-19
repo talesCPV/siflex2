@@ -53,7 +53,8 @@ SELECT * FROM vw_serv_exec;
 
 DROP VIEW vw_func;
  CREATE VIEW vw_func AS
-	SELECT FUNC.*,  SETOR.setor, COALESCE(CAR.cargo,"") AS cargo, IF(CAR.tipo='HORA',1,0) AS horista, IF(FUNC.status="ATIVO",1,0) AS ativo
+	SELECT FUNC.*,  SETOR.setor, COALESCE(CAR.cargo,"") AS cargo, IF(CAR.tipo='HORA',1,0) AS horista,
+    IF(FUNC.status="ATIVO",1,0) AS ativo, COALESCE(CAR.cbo,"") AS cbo
     FROM tb_funcionario AS FUNC    
 	INNER JOIN tb_cargos AS CAR
 	INNER JOIN vw_setor AS SETOR

@@ -439,6 +439,88 @@ DELIMITER $$
 	END $$
 DELIMITER ;
 
+ DROP PROCEDURE sp_view_vale;
+DELIMITER $$
+	CREATE PROCEDURE sp_view_vale(	
+		IN Iallow varchar(80),
+		IN Ihash varchar(64),
+		IN Iid_func int(11)
+    )
+	BEGIN    
+		CALL sp_allow(Iallow,Ihash);
+		IF(@allow)THEN
+			SELECT * FROM vw_vales WHERE id_func=Iid_func ORDER BY data DESC;
+        END IF;
+	END $$
+DELIMITER ;
+
+ DROP PROCEDURE sp_set_vale;
+ DELIMITER $$
+	CREATE PROCEDURE sp_set_vale(
+		IN Iallow varchar(80),
+		IN Ihash varchar(64),
+		IN Iid int(11),
+		IN Iid_func int(11),
+        IN Ivalor double,
+        IN Iquitado boolean,
+		IN Iobs varchar(200),
+        IN Idata datetime
+    )
+	BEGIN
+		CALL sp_allow(Iallow,Ihash);
+		IF(@allow)THEN
+			IF(Iid > 0) THEN
+				IF(Ivalor <= 0)THEN
+					DELETE FROM tb_vale WHERE id=Iid;
+                    DELETE FROM tb_vale_pgto WHERE id_vale=Iid;
+                ELSE
+					UPDATE tb_vale SET quitado=Iquitado, valor=Ivalor, obs=Iobs, data=Idata WHERE id=Iid;
+                END IF;
+			ELSE
+				INSERT INTO tb_vale (id_func,valor,obs,data) VALUES (Iid_func,Ivalor,Iobs,Idata);
+			END IF;
+        END IF;
+	END $$
+DELIMITER ;
+
+ DROP PROCEDURE sp_set_vale_pgto;
+DELIMITER $$
+	CREATE PROCEDURE sp_set_vale_pgto(
+		IN Iallow varchar(80),
+		IN Ihash varchar(64),
+		IN Iid int(11),
+        IN Ivalor double,
+        IN Idata datetime,
+		IN Iobs varchar(200)        
+    )
+	BEGIN
+		CALL sp_allow(Iallow,Ihash);
+		IF(@allow)THEN
+			IF(Ivalor <= 0)THEN
+				DELETE FROM tb_vale_pgto WHERE id=Iid;
+            ELSE            
+				INSERT INTO tb_vale_pgto (id_vale,valor,obs,data) VALUES (Iid,Ivalor,Iobs,Idata);
+            END IF;
+        END IF;
+		SELECT * FROM tb_vale_pgto WHERE id_vale=Iid;
+	END $$
+DELIMITER ;
+
+ DROP PROCEDURE sp_view_vale_pgto;
+DELIMITER $$
+	CREATE PROCEDURE sp_view_vale_pgto(	
+		IN Iallow varchar(80),
+		IN Ihash varchar(64),
+		IN Iid_vale int(11)
+    )
+	BEGIN    
+		CALL sp_allow(Iallow,Ihash);
+		IF(@allow)THEN
+			SELECT * FROM tb_vale_pgto WHERE id_vale=Iid_vale ORDER BY data;
+        END IF;
+	END $$
+DELIMITER ;
+
  DROP PROCEDURE sp_set_feriado;
 DELIMITER $$
 	CREATE PROCEDURE sp_set_feriado(	
@@ -463,6 +545,28 @@ DELIMITER $$
 				END IF;
             END IF;			
 			SELECT * FROM tb_feriados;
+        END IF;
+	END $$
+DELIMITER ;
+
+ DROP PROCEDURE sp_view_imposto;
+DELIMITER $$
+	CREATE PROCEDURE sp_view_imposto(	
+		IN Iallow varchar(80),
+		IN Ihash varchar(64),
+		IN Iid_imp varchar(30)
+    )
+	BEGIN    
+		CALL sp_allow(Iallow,Ihash);
+		IF(@allow)THEN
+			SET @quer =CONCAT('SELECT IMP.nome, ALQ.* 
+						FROM tb_imposto AS IMP
+						INNER JOIN tb_aliquota AS ALQ
+						ON ALQ.id_imp = IMP.id
+						AND IMP.id IN (',Iid_imp,')
+						ORDER BY ALQ.ini_range ASC;');
+			PREPARE stmt1 FROM @quer;
+			EXECUTE stmt1;
         END IF;
 	END $$
 DELIMITER ;
