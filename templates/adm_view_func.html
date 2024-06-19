@@ -151,7 +151,10 @@
             <button id="btnEdit">Editar</button>
             <button id="btnSalvar" class="only-view" disabled>Salvar</button>
         </div>
-    
+        <div class="line">
+            <button id="btnVale">Vale</button>
+            <button id="btnRecibo">Recibo</button>
+        </div>
       </fieldset>    
 
 
@@ -339,6 +342,11 @@
             openFields(0)
         }
     })
+
+    pageScreen.querySelector('#btnVale').addEventListener('click',()=>{
+        openHTML('rh_vale.html','pop-up','Vales e Empréstimos',pageData)
+    })
+
 
     pageFunc.fillCargo()
     pageFunc.fillSetor()

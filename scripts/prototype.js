@@ -210,6 +210,9 @@ HTMLTableElement.prototype.plot = function(obj, fields,type='',file=false, mark=
                     op = type[i].split(' ')
                     op = op.length > 1 ? op[1] : 'OK'                
                     html = `<button id="btn_${this.rows.length-1}" class="tbl-btn">${op}</button>`
+                    break;
+                case 'let':                            
+                    html = arr[0]
                     break;                      
                 default:
                   html = obj[arr[0]] != null ? obj[arr[0]] :''
