@@ -662,7 +662,6 @@ function timbrado(titulo,texto){
 function holerite(func,tipo='holerite'){
 
     function drawFrame(Y=5,mode='ADTO'){
-        func.data.change(-1)
         const date =  meses[func.data.getMonth()] +'/'+ func.data.getFullYear()
         const pageWidth = doc.internal.pageSize.getWidth()
         txt.y = Y+5
@@ -676,13 +675,16 @@ function holerite(func,tipo='holerite'){
         addLine(0.7)
         doc.text('Rua Dr. Rosalvo de Almeida Telles, 2070',35,txt.y)
         doc.text('Caçapava-SP',105,txt.y)
+        
         center_text(mode,[165,pageWidth-5])
         backLine()
         addLine(0.7)
         doc.text('00.519.547/0001-06',35,txt.y)
         center_text(date,[165,pageWidth-5])
+       
         backLine(0.5)
         line(txt.y)
+        
         addLine()
         doc.text(func.nome,10,txt.y)
         doc.text(func.cbo,105,txt.y)
@@ -718,7 +720,6 @@ function holerite(func,tipo='holerite'){
             if(salario.bruto >= parseFloat(imp[i].ini_range) && salario.bruto <= parseFloat(imp[i].fin_range)){
                 salario.impostos[imp[i].nome] = imp[i]
             }
-
         }
 
         if(mode=='ADTO'){
@@ -894,8 +895,7 @@ function holerite(func,tipo='holerite'){
             let tot = 0
             for(let i=0; i<pgto.length; i++){
 
-
-                const dt = pgto[i].data.showDate()
+                const dt = typeof pgto[i].data=='object' ? pgto[i].data.getFullDateTime().date() : pgto[i].data.date()
                 const parcela = i.toString().padStart(2,0)
 
 
@@ -941,18 +941,12 @@ function holerite(func,tipo='holerite'){
             line(txt.y)
             addLine(0.7)
 
-
-
-
         }else{
             doc.setFont(undefined, 'normal')
 
-            doc.text('VALE',10,txt.y)
-//            doc.text(parseFloat(func.horas.vale).toFixed(2),90,txt.y)
+            doc.text(today.getFormatBR()+' - VALE',10,txt.y)
             doc.text(parseFloat(func.horas.vale).toFixed(2),135,txt.y)
-
             doc.setFont(undefined, 'bold')    
-
             txt.y = Y+80
             line(txt.y)
             addLine(0.7)
@@ -1013,10 +1007,9 @@ function holerite(func,tipo='holerite'){
 
     const params = new Object; 
         params.id = func.impostos.trim() == '' ? '0' : func.impostos
-        params.hash = localStorage.getItem('hash')
-
-    const myPromisse = queryDB(params,66);
+    const myPromisse = queryDB(params,'FIN-0');
     myPromisse.then((resolve)=>{
+        
         imp = JSON.parse(resolve)
 
         if(tipo == 'holerite'){

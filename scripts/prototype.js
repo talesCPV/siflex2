@@ -225,8 +225,7 @@ HTMLTableElement.prototype.plot = function(obj, fields,type='',file=false, mark=
     }
     tr.data = obj
     if(mark){
-        tr.style.background = green ? 'rgb(99, 201, 99)' : 'rgb(201, 99, 99)'
-        tr.style.color = green ? 'rgb(0,0,0)' : 'rgb(255,255,255)'
+        tr.classList.add(green ? 'green' : 'red')
     }
     this.appendChild(tr)
 }

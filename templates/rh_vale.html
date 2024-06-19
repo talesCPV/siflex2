@@ -49,20 +49,15 @@
     }
 
     pageScreen.querySelector('#btnNovoVale').addEventListener('click',()=>{
-        const val = pageScreen.querySelector('#edtVal').value.trim()
-        const obs = pageScreen.querySelector('#edtDesc').value.trim()
-
-        if(val.length >0 && obs.length>0){
+        if(checkField(['edtDesc','edtVal'])){
+            const val = pageScreen.querySelector('#edtVal').value.trim()
+            const obs = pageScreen.querySelector('#edtDesc').value.trim()
             addVal(0,val,0,obs)         
-        }else{
-            alert('Favor preencher descrição e valor.')
         }
     })
 
     pageScreen.querySelector('#tblVale').addEventListener('click',(e)=>{
         dt = e.target.parentNode.data
-//        console.log(e.target.parentNode.parentNode.rows.length)
-//        console.log(e.target.parentNode.rowIndex)
         if(e.target.parentNode.rowIndex >0 && e.target.parentNode.rowIndex < e.target.parentNode.parentNode.rows.length-1){
             openHTML('rh_view_vale.html','pop-up',data.nome,dt)
         }

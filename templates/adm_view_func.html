@@ -347,6 +347,11 @@
         openHTML('rh_vale.html','pop-up','Vales e Empréstimos',pageData)
     })
 
+    pageScreen.querySelector('#btnRecibo').addEventListener('click',()=>{
+        pageData.data = new Date()
+        pageData.horas = {'vale' : prompt('Digite o valor:')}
+        holerite(pageData,'VALE')
+    })
 
     pageFunc.fillCargo()
     pageFunc.fillSetor()

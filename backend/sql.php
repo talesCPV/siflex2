@@ -83,6 +83,9 @@
         "COT-4" => 'CALL sp_del_cot(@access,@hash,x00);', // ID_PED
         "COT-5" => 'CALL sp_change_cot(@access,@hash,x00,"x01");', // ID_PED,STATUS
 
+        /* FINANCEIRO */
+
+        "FIN-0" => 'CALL sp_view_imposto(@access,@hash,"x00");' // ID_IMPOSTOS ex: 1,2,3
     );
 
 ?>
