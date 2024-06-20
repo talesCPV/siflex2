@@ -87,7 +87,9 @@
         calc.display = 0
         calc.resp = 0
         calc.oper = '='
+        calc.last = '='
         calc.clear = 1
+        calc.queu = []
 
     const number = pageScreen.querySelectorAll('.numer')
     for(let i=0; i<number.length; i++){
@@ -99,13 +101,12 @@
     const oper = pageScreen.querySelectorAll('.oper')
     for(let i=0; i<oper.length; i++){
         oper[i].addEventListener('click',()=>{
-            calcula()
-            calc.oper = oper[i].innerHTML
+            calcula(oper[i].innerHTML)
         })
     }
 
-    function show(){        
-        pageScreen.querySelector('#display').innerHTML = calc.display
+    function show(){
+        pageScreen.querySelector('#display').innerHTML = calc.display.toString().substring(0,12)
     }
 
     function type(N){
@@ -122,34 +123,25 @@
         calc.display = 0
         calc.resp = 0
         calc.oper = '='
+        calc.queu = []
         show()
     }
 
-    function calcula(){
-        switch(calc.oper){
-                case '=': 
-                    calc.resp = Number(calc.display)
-                    break
-                case '+': 
-                    calc.resp += Number(calc.display)
-                    break
-                case '-': 
-                    calc.resp -= Number(calc.display)
-                    break
-                case 'x': 
-                    calc.resp *=  Number(calc.display)
-                    break
-                case '/': 
-                    calc.resp /= Number(calc.display)
-                    break
-                case '%': 
-                    calc.resp = Number(calc.display) * (Number(calc.resp)/100)
-                    break
-            }
-
-            calc.display = Number(calc.resp)
-            calc.clear = 1
-            show()
+    function calcula(OP){
+        OP = OP=='x' ? '*' : OP
+        if(calc.queu.length>=2){
+            let line = calc.queu[0] + calc.queu[1] + calc.display
+            line = OP == '%' ? `(${line})/100` : line
+            calc.display = eval(line)
+        }
+        calc.queu = []
+        if(OP != '='){
+            calc.queu.push(calc.display)
+            calc.queu.push(OP)
+        }
+        calc.resp = calc.display
+        calc.clear = 1
+        show()
     }
 
     pageFunc.type = (keyCode)=>{
