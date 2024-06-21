@@ -108,7 +108,6 @@ function saveFile(file,path){
     const data = new URLSearchParams();
         data.append("file", JSON.stringify(file));
         data.append("path", path);
-
     const myRequest = new Request("backend/saveFile.php",{
         method : "POST",
         body : data
@@ -129,9 +128,9 @@ function saveFile(file,path){
 
 function uploadNFe(txt, filename){
 
-    saveFile(txt,path=`/../../NFe/txt/${filename}.txt`).then(()=>{
+    saveFile(txt,path=`/../../NF/NFe/txt/${filename}.txt`).then(()=>{
         alert('NFe exportada com sucesso!!')
-        listNF('../NFe/txt')
+        listNF('../NF/NFe/txt')
         if (confirm(`Deseja lançar od boletos?`)) {
             const data = main_data.fisc_nfe.data.config
             for(let i=0; i<data.Y07.length; i++){
@@ -150,9 +149,9 @@ function uploadNFe(txt, filename){
 
 function uploadNFs(txt, filename){
 
-    saveFile(txt,path=`/../../NFs/txt/${filename}.txt`).then(()=>{
+    saveFile(txt,path=`/../../NF/NFs/txt/${filename}.txt`).then(()=>{
         alert('NFs exportada com sucesso!!')
-        listNF('../NFs/txt')
+        listNF('../NF/NFs/txt')
         if (confirm(`Deseja lançar od boletos?`)) {
             for(let i=0; i<pageData.config.fatura.length; i++){
                 addBoleto(pageData.config.fatura[i])
