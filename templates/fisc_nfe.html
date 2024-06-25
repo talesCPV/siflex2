@@ -424,12 +424,10 @@
     }
 
     function importData(){
-
         const resp = getFile('/../../NF/NFe/json/NFe.json')
-        resp.then((txt)=>{           
+        resp.then((txt)=>{  
             pageData.config = JSON.parse(txt)
             fillData()
-
         })
     }
 
@@ -534,13 +532,14 @@
             item.M.b = ''
             item.N = new Object
             if(regime == '3'){ 
+console.log(tblItens[i].data)                
                 // ICMS INTEGRAL
                 pageData.ICMS.TOT_ICMS += parseFloat(tblItens[i].data.TOT_ICMS)
                 item.N02= new Object
                 item.N02.orig = '0'
                 item.N02.CST = '00'
                 item.N02.modBC = '3'
-                item.N02.vBC = parseFloat(tblItens[i].data.total).toFixed(2)
+                item.N02.vBC = parseFloat(tblItens[i].data.TOTAL).toFixed(2)
                 item.N02.pICMS = parseFloat(tblItens[i].data.ICMS).toFixed(4)
                 item.N02.vICMS = parseFloat(tblItens[i].data.TOT_ICMS).toFixed(2)
                 item.N02.pFCP = ''
@@ -665,27 +664,29 @@
     function getTXT(){
         let out = ''
             for(let key in pageData.config){
+                let line = ''
+
                 if(['H','Y07'].includes(key)){
 //                    alert(key)
                     for(let i=0; i<pageData.config[key].length; i++){
                         for(let k in pageData.config[key][i]){
-                            out+= k+'|'
+                            line+= k+'|'
                             for(let item in pageData.config[key][i][k]){
-                                out += pageData.config[key][i][k][item]+'|'
+                                line += pageData.config[key][i][k][item]+'|'
                             }
-                            out += '\n'
+                            line += '\r\n'
                         }
 
                     }
 
                 }else{
-                    out+= key+'|'
+                    line+= key+'|'
                     for(let item in pageData.config[key]){
-                        out += pageData.config[key][item]+'|'
+                        line += pageData.config[key][item]+'|'
                     }
-                    out += '\n'
+                    line += '\r\n'                    
                 }
-
+                out += line
             }
             return out   
     }

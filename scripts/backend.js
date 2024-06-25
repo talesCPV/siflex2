@@ -97,11 +97,12 @@ function getFile(path){
 }
 
 function NFeConf(file){
-    saveFile(file,path='/../config/NFe.json')
+    file = JSON.stringify(file)
+    saveFile(file,path='/../../NF/NFe/json/NFe.json')
 }
 
 function NFsConf(file){
-    saveFile(file,path='/../config/NFs.json')
+    saveFile(file,path='/../../NF/NFe/json/NFs.json')
 }
 
 function saveFile(file,path){
