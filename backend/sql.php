@@ -85,7 +85,9 @@
 
         /* FINANCEIRO */
 
-        "FIN-0" => 'CALL sp_view_imposto(@access,@hash,"x00");' // ID_IMPOSTOS ex: 1,2,3
+        "FIN-0" => 'CALL sp_view_imposto(@access,@hash,"x00");', // ID_IMPOSTOS ex: 1,2,3
+        "FIN-1" => 'CALL sp_view_icms(@access,@hash,"x00","x01","x02");', // FIELD,SIGNAL, VALUE
+        "FIN-2" => 'CALL sp_edtICMS(@access,@hash,x00,"x01");', // ID, VALOR
     );
 
 ?>

@@ -10,7 +10,7 @@
             display: none;
         }
 
-        #btnVerNF{
+        #btnClearNF{
             display: none;
         }
 
@@ -36,7 +36,7 @@
         </table>
         <div class="line">
             <button id="btnFecha" disabled><span class="mdi mdi-folder-wrench-outline"></span> Encerrar</button>
-            <button id="btnVerNF"><span class="mdi mdi-file-check-outline"></span> Ver NF</button>
+            <button id="btnClearNF"><span class="mdi mdi-delete-empty"></span> Deletar PDF</button>
         </div>
     </fieldset>
     <fieldset>
@@ -81,9 +81,9 @@
         }else if(pageData.status == 'PED'){
             pageScreen.querySelector('#btnFecha').innerHTML = 'Upload NF' 
             pageScreen.querySelector('#btnAdd').disabled = true
-            pageData.status == 'FAT' ? pageScreen.querySelector('#btnVerNF').style.display = 'block' : null
         }else if(pageData.status == 'FAT'){
             pageScreen.querySelector('#btnFecha').innerHTML = '<span class="mdi mdi-file-check-outline"></span> PDF NFe'
+            pageScreen.querySelector('#btnClearNF').style.display = 'block'
         }
         pageFunc.fillItens()
     }
@@ -161,13 +161,13 @@
             break
             case 'PED':
                 const file = new Object
-                    file.path = '../NFe/'
-                    file.name = `NF-${pageData.id}.pdf`
+                    file.path = '../NF/NFe/pdf/'
+                    file.name = `PED-${pageData.id}.pdf`
                     file.org = 'com_view_cot'
                 openHTML('tool_upload_file.html','pop-up','Upload de NF', file,500)
             break
             case 'FAT':                
-                const url = `../NFe/NF-${pageData.id}.pdf`
+                const url = `../NF/NFe/pdf/PED-${pageData.id}.pdf`
                 window.open(url, '_blank')
             break            
         }
@@ -195,6 +195,13 @@
         if(pageData.status=='COT'){
             data = e.target.parentNode.data
             openHTML('com_edit_prod.html','pop-up','Alteração do Ítem',data,500)
+        }
+    })
+
+    pageScreen.querySelector('#btnClearNF').addEventListener('click',()=>{
+        if(confirm('Deseja realmente deletar a NFe referente a este Pedido?')){
+            pageFunc.changeStatus('PED')
+            closeModal('com_view_cot')
         }
     })
 

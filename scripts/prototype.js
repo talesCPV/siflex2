@@ -178,7 +178,11 @@ HTMLTableElement.prototype.plot = function(obj, fields,type='',file=false, mark=
                         html = obj[arr[0]] != null ? `(${viewMoneyBR(parseFloat(obj[arr[0]]).toFixed(2))})` : ''
                         green = false
                     }
+                    break
+                case '%..':
+                    html = obj[arr[0]] != null ?parseFloat(obj[arr[0]]).toFixed(2)+'%' : ''   // parseFloat(obj[arr[0]]).toFixed(2) + %
                     break;             
+    
                 case 'cha': // Troca palavra escolhida por outra valor_original=valor_desejado
                     op = type[i].split(' ')
                     html = ''

@@ -128,3 +128,7 @@
 18/06/2024 20:39 tales@flexibus.com.br : Permissao alterada, Modulo: Operacional, Acesso:[[0,1]])
 18/06/2024 20:39 tales@flexibus.com.br : Permissao alterada, Modulo: RH, Acesso:[[0,1,2]])
 18/06/2024 20:39 tales@flexibus.com.br : Permissao alterada, Modulo: Comercial, Acesso:[[0,1]])
+26/06/2024 19:21 tales@flexibus.com.br : Menu Alterado (Fiscal, menu, pop-up, )
+26/06/2024 19:21 tales@flexibus.com.br : Menu Incluido (Impostos)
+26/06/2024 19:49 tales@flexibus.com.br : Menu Alterado (ICMS, fisc_icms.html, pop-up, ICMS por Estado)
+26/06/2024 20:08 tales@flexibus.com.br : Menu Alterado (ICMS, fisc_icms.html, pop-up, ICMS por Estado)
