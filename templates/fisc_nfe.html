@@ -503,7 +503,7 @@
             item.H = new Object
             item.H.nItem = i
             item.H.infAdProd = ''
-// I|cProd|cEAN|xProd|NCM|cBenef|EXTIPI|CFOP|uCom|qCom|vUnCom|vProd|cEANTrib|uTrib|qTrib|vUnTrib| vFrete|vSeg|vDesc|vOutro| indTot| xPed|nItemPed|nFCI|
+// I|cProd|cEAN|xProd|NCM|cBenef|EXTIPI|CFOP|uCom|qCom|vUnCom|vProd|cEANTrib|uTrib|qTrib|vUnTrib|vFrete|vSeg|vDesc|vOutro|indTot|xPed|nItemPed|nFCI|
             item.I = new Object
             item.I.cProd = tblItens[i].data.cod_prod
             item.I.cEAN = '|'
@@ -532,7 +532,6 @@
             item.M.b = ''
             item.N = new Object
             if(regime == '3'){ 
-console.log(tblItens[i].data)                
                 // ICMS INTEGRAL
                 pageData.ICMS.TOT_ICMS += parseFloat(tblItens[i].data.TOT_ICMS)
                 item.N02= new Object
@@ -834,9 +833,10 @@ console.log(tblItens[i].data)
                 params.ped_id = data.id
             const myPromisse = queryDB(params,'COT-2');
             myPromisse.then((resolve)=>{
-                const json = JSON.parse(resolve)             
+                const json = JSON.parse(resolve)     
                 const tbl = document.querySelector('#tblItens')
                 const regime = document.querySelector('#CRT').value
+                      
                 let total
                 if(tbl.rows.length > 0){
                     total = parseFloat(document.querySelector('#edtValorNF').value)
