@@ -1188,3 +1188,40 @@ BEGIN
         END IF;
 	END $$
 	DELIMITER ;
+
+ DROP PROCEDURE sp_view_icms;
+DELIMITER $$
+	CREATE PROCEDURE sp_view_icms(
+		IN Iallow varchar(80),
+		IN Ihash varchar(64),
+		IN Ifield varchar(30),
+        IN Isignal varchar(4),
+		IN Ivalue varchar(50)
+    )
+	BEGIN
+		CALL sp_allow(Iallow,Ihash);
+		IF(@allow)THEN
+			SET @quer =CONCAT('SELECT * FROM tb_icms WHERE ',Ifield,' ',Isignal,' ',Ivalue,' ORDER BY ',Ifield,';');
+			PREPARE stmt1 FROM @quer;
+			EXECUTE stmt1;            
+        END IF;
+	END $$
+	DELIMITER ;
+
+ DROP PROCEDURE sp_edtICMS;
+DELIMITER $$
+	CREATE PROCEDURE sp_edtICMS(
+		IN Iallow varchar(80),
+		IN Ihash varchar(64),
+		IN Iid_uf int(11),
+        IN Ivalor double
+    )
+	BEGIN
+		CALL sp_allow(Iallow,Ihash);
+		IF(@allow)THEN
+			UPDATE tb_icms SET valor=Ivalor WHERE id=Iid_uf;
+        END IF;
+
+		SELECT * FROM tb_icms;
+	END $$
+	DELIMITER ;

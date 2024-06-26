@@ -82,7 +82,7 @@ ORDER BY mes,dia;
 SELECT * FROM vw_feriado; 
 
 DROP VIEW vw_cot_itens;
--- CREATE VIEW vw_cot_itens AS
+ CREATE VIEW vw_cot_itens AS
 	SELECT ITN.id_ped, GROUP_CONCAT(PRD.cod SEPARATOR ',') AS id_prod
 	FROM tb_item_ped AS ITN
 	INNER JOIN tb_produto AS PRD
@@ -134,14 +134,29 @@ SELECT * FROM vw_cot_preco;
 
 SELECT * FROM vw_cotacoes; 
 
+DROP VIEW vw_ped_icms;
+ CREATE VIEW vw_ped_icms AS
+	SELECT PED.id AS id_ped, ICMS.valor, ICMS.sigla 
+	FROM tb_pedido AS PED
+	INNER JOIN tb_empresa AS EMP
+	INNER JOIN tb_icms AS ICMS
+	ON EMP.id = PED.id_emp
+	AND ICMS.sigla = EMP.estado;
+
+SELECT * FROM vw_ped_icms;
+
 DROP VIEW vw_item_cot;
  CREATE VIEW vw_item_cot AS
-SELECT ITN.*, ROUND((ITN.qtd*ITN.preco), 2) AS TOTAL, PRD.descricao, PRD.unidade, PRD.CFOP, PRD.ncm, PRD.cod AS cod_prod
-	FROM tb_item_ped AS ITN
-    INNER JOIN tb_produto AS PRD
-    ON ITN.id_prod = PRD.id;
+	SELECT ITN.*, ROUND((ITN.qtd*ITN.preco), 2) AS TOTAL, PRD.descricao, PRD.unidade, PRD.CFOP, PRD.ncm, PRD.cod AS cod_prod, 
+    ICMS.valor AS ICMS, ROUND((ITN.qtd*ITN.preco) * (ICMS.valor/100), 2) AS TOT_ICMS
+		FROM tb_item_ped AS ITN
+		INNER JOIN tb_produto AS PRD
+		INNER JOIN vw_ped_icms AS ICMS
+		ON ITN.id_prod = PRD.id
+		AND ITN.id_ped = ICMS.id_ped;
 
 SELECT * FROM vw_item_cot;
+
 
 -- 	DROP VIEW vw_date_range;
  	CREATE VIEW vw_date_range AS
