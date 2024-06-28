@@ -42,21 +42,38 @@
 class NFe{
     constructor(fds){
         fds = fds.split(',')
+        this.itens = new Array
         for(let i=0; i<fds.length; i++){
-            this.make(fields[fds[i]])
+            this[fds[i]] = this.make(fds[i])
         }
-
     }
 }
 
+NFe.prototype.make = function(f_index){
+    const out = new Object
+    const fds = fields[f_index].split('|')
+//    out[fields[0]] = new Object
 
-NFe.prototype.make = function(FDS){
-    const fields = FDS.split('|')
-    this[fields[0]] = new Object
-
-    for(let i=1; i<fields.length; i++){
-        this[fields[0]][fields[i]] = ''
+    for(let i=1; i<fds.length; i++){
+        out[fds[i]] = ''
     }
 
-//    return out
+    return out
+
 }
+
+NFe.prototype.addItem = function(){
+    const keys = ['H','I','M','N','N02','O','O07','O10','Q','Q05','Q07','S','S05','S07']
+    const out = new Object
+    for(let i=0; i<keys.length; i++){
+        out[keys[i]] = this.make(keys[i])
+    }
+
+    this.itens.push(out)
+    for(let i=0; i<this.itens.length;i++){
+        this.itens[i].H.nItem = i+1
+    }
+
+}
+
+
