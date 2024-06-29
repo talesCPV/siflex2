@@ -44,7 +44,7 @@ class NFe{
         fds = fds.split(',')
         this.itens = new Array
         for(let i=0; i<fds.length; i++){
-            this[fds[i]] = this.make(fds[i])
+            this[fds[i]] = this.makeItem(fds[i])
         }
     }
 }
@@ -76,4 +76,48 @@ NFe.prototype.addItem = function(){
 
 }
 
+NFe.prototype.makeItem = function(key_name){
+    const out = new Object
+    const rule = rules[key_name]
+    
+    for (const key in rule) {
+        let value = rule[key].def.trim()
+        const tipo = rule[key].tipo
+        const tam = rule[key].tam.split('-')
+        const ocor = rule[key].ocor.split('-')
 
+        if(tipo=='N'){
+            const dec = rule[key].dec
+            value = (ocor[0] == '1' && value == '') ? '0' : value
+            value = (value != '' && dec > 0) ? Number(value).toFixed(dec) : value
+            value = value.substr(0,tam[tam.length-1])
+        }else if(['C','D','H','DH'].includes(tipo)){
+            value = value.substr(0,tam[tam.length-1])
+            if(ocor[0] == '1' && value == ''){
+                console.log(`Campo obrigatório vazio: ${key_name}->${key}`)
+            }
+        }else{
+            null
+        }
+
+        out[key] = value
+    }
+
+
+    return out
+}
+
+
+NFe.prototype.teste =function(keys){
+    keys = keys.split(',')
+    const out = new Object
+
+    for(let i=0; i<keys.length; i++){
+        out[keys[i]] = this.makeItem(keys[i])
+
+    }
+
+    this[keys[i]] = out[keys]
+
+
+}
