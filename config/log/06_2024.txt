@@ -132,3 +132,6 @@
 26/06/2024 19:21 tales@flexibus.com.br : Menu Incluido (Impostos)
 26/06/2024 19:49 tales@flexibus.com.br : Menu Alterado (ICMS, fisc_icms.html, pop-up, ICMS por Estado)
 26/06/2024 20:08 tales@flexibus.com.br : Menu Alterado (ICMS, fisc_icms.html, pop-up, ICMS por Estado)
+29/06/2024 16:06 tales@flexibus.com.br : Menu Incluido (NFe Teste)
+29/06/2024 16:07 tales@flexibus.com.br : Menu Alterado (NFe Teste, fisc_NFe_.html, pop-up, NFe Teste)
+29/06/2024 16:07 tales@flexibus.com.br : Menu Alterado (NFe Teste, fisc_nfe_.html, pop-up, NFe Teste)

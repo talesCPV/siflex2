@@ -59,3 +59,45 @@ NFe.prototype.make = function(key_name){
     }
     return out
 }
+
+NFe.prototype.geraChave = function(){
+
+    this.B.cNF = Math.floor(Math.random() * 89999999 + 10000000)
+
+    const today = new Date()
+    const aamm = today.getFullYear().toString().substring(2)+today.getMonth().toString().padStart(2, '0')
+    const chave = this.B.cUF + aamm + this.C02.CNPJ + this.B.mod + this.B.serie.padStart(3,0) +  this.B.nNF.padStart(9, '0') + this.B.tpEmis + this.B.cNF
+
+    let dv = 0
+    let mult = 2
+    for(let i = 1; i < chave.length+1; i++){
+        dv += (chave[chave.length - i] * mult)
+        mult++
+
+        if (mult > 9){
+        mult = 2
+        }
+    }
+    const resto = dv % 11
+    dv = 11 - resto
+
+    if(dv > 9){
+        dv = 0
+    }
+    this.A.id = 'NFe'+chave+dv
+}
+
+NFe.prototype.geraTXT = function(){
+    let out = ''
+    for (const key in this) {
+        if(typeof this[key] === 'object' && !Array.isArray(this[key])){
+            let line = key+'|'
+            for(const obj_key in this[key]){
+                line += this[key][obj_key] +'|'
+            }
+            out += line + '\n'
+        }
+        
+    }
+    console.log(out)
+}

@@ -5,11 +5,11 @@
         "indSinc"   :{"tam" :"1"  ,"tipo": "N","ocor" : "0-1","dec" : 0,"def" : ""}
     },
     "B" : {
-        "cUF"       :{"tam" : "2"   ,"tipo": "N","ocor" : "1-1","dec" : 0,"def" : "35"},
+        "cUF"       :{"tam" : "2"   ,"tipo": "N","ocor" : "1-1","dec" : 0,"def" : ""},
         "cNF"       :{"tam" : "8"   ,"tipo": "N","ocor" : "0-1","dec" : 0,"def" : ""},
         "natOp"     :{"tam" : "1-60","tipo": "C","ocor" : "1-1","dec" : 0,"def" : "VENDA"},
-        "mod"       :{"tam" : "2"   ,"tipo": "N","ocor" : "0-1","dec" : 0,"def" : "55"},
-        "serie"     :{"tam" : "1-3" ,"tipo": "N","ocor" : "1-1","dec" : 0,"def" : "1"},
+        "mod"       :{"tam" : "2"   ,"tipo": "N","ocor" : "0-1","dec" : 0,"def" : ""},
+        "serie"     :{"tam" : "1-3" ,"tipo": "N","ocor" : "1-1","dec" : 0,"def" : ""},
         "nNF"       :{"tam" : "1-9" ,"tipo": "N","ocor" : "1-1","dec" : 0,"def" : ""},
         "dhEmi"     :{"tam" : "22"  ,"tipo": "DH","ocor": "0-1","dec" : 0,"def" : ""},
         "dhSaiEnt"  :{"tam" : "22"  ,"tipo": "DH","ocor": "0-1","dec" : 0,"def" : ""},
@@ -17,7 +17,7 @@
         "idDest"    :{"tam" : "1"   ,"tipo": "N","ocor" : "0-1","dec" : 0,"def" : "", "opt" : "1-Operação Interna|2-Operação Interestadual|3-Operação com o Exterior"},
         "cMunFG"    :{"tam" : "7"   ,"tipo": "N","ocor" : "1-1","dec" : 0,"def" : ""},
         "tpImp"     :{"tam" : "1"   ,"tipo": "N","ocor" : "0-1","dec" : 0,"def" : "", "opt" : "1-Retrato|2-Paisagem"},
-        "tpEmis"    :{"tam" : "1"   ,"tipo": "N","ocor" : "0-1","dec" : 0,"def" : "1", "opt" : "1-Normal|2-Contingência (emissão em contingência com impressão do DANFE em Formulário de Segurança)|4-Contingência EPEC (emissão em contingência com envio da Evento Prévio de Emissão em Contingência > EPEC)|5-Contingência FS/DA (emissão em contingência com impressão do DANFE em Formulário de Segurança para Impressão de Documento Auxiliar de Documento Fiscal Eletrônico)|6-Contingência SVC/AN|7-Contingência SVC/RS|9-Contingência off line NFC/e"},
+        "tpEmis"    :{"tam" : "1"   ,"tipo": "N","ocor" : "0-1","dec" : 0,"def" : "", "opt" : "1-Normal|2-Contingência (emissão em contingência com impressão do DANFE em Formulário de Segurança)|4-Contingência EPEC (emissão em contingência com envio da Evento Prévio de Emissão em Contingência > EPEC)|5-Contingência FS/DA (emissão em contingência com impressão do DANFE em Formulário de Segurança para Impressão de Documento Auxiliar de Documento Fiscal Eletrônico)|6-Contingência SVC/AN|7-Contingência SVC/RS|9-Contingência off line NFC/e"},
         "cDV"       :{"tam" : "1"   ,"tipo": "N","ocor" : "0-1","dec" : 0,"def" : ""},
         "tpAmb"     :{"tam" : "1"   ,"tipo": "N","ocor" : "0-1","dec" : 0,"def" : "", "opt" : "1-Produção|2-Homologação"},
         "finNFe"    :{"tam" : "1"   ,"tipo": "N","ocor" : "1-1","dec" : 0,"def" : "", "opt" : "1-NFe normal|2-NFe complementar|3-NFe de ajuste"},
