@@ -1018,9 +1018,9 @@ DELIMITER $$
 	END $$
 	DELIMITER ;
 
- DROP PROCEDURE sp_set_pedido;
+ DROP PROCEDURE sp_set_cotacao;
 DELIMITER $$
-	CREATE PROCEDURE sp_set_pedido(
+	CREATE PROCEDURE sp_set_cotacao(
 		IN Iallow varchar(80),
 		IN Ihash varchar(64),
         IN Iid_ped int(11),
@@ -1077,9 +1077,9 @@ DELIMITER $$
 	DELIMITER ;    
     
 
--- DROP PROCEDURE sp_set_item_ped;
+ DROP PROCEDURE sp_set_item_cot;
 DELIMITER $$
-	CREATE PROCEDURE sp_set_item_ped(
+	CREATE PROCEDURE sp_set_item_cot(
 		IN Iallow varchar(80),
 		IN Ihash varchar(64),
         IN Iid int(11),
@@ -1087,19 +1087,22 @@ DELIMITER $$
         IN Iid_ped int(11),
         IN Iqtd double,
         IN Ipreco double,
-        IN Iund varchar(10),
-        IN Iserv varchar(5)
+        IN Iund varchar(10)
     )
 	BEGIN
 		CALL sp_allow(Iallow,Ihash);
 		IF(@allow)THEN
-			INSERT INTO tb_item_ped (id,id_prod,id_ped,qtd,preco,und,serv) 
-            VALUES (Iid,Iid_prod,Iid_ped,Iqtd,Ipreco,Iund,Iserv)
-			ON DUPLICATE KEY UPDATE 
-			qtd=Iqtd,preco=Ipreco,und=Iund,serv=Iserv;
+			IF(Iqtd = 0)THEN
+				DELETE FROM tb_item_ped WHERE id = Iid;
+            ELSE
+				INSERT INTO tb_item_ped (id,id_prod,id_ped,qtd,preco,und) 
+				VALUES (Iid,Iid_prod,Iid_ped,Iqtd,Ipreco,Iund)
+				ON DUPLICATE KEY UPDATE
+				qtd=Iqtd,preco=Ipreco,und=Iund;
+			END IF;
         END IF;
 	END $$
-	DELIMITER ;    
+	DELIMITER ;   
 
 -- DROP PROCEDURE sp_del_cot;    
 DELIMITER $$
@@ -1223,5 +1226,37 @@ DELIMITER $$
         END IF;
 
 		SELECT * FROM tb_icms;
+	END $$
+	DELIMITER ;
+
+/* FINNCEIRO */    
+
+ DROP PROCEDURE sp_view_pedido;    
+DELIMITER $$
+	CREATE PROCEDURE sp_view_pedido(    
+		IN Iallow varchar(80),
+		IN Ihash varchar(64),
+		IN Ifield varchar(30),
+        IN Isignal varchar(4),
+		IN Ivalue varchar(50),
+        IN Idt_ini date,
+        IN Idt_fin date
+    )
+	BEGIN
+		CALL sp_allow(Iallow,Ihash);
+		IF(@allow)THEN
+			SET @quer =CONCAT('SELECT COT.*, ITN.id_prod            
+								FROM vw_pedidos AS COT 
+								LEFT JOIN vw_cot_itens AS ITN 
+                                ON COT.id = ITN.id_ped 
+                                WHERE ',Ifield,' ',Isignal,' ',Ivalue,' 
+                                AND data_ped BETWEEN "',Idt_ini,'" 
+                                AND "',Idt_fin,'" 
+                                ORDER BY data_ped;');
+			PREPARE stmt1 FROM @quer;
+			EXECUTE stmt1;
+		ELSE
+			SELECT 0 AS id, "" AS nome;
+        END IF;
 	END $$
 	DELIMITER ;

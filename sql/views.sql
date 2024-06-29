@@ -134,6 +134,34 @@ SELECT * FROM vw_cot_preco;
 
 SELECT * FROM vw_cotacoes; 
 
+ 	DROP VIEW vw_pedidos;
+ 	CREATE VIEW vw_pedidos AS 
+    SELECT 
+        `COT`.`id` AS `id`,
+        `COT`.`id_emp` AS `id_emp`,
+        `COT`.`data_ped` AS `data_ped`,
+        `COT`.`num_ped` AS `num_ped`,
+        `COT`.`status` AS `status`,
+        `COT`.`VALOR` AS `VALOR`,
+        COALESCE(`EMP`.`nome`, '') AS `xNome`,
+        COALESCE(`EMP`.`cnpj`, '') AS `CNPJ`,
+        COALESCE(`EMP`.`ie`, '') AS `IE`,
+		COALESCE(`EMP`.`im`, '') AS `IM`,
+		COALESCE(`EMP`.`email`, '') AS `email`,
+        COALESCE(`EMP`.`endereco`, '') AS `xLgr`,
+        COALESCE(`EMP`.`num`, '') AS `nro`,
+        COALESCE(`EMP`.`estado`, '') AS `UF`,
+        COALESCE(`EMP`.`cep`, '') AS `CEP`,
+        COALESCE(`EMP`.`bairro`, '') AS `xBairro`,
+        COALESCE(`EMP`.`comp`, '') AS `XCpl`,
+		COALESCE(`EMP`.`cidade`, '') AS `xMun`,
+        COALESCE(`EMP`.`tel`, '') AS `fone`
+    FROM
+        (`vw_cot_preco` `COT`
+        LEFT JOIN `tb_empresa` `EMP` ON ((`COT`.`id_emp` = `EMP`.`id`)));
+        
+SELECT * FROM vw_pedidos;   
+
 DROP VIEW vw_ped_icms;
  CREATE VIEW vw_ped_icms AS
 	SELECT PED.id AS id_ped, ICMS.valor, ICMS.sigla 

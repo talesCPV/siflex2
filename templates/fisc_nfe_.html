@@ -334,7 +334,7 @@
                 </select>
            </div>
             <div class="inline">
-                <label for="edtXNome">Nome</label>
+                <label for="edtXNome">Transportadora</label>
                 <input type="text" id="edtXnome" maxlength="60">
             </div>
             <div class="inline">
@@ -352,11 +352,30 @@
                 <label for="edtXEnder">Endereço</label>
                 <input type="text" id="edtXEnder" maxlength="60">
                 <label for="edtUF">UF</label>
-                <input type="text" id="edtUF" maxlength="2">
+                <input type="text" id="edtUF" maxlength="2" style="max-width: 100px;">
             </div>
             <div class="inline">
                 <label for="edtXmun">Município</label>
                 <input type="text" id="edtXmun" maxlength="60">
+            </div>
+            <div class="inline">
+                <label for="edtvServ">Valor Frete</label>
+                <input type="text" id="edtvServ" maxlength="15" onkeyup="valFloat(this)">
+                <label for="edtvBCRet">BC ICMS</label>
+                <input type="text" id="edtvBCRet" maxlength="15" onkeyup="valFloat(this)">
+                <label for="edtpICMSRet">Aliq. ICMS</label>
+                <input type="text" id="edtpICMSRet" maxlength="5" onkeyup="valFloat(this)">
+            </div>
+            <div class="inline">
+                <label for="edtvICMSRet">Aliq. ICMS</label>
+                <input type="text" id="edtvICMSRet" maxlength="15" onkeyup="valFloat(this)">
+                <label for="edtCFOP">CFOP</label>
+                <input type="text" id="edtCFOP">
+            </div>
+
+
+            <div class="line">
+                <button id="btnFrete">Salvar</button>
             </div>
         </div>           
         <div id="fatura" class="tab">
@@ -438,16 +457,14 @@
 
         listNF('../NF/NFe/txt')
         listNF('../NF/NFe/pdf','pdf')
-        fillData()
+        fillEmitente()
+        fillFiscal()
 
     }
 
+/* FUNÇÔES */
 
-
-/* FUNÇÔES */    
-
-    function fillData(){
-
+    function fillEmitente(){
             const emitente = pageScreen.querySelector('#emitente')            
             emitente.querySelector('#xNome').value = pageData.NFe.C.xNome
             emitente.querySelector('#xFant').value = pageData.NFe.C.xFant
@@ -468,7 +485,9 @@
             emitente.querySelector('#cPais').value = pageData.NFe.C05.cPais
             emitente.querySelector('#CEP').value = getCEP(pageData.NFe.C05.CEP)
             emitente.querySelector('#fone').value = getFone(pageData.NFe.C05.fone)
-            
+    }
+
+    function fillFiscal(){            
             const fiscal = pageScreen.querySelector('#fiscal')            
             fiscal.querySelector('#nNF').value = parseInt(pageData.NFe.B.nNF) + 1
             fiscal.querySelector('#cNF').value = pageData.NFe.B.cNF
@@ -494,261 +513,26 @@
             fiscal.querySelector('#xJust').value = pageData.NFe.B.xJust
     }
 
-    function somaNFeItens(){
-        let tot = 0
-        const tbl = pageScreen.querySelector('#tblItens').rows
-        for(let i=1; i<tbl.length; i++){
-            let val = parseFloat(tbl[i].cells[4].innerHTML) 
-            val = val == NaN ? 0 : val
-            tot += val
-        }
-        pageScreen.querySelector('#edtValorNF').value = tot.toFixed(2)
-        const txt_compl =  pageScreen.querySelector('#CRT').value == '3' ? `DOC. GERA DIREITO A CREDITO FISCAL DO ICMS NO VALOR DE  R$${(tot*0.18).toFixed(2)} CORRESPONDENTE A ALIQUOTA DE 18%. Aprovado conforme pedido(s) ${pageScreen.querySelector('#hdnPed').value}` : `DOC. EMITIDO POR ME OU EPP OPTANTE S.NACIONAL, NÃO GERA DIREITO A CREDITO FISCAL DE ISSQN E IPI, PERMITE O APROVEITAMENTO DE CREDITO DO ICMS NO VALOR DE  R$${(tot*0.0282).toFixed(2)} CORRESPONDENTE A ALIQUOTA DE 2,82% NOS TERMOS DO ARTIGO 23 DA LC 123. Aprovado conforme pedido(s) ${pageScreen.querySelector('#hdnPed').value}`
-        pageScreen.querySelector('#txaTextoCompl').value = txt_compl
+    function fillCliente(){      
+        const cliente = pageScreen.querySelector('#cliente')
+        cliente.querySelector('#xNome').value = pageData.NFe.E.xNome
+        cliente.querySelector('#indIEDest').value = pageData.NFe.E.indIEDest
+        cliente.querySelector('#IE').value = getIE(pageData.NFe.E.IE)
+        cliente.querySelector('#IM').value = pageData.NFe.E.IM
+        cliente.querySelector('#CNPJ').value = getCNPJ(pageData.NFe.E02.CNPJ)
+        cliente.querySelector('#xLgr').value = pageData.NFe.E05.xLgr
+        cliente.querySelector('#nro').value = pageData.NFe.E05.nro
+        cliente.querySelector('#XCpl').value = pageData.NFe.E05.xCpl
+        cliente.querySelector('#xBairro').value = pageData.NFe.E05.xBairro
+        cliente.querySelector('#xMun').value = pageData.NFe.E05.xMun
+        cliente.querySelector('#UF').value = pageData.NFe.E05.UF
+        cliente.querySelector('#CEP').value = getCEP(pageData.NFe.E05.CEP)
+        cliente.querySelector('#cPais').value = pageData.NFe.E05.cPais
+        cliente.querySelector('#xPais').value = pageData.NFe.E05.xPais
+        cliente.querySelector('#fone').value = getFone(pageData.NFe.E05.fone)
     }
 
-    function geraNFeItens(){
-        const tblItens = pageScreen.querySelector('#tblItens').rows
-        const regime = pageScreen.querySelector('#CRT').value        
-        pageData.ICMS = new Object
-        pageData.ICMS.TOT_ICMS = 0
-        pageData.config.H = []
-        for(let i=1; i< tblItens.length; i++){
-            const item = new Object
-            item.H = new Object
-            item.H.nItem = i
-            item.H.infAdProd = ''
-// I|cProd|cEAN|xProd|NCM|cBenef|EXTIPI|CFOP|uCom|qCom|vUnCom|vProd|cEANTrib|uTrib|qTrib|vUnTrib|vFrete|vSeg|vDesc|vOutro|indTot|xPed|nItemPed|nFCI|
-            item.I = new Object
-            item.I.cProd = tblItens[i].data.cod_prod
-            item.I.cEAN = '|'
-            item.I.xProd = tblItens[i].data.descricao.trim()
-            item.I.NCM = tblItens[i].data.ncm
-            item.I.cBenef = ''
-            item.I.CFOP = tblItens[i].data.cfop
-            item.I.uCom = tblItens[i].data.und.split('\r')[0]
-            item.I.qCom = parseFloat(tblItens[i].data.qtd).toFixed(4)
-            item.I.vUnCom = parseFloat(tblItens[i].data.preco).toFixed(10)
-            item.I.vProd = parseFloat(tblItens[i].data.TOTAL).toFixed(2)
-            item.I.cEANTrib =  '|'
-            item.I.uTrib = tblItens[i].data.und.split('\r')[0]
-            item.I.qTrib = parseFloat(tblItens[i].data.qtd).toFixed(4)
-            item.I.vUnTrib = parseFloat(tblItens[i].data.preco).toFixed(10)
-            item.I.vFrete = ''
-            item.I.vSeg = ''
-            item.I.vDesc = ''
-            item.I.vOutro = ''
-            item.I.indTot = '1'
-            item.I.xPed = ''
-            item.I.nItemPed = ''
-            item.I.nFCI = ''
-            item.M = new Object
-            item.M.a = ''
-            item.M.b = ''
-            item.N = new Object
-            if(regime == '3'){ 
-                // ICMS INTEGRAL
-                pageData.ICMS.TOT_ICMS += parseFloat(tblItens[i].data.TOT_ICMS)
-                item.N02= new Object
-                item.N02.orig = '0'
-                item.N02.CST = '00'
-                item.N02.modBC = '3'
-                item.N02.vBC = parseFloat(tblItens[i].data.TOTAL).toFixed(2)
-                item.N02.pICMS = parseFloat(tblItens[i].data.ICMS).toFixed(4)
-                item.N02.vICMS = parseFloat(tblItens[i].data.TOT_ICMS).toFixed(2)
-                item.N02.pFCP = ''
-                item.N02.vFCP = ''
-            }else{
-                //N10d|orig|CSOSN|
-                item.N10d = new Object
-                item.N10d.orig = '0'
-                item.N10d.CSOSN = '102'
-            }
-//O|CNPJProd|cSelo|qSelo|cEnq|                
-            item.O = new Object
-            item.O.CNPJProd = ''
-            item.O.cSelo = ''
-            item.O.qSelo = ''
-            item.O.cEnq = '999'
-//O07|CST|vIPI|                
-            item.O07 = new Object
-            item.O07.CST = '99'
-            item.O07.vIPI = '0.00'
-//O10|vBC|pIPI|
-            item.O10 = new Object
-            item.O10.vBC = '0.00'
-            item.O10.pIPI = '0.0000'
-            item.Q = new Object
-//Q05|CST|vPIS|            
-            item.Q05 = new Object
-            item.Q05.CST = '99'
-            item.Q05.vPIS = '0.00'
-//Q07|vBC|pPIS|                
-            item.Q07 = new Object
-            item.Q07.vBC = '0.00'
-            item.Q07.pPIS = '0.0000'
-            item.S = new Object
-//S05|CST|vCOFINS|            
-            item.S05 = new Object
-            item.S05.CST = '99'
-            item.S05.vCOFINS = '0.00'
-//S07|vBC|pCOFINS|
-            item.S07 = new Object
-            item.S07.vBC = '0.00'
-            item.S07.pCOFINS = '0.0000'
-            pageData.config.H.push(item)
-        }
-
-        pageData.config.W = new Object
-//W02|vBC|vICMS|vICMSDeson|vFCPUFDest|vICMSUFDest|vICMSUFRemet|vFCP|vBCST|vST|vFCPST|vFCPSTRet|vProd|vFrete|vSeg|vDesc|vII|vIPI|vIPIDevol|vPIS|vCOFINS|vOutro|vNF|vTotTrib|
-        pageData.config.W02 = new Object
-        pageData.config.W02.vBC =  regime == '3' ? parseFloat(pageScreen.querySelector('#edtValorNF').value).toFixed(2) : '0.00'
-        pageData.config.W02.vICMS =  regime == '3' ? pageData.ICMS.TOT_ICMS.toFixed(2) : '0.00'
-        pageData.config.W02.vICMSDeson = '0.00'
-//        pageData.config.W02.vFCPUFDest = '0.00'
-//        pageData.config.W02.vICMSUFDest = '0.00'
-        pageData.config.W02.vICMSUFRemet = '0.00'
-        pageData.config.W02.vFCP = '0.00'
-        pageData.config.W02.vBCST = '0.00'
-        pageData.config.W02.vST = '0.00'
-        pageData.config.W02.vFCPST = '0.00'
-//        pageData.config.W02.vFCPSTRet = '0.00'
-        pageData.config.W02.vProd = parseFloat(pageScreen.querySelector('#edtValorNF').value).toFixed(2)
-        pageData.config.W02.vFrete = '0.00'
-        pageData.config.W02.vSeg = '0.00'
-        pageData.config.W02.vDesc = '0.00'
-        pageData.config.W02.vII = '0.00'
-        pageData.config.W02.vIPI = '0.00'
-        pageData.config.W02.vIPIDevol = '0.00'
-        pageData.config.W02.vPIS = '0.00'
-        pageData.config.W02.vCOFINS = '0.00'
-        pageData.config.W02.vOutro = '0.00'
-        pageData.config.W02.vNF = parseFloat(pageScreen.querySelector('#edtValorNF').value).toFixed(2)
-        pageData.config.W02.vTotTrib = '0.00'
-//Y02|nFat|vOrig|vDesc|vLiq|
-        const parc = pageScreen.querySelector('#edtDiasParcelas').value.split('/')
-        const valor = parseFloat(pageScreen.querySelector('#edtValorNF').value)
-        const desc = parseFloat(pageScreen.querySelector('#edtDesconto').value)
-        pageData.config.Y02 = new Object
-        pageData.config.Y02.nFat = parc.length
-        pageData.config.Y02.vOrig = valor.toFixed(2)
-        pageData.config.Y02.vDesc = desc.toFixed(2)
-        pageData.config.Y02.vLiq = (valor - desc).toFixed(2)
-        pageData.config.Y07 = []
-        let tot = 0
-        for(let i=0; i< parc.length; i++){
-            const data_fat = new Date()
-            data_fat.change(parseInt(parc[i]))
-            const fat = new Object
-            fat.Y07 = new Object
-            fat.Y07.parc = (i+1).toString().padStart(3,'0')
-            fat.Y07.date = data_fat.getFormatDate()
-            fat.Y07.valor = i != (parc.length-1) ? ((valor - desc)/parc.length).toFixed(2) : (valor - desc - tot).toFixed(2)
-            pageData.config.Y07.push(fat)
-            tot += parseFloat(fat.Y07.valor)
-        }
-        pageData.config.YA = new Object
-        pageData.config.YA01 = new Object
-        pageData.config.YA01.IndPag = pageScreen.querySelector('#cmbModPag').value 
-        pageData.config.YA01.tPag = pageScreen.querySelector('#cmbTipPag').value 
-        pageData.config.YA01.tip = ''
-        pageData.config.YA01.vPag = (valor - desc).toFixed(2)
-        pageData.config.Z = new Object
-        pageData.config.Z.infAdFisco = ''
-        pageData.config.Z.infCpl = pageScreen.querySelector('#txaTextoCompl').value   
-        NFeConf(pageData.config)
-    }
-
-    pageFunc.row_edit = (obj)=>{
-        pageData.config.row_item.cells[1].innerHTML = obj.descricao
-        pageData.config.row_item.cells[2].innerHTML = obj.qtd
-        pageData.config.row_item.cells[3].innerHTML = obj.preco
-        pageData.config.row_item.cells[4].innerHTML = obj.total
-        pageData.config.row_item.cells[5].innerHTML = obj.TOT_ICMS
-        pageData.config.row_item.cells[6].innerHTML = obj.ICMS
-        pageData.config.row_item.cells[7].innerHTML = obj.cfop
-        somaNFeItens()
-    }
-
-    function getTXT(){
-        let out = ''
-            for(let key in pageData.config){
-                let line = ''
-
-                if(['H','Y07'].includes(key)){
-//                    alert(key)
-                    for(let i=0; i<pageData.config[key].length; i++){
-                        for(let k in pageData.config[key][i]){
-                            line+= k+'|'
-                            for(let item in pageData.config[key][i][k]){
-                                line += pageData.config[key][i][k][item]+'|'
-                            }
-                            line += '\r\n'
-                        }
-
-                    }
-
-                }else{
-                    line+= key+'|'
-                    for(let item in pageData.config[key]){
-                        line += pageData.config[key][item]+'|'
-                    }
-                    line += '\r\n'                    
-                }
-                out += line
-            }
-            return out   
-    }
-
-    function IBGE_cMun(C,E){
-        C = C.trim().toLowerCase()
-        E = E.trim().toUpperCase()
-        if(C != '' && E != ''){
-            const UF_cod = new Promise((resolve,reject) =>{
-                fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados")
-                .then(function (response){
-                    if (response.status === 200) { 
-                        resolve(response.text());
-                    } else { 
-                        reject(new Error("Houve algum erro na comunicação com o servidor"));
-                    } 
-                })                    
-            });   
-
-            UF_cod.then((resolve)=>{
-                const json = JSON.parse(resolve);
-                for(let i=0; i<json.length; i++){
-                    if(json[i].sigla == E){
-                        const Mun_cod = new Promise((resolve,reject) =>{
-                            fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${json[i].id}/municipios`)
-                            .then(function (response){
-                                if (response.status === 200) { 
-                                    resolve(response.text());
-                                } else { 
-                                    reject(new Error("Houve algum erro na comunicação com o servidor"));
-                                } 
-                            })                    
-                        }); 
-
-                        Mun_cod.then((resolve)=>{
-                            const json = JSON.parse(resolve);
-                            for(let j=0; j<json.length; j++){
-                                if(json[j].nome.trim().toLowerCase() == C){
-                                    pageScreen.querySelector('#E05').querySelector('#cMun').value =  json[j].id;
-                                    pageScreen.querySelector('#btnSaveCli').click()
-                                    break;
-                                }
-                            }
-                        })                
-                    }
-                }
-            })
-        }else{
-            alert('Favor preencher Nome do Município e Sigla da UF.')
-        }
-    }
-
-    function fillCot(){
+    function loadPed(){
         const query = getVal('nfe')
         const params = new Object;
             params.field = query[0]
@@ -756,56 +540,21 @@
             params.value = query[2]
             params.dt_ini = pageScreen.querySelector('#edtIni').value
             params.dt_fin = pageScreen.querySelector('#edtFin').value
-        const myPromisse = queryDB(params,'COT-0');
+        const myPromisse = queryDB(params,'FIN-3');
         myPromisse.then((resolve)=>{            
-            const json = JSON.parse(resolve)
+            const json = JSON.parse(resolve)                   
             const tbl = pageScreen.querySelector('#tblBuscaPed')
             tbl.innerHTML = ''
-            json.length > 0 ? tbl.head('Cod.|mobHide,Num.,Cliente.,Data,Status|mobHide,Valor R$|mobHide,NF|mobHide') : 0
+            json.length > 0 ? tbl.head('Cod.|mobHide,Ped.,Data,Cliente.,Status|mobHide,Valor R$|mobHide') : 0
             for(let i=0; i<json.length;i++){
-                tbl.plot(json[i],'id|mobHide,num_ped,EMPRESA,data_ped,status|mobHide,VALOR|mobHide,status|mobHide','int,str,Upp,date,Upp,R$.,ico FAT=mdi-file-check-outline .=mdi-file-document-remove-outline',true)
+                tbl.plot(json[i],'id|mobHide,num_ped,data_ped,xFANT,status|mobHide,VALOR|mobHide','int,str,date,Upp,Upp,R$.',true)
             }   
         });
     }
 
-/* CHAMADA DE FUNÇÕES DO DOM */    
-
-    pageScreen.querySelector('#tblItens').addEventListener('click',(e)=>{
-
-        data = e.target.parentNode.data
-        data.mode = 'edtItens'
-        pageData.config.row_item = e.target.parentNode
-        openHTML('fisc_nfeItens.html','pop-up','Edição de Ítem de NFe',data)
-
-    })
- /***** PEDIDO *****/
-    pageScreen.querySelector('#tblBuscaPed').addEventListener('click',(e)=>{
-        data = e.target.parentNode.data
-        data.mode = 'NFe'
-        if (confirm(`Carregar Ped.${data.num_ped} de ${data.EMPRESA.toUpperCase()}?`)) {
-            function addCli(){
-                const cliente = pageScreen.querySelector('#cliente')
-                cliente.querySelector('#xNome').value = data.EMPRESA.trim().toUpperCase()
-                cliente.querySelector('#indIEDest').value = (data.IE==null || data.IE.trim() == '') ? 2 : 1
-                cliente.querySelector('#IE').value = data.IE!=null ? getIE(data.IE) : ''
-                cliente.querySelector('#IM').value = data.IM!=null ? data.IM.trim().toUpperCase() : ''
-                cliente.querySelector('#CNPJ').value = getCNPJ(data.CNPJ)
-                cliente.querySelector('#xLgr').value = data.END!=null ? data.END.trim().toUpperCase() : ''
-                cliente.querySelector('#nro').value = data.NUM!=null ? data.NUM.trim().toUpperCase() : ''
-                cliente.querySelector('#XCpl').value = ''
-                cliente.querySelector('#xBairro').value = data.BAIRRO!=null ? data.BAIRRO.trim().toUpperCase() : ''
-                cliente.querySelector('#xMun').value = data.CIDADE!=null ? data.CIDADE.trim().toUpperCase() : ''
-                cliente.querySelector('#UF').value = data.UF.trim().toUpperCase()
-                cliente.querySelector('#CEP').value = data.CEP!=null ? getCEP(data.CEP) : ''
-                cliente.querySelector('#cPais').value = '1058'
-                cliente.querySelector('#xPais').value = 'BRASIL'
-                cliente.querySelector('#fone').value = getFone(data.TEL.trim())
-                pageScreen.querySelector('#btnSaveCli').click()
-                pageScreen.querySelector('#btnBuscaIBGE').click()
-            }    
-
-            const params = new Object;
-                params.ped_id = data.id
+    function loadItemPed(ped_id){
+        const params = new Object;
+                params.ped_id = ped_id
             const myPromisse = queryDB(params,'COT-2');
             myPromisse.then((resolve)=>{
                 const json = JSON.parse(resolve)     
@@ -859,15 +608,39 @@
 
                 pageScreen.querySelector('#tab-cliente').click()
             })
+    }
 
+
+/* CHAMADA DE FUNÇÕES DO DOM */    
+
+
+ /***** PEDIDO *****/
+    pageScreen.querySelector('#tblBuscaPed').addEventListener('click',(e)=>{
+        data = e.target.parentNode.data
+        data.mode = 'NFe'
+        if (confirm(`Carregar Ped.${data.num_ped} de ${data.xFANT.toUpperCase()}?`)) {
+ 
+            pageData.NFe.addCliente(data)
+            fillCliente()
+
+/*
+
+*/
         }
 
 //        openHTML('viewCot.html','pop-up','Cotação',data)
     })
 
     pageScreen.querySelector('#btnBuscaPed').addEventListener('click',()=>{
-        fillCot()         
+        loadPed()         
     })
+
+    pageScreen.querySelector('#tblItens').addEventListener('click',(e)=>{
+        data = e.target.parentNode.data
+        data.mode = 'edtItens'
+        pageData.config.row_item = e.target.parentNode
+        openHTML('fisc_nfeItens.html','pop-up','Edição de Ítem de NFe',data)
+    })    
 
 /***** FILES *****/    
     pageScreen.querySelector('#txtFiles').addEventListener('dblclick',()=>{
