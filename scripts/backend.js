@@ -1,3 +1,30 @@
+/*  DATABASE  */
+function queryDB(params,cod){
+    const access = main_data.dashboard == undefined ? -1 : main_data.dashboard.data.access
+    const hash = localStorage.getItem('hash') == undefined ? 0 : localStorage.getItem('hash')
+    const data = new URLSearchParams()
+        data.append("access", access)
+        data.append("hash", hash)
+        data.append("cod", cod)
+        data.append("params", JSON.stringify(params))
+
+    const myRequest = new Request("backend/query_db.php",{
+        method : "POST",
+        body : data
+    });
+
+    return new Promise((resolve,reject) =>{
+        fetch(myRequest)
+        .then(function (response){
+            if (response.status === 200) { 
+                resolve(response.text())        
+            } else { 
+                reject(new Error("Houve algum erro na comunicação com o servidor"));
+            } 
+        });
+    });      
+}
+
 
 function backFunc(params,cod){
     const data = new URLSearchParams();        
@@ -19,6 +46,51 @@ function backFunc(params,cod){
             } 
         });
     });      
+}
+
+function getConfig(field){
+    const data = new URLSearchParams();        
+        data.append("user", localStorage.getItem('id_user'));
+        data.append("field", field);
+        data.append("file",'config.json');
+    const myRequest = new Request("backend/getConfig.php",{
+        method : "POST",
+        body : data
+    });
+
+    return new Promise((resolve,reject) =>{
+        fetch(myRequest)
+        .then(function (response){
+            if (response.status === 200) {                 
+                resolve(response.text());                    
+            } else { 
+                reject(new Error("Houve algum erro na comunicação com o servidor"));                    
+            } 
+        });
+    }); 
+}
+
+function setConfig(field,value){
+    const data = new URLSearchParams();        
+    data.append("user", localStorage.getItem('id_user'));
+    data.append("field", field);
+    data.append("file",'config.json');
+    data.append("value", value);
+    const myRequest = new Request("backend/setConfig.php",{
+        method : "POST",
+        body : data
+    });
+
+    return new Promise((resolve,reject) =>{
+        fetch(myRequest)
+        .then(function (response){
+            if (response.status === 200) {                 
+                resolve(response.text());                    
+            } else { 
+                reject(new Error("Houve algum erro na comunicação com o servidor"));                    
+            } 
+        });
+    }); 
 }
 
 function uploadImage(fileID,path,filename){
