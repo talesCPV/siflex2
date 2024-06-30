@@ -56,18 +56,16 @@ NFe.prototype.addItem = function(data){
     const out = new Object
     for(let i=0; i<keys.length; i++){
         out[keys[i]] = this.make(keys[i])
+        for (const key in out[keys[i]]) {
+            if(data.hasOwnProperty(key)){
+                out[keys[i]][key] = data[key]
+            }
+        }               
     }
 
     this.itens.push(out)
     for(let i=0; i<this.itens.length;i++){
-        this.itens[i].H.nItem = i+1
-/*       
-        if(data.hasOwnProperty(key)){
-            if(this.I.hasOwnProperty(key)){
-                this.I[key] = data[key]
-            }
-        }
-*/                    
+        this.itens[i].H.nItem = i+1                 
     }
 }
 
