@@ -66,6 +66,7 @@ NFe.prototype.addItem = function(){
 }
 
 NFe.prototype.addCliente = function(data){
+
     const keys = ['E','E02','E05']
     for(let i=0; i<keys.length; i++){
         this[keys[i]] = this.make(keys[i])
@@ -82,15 +83,17 @@ NFe.prototype.addCliente = function(data){
     this.E05.fone = onlyNum(this.E05.fone)
     this.E05.CEP = onlyNum(this.E05.CEP)
 
-    IBGE_cMun(this.E05.xMun,this.E05.UF).then((response)=>{
+    const out = IBGE_cMun(this.E05.xMun,this.E05.UF).then((response)=>{
         const json = JSON.parse(response)
         for(let i=0; i<json.length; i++){
             if(json[i].nome.trim().toLowerCase() == this.E05.xMun.trim().toLowerCase()){
-                console.log(json[i].id)
+                this.E05.xMun = json[i].nome
                 this.E05.cMun = json[i].id
             }
         }
     })
+
+    return out
 }
 
 NFe.prototype.geraChave = function(){
