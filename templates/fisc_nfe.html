@@ -556,9 +556,9 @@
     function loadItemPed(ped_id){
         const params = new Object;
                 params.ped_id = ped_id
-            const myPromisse = queryDB(params,'COT-2');
+            const myPromisse = queryDB(params,'FIN-4');
             myPromisse.then((resolve)=>{
-                const json = JSON.parse(resolve)            
+                const json = JSON.parse(resolve)       
                 const tbl = pageScreen.querySelector('#tblItens')
                 pageData.NFe.C.CRT = pageScreen.querySelector('#CRT').value
 
@@ -574,11 +574,11 @@
                     tbl.head('Cod.|mobHide,Descrição,Qtd.,Preço Unit.,Sub Total,ICMS,%,CFOP')        
                 }
 
-                for(let i=0; i<json.length;i++){
+                for(let i=0; i<json.length;i++){                        
                     json[i].cfop = (pageData.NFe.C05.UF == pageData.NFe.E05.UF ? '51' : '61')+(json[i].id_emp == '13' ? '01' : '02')
-                    json[i].ICMS = pageData.NFe.C.CRT == '3' ? json[i].ICMS : 0
-                    json[i].TOT_ICMS = pageData.NFe.C.CRT == '3' ? json[i].TOT_ICMS : 0
-                    tbl.plot(json[i],'cod_prod|mobHide,descricao,qtd,preco,TOTAL,TOT_ICMS,ICMS,cfop','str,Upp,str,flo,flo,flo,flo,str')
+                    json[i].ICMS = pageData.NFe.C.CRT == '3' ? json[i].pICMS : 0
+                    json[i].TOT_ICMS = pageData.NFe.C.CRT == '3' ? json[i].vICMS : 0
+                    tbl.plot(json[i],'cProd|mobHide,xProd,qTrib,vUnCom,vProd,TOT_ICMS,ICMS,cfop','str,Upp,str,flo,flo,flo,flo,str')
                 }
 
                 pageFunc.somaNFeItens()
@@ -599,8 +599,12 @@
 
     pageFunc.somaNFeItens = ()=>{
         let total = 0
-        const tbl = document.querySelector('#tblItens').rows     
+        const tbl = document.querySelector('#tblItens').rows
+        pageData.NFe.itens = []
         for(let i=1; i<tbl.length; i++){
+            pageData.NFe.addItem(tbl[i].data)
+            const index = pageData.NFe.itens.length -1
+            pageData.NFe.itens[index].I.cProd = tbl[i].data.id_prod
             const value = parseFloat(tbl[i].cells[4].innerHTML)
             total += value == NaN ? 0 : value
         }
@@ -642,34 +646,11 @@
 
 /***** FILES *****/    
     pageScreen.querySelector('#txtFiles').addEventListener('dblclick',()=>{
-        const file = pageScreen.querySelector('#txtFiles').value
-        const path = '../NF/NFe/txt/' + file
-        downloadFile(path)
-/*               
-        const link = document.createElement("a")
-        link.download = file
-        link.href = path
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-        delete link
-*/        
+        downloadFile('../NF/NFe/txt/' + pageScreen.querySelector('#txtFiles').value)
     })
 
     pageScreen.querySelector('#pdfFiles').addEventListener('dblclick',()=>{
-
-        const file = pageScreen.querySelector('#pdfFiles').value
-        const path = '../NF/NFe/pdf/' + file
-        downloadFile(path)
-/*        
-        var link = document.createElement("a")
-            link.download = file
-            link.href = path
-            document.body.appendChild(link)
-            link.click()
-            document.body.removeChild(link)
-            delete link
-*/            
+        downloadFile('../NF/NFe/pdf/' + pageScreen.querySelector('#pdfFiles').value)         
     })
 
 /***** EMISSOR *****/

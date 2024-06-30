@@ -1260,3 +1260,18 @@ DELIMITER $$
         END IF;
 	END $$
 	DELIMITER ;
+
+-- DROP PROCEDURE sp_view_item_ped;
+DELIMITER $$
+CREATE PROCEDURE sp_view_item_ped(
+		IN Iallow varchar(80),
+		IN Ihash varchar(64),
+		IN Iid_ped int(11)
+    )
+	BEGIN
+		CALL sp_allow(Iallow,Ihash);
+		IF(@allow)THEN
+			SELECT * FROM vw_item_ped WHERE id_ped = Iid_ped;
+        END IF;
+	END $$
+	DELIMITER ;

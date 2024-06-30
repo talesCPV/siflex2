@@ -185,6 +185,30 @@ DROP VIEW vw_item_cot;
 
 SELECT * FROM vw_item_cot;
 
+DROP VIEW vw_item_ped;
+ CREATE VIEW vw_item_ped AS
+	SELECT PRD.cod AS cProd,
+    PRD.descricao AS xProd,
+    PRD.ncm AS NCM,
+    PRD.CFOP AS CFOP,
+    PRD.unidade AS uCom,
+    ROUND(ITN.qtd,4) AS qCom,
+	ROUND(ITN.preco,10) AS vUnCom,
+	ROUND((ITN.qtd*ITN.preco),2) AS vProd,
+    PRD.unidade AS uTrib,
+	ITN.qtd AS qTrib,
+    ROUND(ITN.preco,10) AS vUnTrib,    
+	ROUND((ITN.qtd*ITN.preco),2) AS vBC,
+    ROUND(ICMS.valor,4) AS pICMS,
+    ROUND((ITN.qtd*ITN.preco) * (ICMS.valor/100), 2) AS vICMS
+		FROM tb_item_ped AS ITN
+		INNER JOIN tb_produto AS PRD
+		INNER JOIN vw_ped_icms AS ICMS
+		ON ITN.id_prod = PRD.id
+		AND ITN.id_ped = ICMS.id_ped;
+
+SELECT * FROM vw_item_ped;
+
 
 -- 	DROP VIEW vw_date_range;
  	CREATE VIEW vw_date_range AS

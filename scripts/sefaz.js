@@ -51,7 +51,7 @@ NFe.prototype.make = function(key_name){
     return this[key_name]
 }
 
-NFe.prototype.addItem = function(){
+NFe.prototype.addItem = function(data){
     const keys = ['H','I','M','N','N02','O','O07','O10','Q','Q05','Q07','S','S05','S07']
     const out = new Object
     for(let i=0; i<keys.length; i++){
@@ -61,8 +61,14 @@ NFe.prototype.addItem = function(){
     this.itens.push(out)
     for(let i=0; i<this.itens.length;i++){
         this.itens[i].H.nItem = i+1
+/*       
+        if(data.hasOwnProperty(key)){
+            if(this.I.hasOwnProperty(key)){
+                this.I[key] = data[key]
+            }
+        }
+*/                    
     }
-
 }
 
 NFe.prototype.addCliente = function(data){

@@ -32,12 +32,11 @@
     const pageData = main_data.fisc_nfeItens.data 
     const pageFunc = main_data.fisc_nfeItens.func
     const pageScreen = document.querySelector('#card-fisc_nfeItens')
-
-    pageScreen.querySelector('#edtDesc').value = pageData.descricao.trim()
-    pageScreen.querySelector('#edtQtd').value = pageData.qtd.trim()
-    pageScreen.querySelector('#edtPreco').value = pageData.preco.trim()
+    pageScreen.querySelector('#edtDesc').value = pageData.xProd.trim()
+    pageScreen.querySelector('#edtQtd').value = pageData.qTrib.trim()
+    pageScreen.querySelector('#edtPreco').value = pageData.vProd.trim()
     pageScreen.querySelector('#edtCFOP').value = pageData.cfop.trim()
-    pageScreen.querySelector('#edtICMS').value = pageData.ICMS.trim()
+    pageScreen.querySelector('#edtICMS').value = parseFloat(pageData.ICMS.trim()).toFixed(2)
 
 
     pageScreen.querySelector('#btnSaveItem').addEventListener('click',()=>{

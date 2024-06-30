@@ -109,9 +109,9 @@
     "M" : {},
     "N" : {},
     "N02" : {
-        "orig"  :{"tam" : "1" ,"tipo": "N","ocor" : "1-1","dec" : 0,"def" : ""},
-        "CST"   :{"tam" : "2" ,"tipo": "N","ocor" : "1-1","dec" : 0,"def" : ""},
-        "modBC" :{"tam" : "1" ,"tipo": "N","ocor" : "1-1","dec" : 0,"def" : ""},
+        "orig"  :{"tam" : "1" ,"tipo": "N","ocor" : "1-1","dec" : 0,"def" : "0", "opt" : "0-Nacional|1-Estrangeira (Importação direta)|2-Estrangeira (Adquirida no mercado interno)"},
+        "CST"   :{"tam" : "2" ,"tipo": "N","ocor" : "1-1","dec" : 0,"def" : "00"},
+        "modBC" :{"tam" : "1" ,"tipo": "N","ocor" : "1-1","dec" : 0,"def" : "3", "opt" : "0-Margem Valor Agregado(%)|1-Pauta (Valor)|2-Preço Tabelado Máx.(valor)|3-Valor da operação"},
         "vBC"   :{"tam" : "15","tipo": "N","ocor" : "1-1","dec" : 2,"def" : ""},
         "pICMS" :{"tam" : "5" ,"tipo": "N","ocor" : "1-1","dec" : 2,"def" : ""},
         "vICMS" :{"tam" : "15","tipo": "N","ocor" : "1-1","dec" : 2,"def" : ""},
