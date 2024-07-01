@@ -100,6 +100,27 @@ NFe.prototype.addCliente = function(data){
     return out
 }
 
+NFe.prototype.import = function(obj){
+    console.log(obj)
+    for (const grupo in obj) {
+        if(this.hasOwnProperty(grupo)){
+            for (const campo in obj[grupo]){
+                if(this[grupo].hasOwnProperty(campo)){
+                //  exceções
+                if(['N','C'].includes(rules[grupo][campo].tipo)){
+                    obj[grupo][campo] = onlyAlpha(obj[grupo][campo])
+                }else{ // D, H ou DH
+                    obj[grupo][campo] += campo == 'dhEmi' ? 'T07:00:00-03:00' : ''
+                    obj[grupo][campo] += campo == 'dhSaiEnt' ? 'T16:00:00-03:00' : ''
+                }
+
+                    this[grupo][campo] =  obj[grupo][campo]
+                }
+            }
+        }
+    }
+}
+
 NFe.prototype.geraChave = function(){
 
     this.B.cNF = Math.floor(Math.random() * 89999999 + 10000000)
@@ -158,7 +179,6 @@ NFe.prototype.geraTXT = function(){
     }
 
     let makeItem = 0
-
     for (const key in NFe) {
         if(typeof NFe[key] === 'object' && !Array.isArray(NFe[key])){
             if(key.charCodeAt() > 72 && !makeItem){
@@ -173,14 +193,25 @@ NFe.prototype.geraTXT = function(){
 }
 
 function onlyNum(V){
-    const ok_chr = ['1','2','3','4','5','6','7','8','9','0'];
     let out = ''
     for(let i=0; i< V.length; i++){
-        if(ok_chr.includes(V[i])){
+        const ascii = V[i].charCodeAt()
+        if(ascii>=48 && ascii<=57){
             out+=V[i]
         }
     }
     return out
+}
+
+function onlyAlpha(V){    
+    let out = ''
+    for(let i=0; i< V.length; i++){
+        const ascii = V[i].charCodeAt()
+        if((ascii>=48 && ascii<=57)||(ascii>=65 && ascii<=90)||(ascii>=97 && ascii<=122)|| ascii==32){
+            out+=V[i]
+        }
+    }
+    return out.trim()
 }
 
 function IBGE_cMun(C,E){

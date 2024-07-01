@@ -37,129 +37,123 @@
         <div class="tab-item" id="tab-export" onclick="pictab(this)">Arquivos</div>
     </div>
     
-    <div class="tab-screen">        
+    <div class="tab-screen">
+
+<!-- EMITENTE -->
+
         <div id="emitente" class="tab">
-<!--                <h2>Emitente</h2>               -->
-            <div id="C">
+            <div id="C" class="grupo">
                 <div class="inline">
                     <label> Razão Social *</label>
-                    <input type="text" id="xNome" maxlength="60" />
+                    <input type="text" id="xNome" class="campo" maxlength="60" />
                 </div>
                 <div class="inline">
                     <label> Nome Fantasia </label>
-                    <input type="text" id="xFant" maxlength="60" />
+                    <input type="text" id="xFant" class="campo" maxlength="60" />
                 </div>    
 
                 <div class="inline">
                     <label> Insc. Estadual </label>
-                    <input type="text" id="IE" maxlength="15" onkeyup="valIE(this)"/>
-                    <input type="hidden" id="IEST" >                
+                    <input type="text" id="IE" class="campo" maxlength="15" onkeyup="valIE(this)"/>
                     <label> Insc. Municipal </label>
-                    <input type="text" id="IM" maxlength="15" onkeyup="valInt(this)"/>
+                    <input type="text" id="IM" class="campo" maxlength="15" onkeyup="valInt(this)"/>
                 </div> 
                 <div class="inline">
                     <label> Regime Trib. </label>
-                    <select id="CRT" >
+                    <select id="CRT" class="campo" >
                         <option value="1" selected>Simples Nacional</option>
                         <option value="2" >Simples Nacional - excesso de sublimite de receita bruta</option>
                         <option value="3" >Regime Normal.</option>
                     </select>
                     <label> CNAE </label>
-                    <input type="text" id="CNAE" maxlength="7" onkeyup="valInt(this)"/>                        
+                    <input type="text" id="CNAE" class="campo" maxlength="7" onkeyup="valInt(this)"/>                        
                 </div>                                                       
             </div>
-            <div id="C02" class="inline">
-                
-                <label> CNPJ </label>
-                <input type="text" id="CNPJ" maxlength="18" onkeyup="valCNPJ(this)"/>
+            <div id="C02" class="grupo">
+                <div class="inline">
+                    <label> CNPJ </label>
+                    <input type="text" id="CNPJ" class="campo" maxlength="18" onkeyup="valCNPJ(this)"/>
+                </div>
             </div>
-            <div id="C05">
+            <div id="C05" class="grupo">
                 <div class="inline">
                     <label> Endereço </label>
-                    <input type="text" id="xLgr" maxlength="60" />
+                    <input type="text" id="xLgr" class="campo" maxlength="60" />
                     <label> Número: </label>
-                    <input type="text" id="nro" maxlength="5" style="max-width: 100px;" />
+                    <input type="text" id="nro" class="campo" maxlength="5" style="max-width: 100px;" />
                 </div>
                 <div class="inline">
                     <label> Bairro </label>
-                    <input type="text" id="bairro" maxlength="60" />
+                    <input type="text" id="bairro" class="campo" maxlength="60" />
                     <label> Complemento </label>
-                    <input type="text" id="cpl" maxlength="60" style="max-width: 200px;" />
+                    <input type="text" id="cpl" class="campo" maxlength="60" style="max-width: 200px;" />
                 </div>
                 <div class="inline">
                     <label> Municipio</label>
-                    <input type="text" id="xMun" maxlength="60" />
+                    <input type="text" id="xMun" class="campo" maxlength="60" />
                     <label> Código</label>
-                    <input type="text" id="cMun" maxlength="7" style="max-width: 150px;" onkeyup="valInt(this)" />
+                    <input type="text" id="cMun" class="campo" maxlength="7" style="max-width: 150px;" onkeyup="valInt(this)" />
                     <label> Sigla da UF </label>
-                    <input type="text" id="UF" maxlength="2" style="max-width: 50px;" />
+                    <input type="text" id="UF" class="campo" maxlength="2" style="max-width: 50px;" />
                 </div>
                 <div class="inline">
                     <label> Nome do País </label>
-                    <input type="text" id="xPais" maxlength="60" />
+                    <input type="text" id="xPais" class="campo" maxlength="60" />
                     <label> Código </label>
-                    <input type="text" id="cPais" maxlength="4" onkeyup="valInt(this)"/>
+                    <input type="text" id="cPais" class="campo" maxlength="4" onkeyup="valInt(this)"/>
                 </div>
                 <div class="inline">
                     <label> CEP </label>
-                    <input type="text" id="CEP" maxlength="10" onkeyup="valCEP(this)"/>
+                    <input type="text" id="CEP" class="campo" maxlength="10" onkeyup="valCEP(this)"/>
                     <label> Telefone </label>
-                    <input type="text" id="fone" maxlength="14" onkeyup="phone(this)"/>
+                    <input type="text" id="fone" class="campo" maxlength="14" onkeyup="phone(this)"/>
                 </div>
             </div>
             <button id="btnSaveEmit">Salvar</button>
                             
-        </div>            
-        <div id="fiscal" class="tab">
-<!--                <h2>Fiscal</h2>-->
-        
-            <div id="B">
+        </div>
 
-                <input type="hidden" id="cUF" value="35">
-                <input type="hidden" id="cNF">
-                <input type="hidden" id="serie" value="1">
-                <input type="hidden" id="cMunFG">
-                <input type="hidden" id="cDV">
-                <input type="hidden" id="verProc">
-                <input type="hidden" id="dhCont">
-                <input type="hidden" id="xJust">
+<!-- FISCAL -->
+
+        <div id="fiscal" class="tab">        
+            <div id="B" class="grupo">
             
                 <label> Numero da NF</label>    
-                <input type="text" id="nNF" maxlength="9" />
-
+                <input type="text" id="nNF" class="campo" maxlength="9" />
+                
                 <label> Nat. Operação *</label>
-                <input type="text" id="natOp" maxlength="60" />
+                <input type="text" id="natOp" class="campo" maxlength="60" />
 
                 <label> Código do Modelo do Documento Fiscal </label>
-                <input type="text" id="mod" maxlength="2" value=""/>
+                <input type="text" id="mod" class="campo" maxlength="2"/>
                 
                 <label> Data de emissão do Documento Fiscal </label>
-                <input type="date" id="dhEmi" value="" >
+                <input type="date" id="dhEmi" class="campo">
 
                 <label> Data e hora de Saída ou da Entrada da Mercadoria/Produto </label>
-                <input type="date" id="dhSaiEnt" value="">
+                <input type="date" id="dhSaiEnt" class="campo" >
 
                 <label> Tipo de Operação</label>
-                <select id="tpNF" >
+                <select id="tpNF" class="campo" >
                     <option value="0" selected>Entrada</option>
                     <option value="1">Saída</option>
                 </select>
 
                 <label> Identificador de Local de destino da operação</label>
-                <select id="idDest" >
+                <select id="idDest" class="campo" >
                     <option value="1">Operação Interna</option>
                     <option value="2">Operação Interestadual</option>
                     <option value="3">Operação com o Exterior</option>
                 </select>
     
                 <label> Formato de Impressão do DANFE</label>
-                <select id="tpImp" >
+                <select id="tpImp" class="campo" >
                     <option value="1">Retrato</option>
                     <option value="2">Paisagem</option>
                 </select>
 
                 <label>Tipo de Emissão da NF-e</label>
-                <select id="tpEmis" >
+                <select id="tpEmis" class="campo">
                     <option value="1">Normal</option>
                     <option value="2">Contingência FS - emissão em contingência com impressão do DANFE em Formulário de Segurança</option>
                     <option value="4">Contingência EPEC - emissão em contingência com envio da Evento Prévio de Emissão em Contingência - EPEC</option>
@@ -170,13 +164,13 @@
                 </select>
     
                 <label> Identificação do Ambiente</label>
-                <select id="tpAmb" >
+                <select id="tpAmb" class="campo" >
                     <option value="1">Produção</option>
                     <option value="2">Homologação</option>
                 </select>
 
                 <label> Finalidade de emissão da NF-e</label>
-                <select id="finNFe" >
+                <select id="finNFe" class="campo" >
                     <option value="1">NF-e normal</option>
                     <option value="2">NF-e complementar</option>
                     <option value="3">NF-e de ajuste</option>
@@ -184,13 +178,13 @@
                 </select>
 
                 <label>Indica operação com o consumidor final</label>
-                <select id="indFinal" >
+                <select id="indFinal" class="campo" >
                     <option value="0">Normal</option>    
                     <option value="1">Consumidor Final</option>
                 </select>
 
                 <label>Indicador de presença do comprador no estabelecimento comercial no momento da operação</label>
-                <select id="indPres" >
+                <select id="indPres" class="campo" >
                     <option value="0">Não se aplica (por exemplo Nota Fiscal Complementar ou de ajuste)</option>
                     <option value="1">Operação presencial</option>
                     <option value="2">Operação não presencial, pela Internet</option>
@@ -201,7 +195,7 @@
                 </select>
 
                 <label>Processo de emissão da NF-e</label>
-                <select id="procEmi" >
+                <select id="procEmi" class="campo" >
                     <option value="" selected></option>
                     <option value="0">emissão de NF-e com aplicativo do contribuinte</option>
                     <option value="1">emissão de NF-e avulsa pelo Fisco</option>
@@ -209,12 +203,12 @@
                     <option value="3">emissão NF-e pelo contribuinte com aplicativo fornecido pelo Fisco</option>
                 </select>
             </div>                
-
                 <button id="btnSaveFiscal">Salvar</button>                
-        </div>            
-        <div id="pedido" class="tab">
-<!--                <h2>Pedido</h2>-->
+        </div>
 
+<!-- PEDIDO -->
+
+        <div id="pedido" class="tab">
             <fieldset class="fds-busca nfe">
                 <legend>Filtro</legend>
         
@@ -247,18 +241,19 @@
                 </div>            
             </fieldset>
             <table id="tblBuscaPed"></table> 
-
         </div>
+
+<!-- CLIENTE -->
+
         <div id="cliente" class="tab">
-<!--                <h2>Cliente</h2>-->
-            <div id="E">
+            <div id="E" class="grupo">
                 <div class="inline">
                     <label> Razão Social *</label>
-                    <input type="text" id="xNome" maxlength="60"/>
+                    <input type="text" id="xNome" class="campo" maxlength="60"/>
                 </div>
                 <div class="inline">
                     <label> ICMS</label>
-                    <select id="indIEDest">
+                    <select id="indIEDest" class="campo" >
                         <option value="1">Contribuinte ICMS (informar a IE do destinatário)</option>
                         <option value="2">Contribuinte isento de Inscrição no cadastro de Contribuintes do ICMS (Não possui IE)</option>
                         <option value="9">Não Contribuinte, que pode ou não possuir Inscrição Estadual no Cadastro de Contribuintes do ICMS</option>
@@ -266,56 +261,58 @@
                 </div>
                 <div class="inline">
                     <label> Insc. Estadual </label>
-                    <input type="text" id="IE" maxlength="15" onkeyup="valIE(this)"/>
+                    <input type="text" id="IE" class="campo" maxlength="15" onkeyup="valIE(this)"/>
                     <input type="hidden" id="ISUF">
                     <label> Insc. Municipal </label>
-                    <input type="text" id="IM" maxlength="15" onkeyup="valInt(this)"/>                 
+                    <input type="text" id="IM" class="campo" maxlength="15" onkeyup="valInt(this)"/>                 
                 </div>
                 <div class="inline">
                     <label> Email </label>
-                    <input type="text" id="email"/>
+                    <input type="text" id="email" class="campo" />
                 </div>
 
             </div>                           
-            <div id="E02" class="inline">
-                <label> CNPJ </label>
-                <input type="text" id="CNPJ" maxlength="18" onkeyup="valCNPJ(this)"/>
+            <div id="E02" class="grupo">
+                <div class="inline">
+                    <label> CNPJ </label>
+                    <input type="text" id="CNPJ" class="campo" maxlength="18" onkeyup="valCNPJ(this)"/>
+                </div>
             </div>
-            <div id="E05">
+            <div id="E05" class="grupo">
                 <div class="inline">
                     <label> Endereço </label>
-                    <input type="text" id="xLgr" maxlength="60"/>
+                    <input type="text" id="xLgr" class="campo" maxlength="60"/>
                     <label> Número: </label>
-                    <input type="text" id="nro" maxlength="5" style="width: 100px;" />    
+                    <input type="text" id="nro" class="campo" maxlength="5" style="width: 100px;" />    
                 </div>
                 <div class="inline">
                     <label> Bairro </label>
-                    <input type="text" id="xBairro" maxlength="60"/>
+                    <input type="text" id="xBairro" class="campo" maxlength="60"/>
                     <label> Complemento </label>
-                    <input type="text" id="XCpl" maxlength="60"/>
+                    <input type="text" id="XCpl" class="campo" maxlength="60"/>
                 </div>
                 <div class="inline">
                     <label>  Municipio</label>
-                    <input type="text" id="xMun" maxlength="60"/>
+                    <input type="text" id="xMun" class="campo" maxlength="60"/>
                     <label> UF </label>
-                    <input type="text" id="UF" maxlength="2" style="width: 70px ;"/>                      
+                    <input type="text" id="UF" class="campo" maxlength="2" style="width: 70px ;"/>                      
                     <label> Cod.</label>
-                    <input type="text" id="cMun" maxlength="7" onkeyup="valInt(this)" style="width: 200px ;" readonly/>
+                    <input type="text" id="cMun" class="campo" maxlength="7" onkeyup="valInt(this)" style="width: 200px ;" readonly/>
                     <button id="btnBuscaIBGE" class="btn-round"><span class="mdi mdi-magnify"></span></button>
                       
                 </div>
                 
                 <div class="inline">
                     <label> País </label>
-                    <input type="text" id="xPais" maxlength="15"/>                        
+                    <input type="text" id="xPais" class="campo" maxlength="15"/>                        
                     <label> Cod.</label>
-                    <input type="text" id="cPais" maxlength="4"/>
+                    <input type="text" id="cPais" class="campo" maxlength="4"/>
                 </div>
                 <div class="inline">
                     <label> CEP </label>
-                    <input type="text" id="CEP" maxlength="10" onkeyup="valCEP(this)"/>
+                    <input type="text" id="CEP" class="campo" maxlength="10" onkeyup="valCEP(this)"/>
                     <label> Telefone </label>
-                    <input type="text" id="fone" maxlength="14" onkeyup="phone(this)"/>    
+                    <input type="text" id="fone" class="campo" maxlength="14" onkeyup="phone(this)"/>    
                 </div>
             </div>
             <button id="btnSaveCli">Salvar</button>
@@ -323,6 +320,9 @@
         <div id="itens" class="tab">
             <table id="tblItens"></table>
         </div>
+
+<!-- FRETE -->
+
         <div id="frete" class="tab">
            <div class="inline">
                 <label for="cmbModFrete">Modalidade</label>
@@ -379,29 +379,32 @@
             <div class="line">
                 <button id="btnFrete">Salvar</button>
             </div>
-        </div>           
-        <div id="fatura" class="tab">
-<!--                <h2>Faturamento</h2>-->
-            <div id="W">
+        </div>
 
-                <fieldset>
-                    <legend>Dados de Fatura</legend>
+<!-- FATURA -->
+
+        <div id="fatura" class="tab">
+            <fieldset>
+                <legend>Dados de Fatura</legend>
+                <div id="W" class="grupo">
                     <div class="inline">
                         <label>Valor da NF R$</label>
-                        <input type="text" id="edtValorNF" value="0.00" onkeyup="valFloat(this)">
+                        <input type="text" id="vNF" class="campo" value="0.00" onkeyup="valFloat(this)">
                         <label>Dias entre as Parcelas (separar por /)</label>
                         <input type="text" id="edtDiasParcelas" value="28">
                         <label>Desconto R$</label>
                         <input type="text" id="edtDesconto" value="0" onkeyup="valFloat(this)">
                     </div>
+                </div> 
+                <div id="YB" class="grupo">
                     <div class="inline">
-                        <label for="cmbModPag">Modo de Pgto.</label>
-                        <select id="cmbModPag">
+                        <label for="IndPag">Modo de Pgto.</label>
+                        <select id="IndPag" class="campo">
                             <option value="0">A Vista</option>
                             <option value="1" selected>A Prazo</option>
                         </select>
-                        <label for="cmbTipPag">Tipo de Pgto.</label>
-                        <select id="cmbTipPag">
+                        <label for="tPag">Tipo de Pgto.</label>
+                        <select id="tPag" class="campo">
                             <option value="01">Dinheiro</option>
                             <option value="02">Cheque</option>
                             <option value="03">Cartão de Crédito</option>
@@ -418,16 +421,18 @@
                         </select>
                     </div>       
                     <input type="hidden" id="hdnPed">
+                </div>                   
+                <div id="Z" class="grupo">
                     <label class="inline">Texto Complementar</label>
-                    <textarea  id="txaTextoCompl" rows="10"></textarea>                    
-                </fieldset>
-
-                <button id="btnGeraNFe">Gerar NFe</button>
-            </div>
+                    <textarea  id="infCpl" class="campo" rows="10"></textarea>
+                </div>
+            </fieldset>
+            <button id="btnGeraNFe">Gerar NFe</button>
         </div>
-        <div id="export" class="tab">
-<!--                <h2>Arquivos TXT</h2>-->
+    
+<!-- ARQUIVOS -->
 
+        <div id="export" class="tab">
                 <fieldset>
                     <legend>TXT</legend>
                     <select id="txtFiles" size="20"></select>
@@ -436,8 +441,8 @@
                     <legend>PDF</legend>
                     <select id="pdfFiles" size="20"></select>
                 </fieldset>
-<!--                <button id="btnAssina">Assina XML</button>-->
-        </div>                
+        </div>
+
     </div>   
 
 
@@ -448,7 +453,7 @@
     const pageFunc = main_data.fisc_nfe.func
     const pageScreen = document.querySelector('#card-fisc_nfe')
 
-    pageData.NFe = new NFe('A,B,C,C02,C05,W,W02,X,Y,Y02,YA,YA01,Z')
+    pageData.NFe = new NFe('A,B,C,C02,C05,W,W02,X,Y,Y02,YA,YB,Z')
 
 /* CHAMADA DE FUNÇÕES INICIAL */    
 
@@ -470,7 +475,6 @@
             emitente.querySelector('#xNome').value = pageData.NFe.C.xNome
             emitente.querySelector('#xFant').value = pageData.NFe.C.xFant
             emitente.querySelector('#IE').value = getIE(pageData.NFe.C.IE)
-            emitente.querySelector('#IEST').value = pageData.NFe.C.IEST
             emitente.querySelector('#IM').value = pageData.NFe.C.IM
             emitente.querySelector('#CNAE').value = pageData.NFe.C.CNAE
             emitente.querySelector('#CRT').value = pageData.NFe.C.CRT
@@ -491,27 +495,27 @@
     function fillFiscal(){            
             const fiscal = pageScreen.querySelector('#fiscal')            
             fiscal.querySelector('#nNF').value = parseInt(pageData.NFe.B.nNF) + 1
-            fiscal.querySelector('#cNF').value = pageData.NFe.B.cNF
-            fiscal.querySelector('#cUF').value = pageData.NFe.B.cUF
+//            fiscal.querySelector('#cNF').value = pageData.NFe.B.cNF
+//            fiscal.querySelector('#cUF').value = pageData.NFe.B.cUF
             fiscal.querySelector('#natOp').value = pageData.NFe.B.natOp
             fiscal.querySelector('#mod').value = pageData.NFe.B.mod
-            fiscal.querySelector('#serie').value = pageData.NFe.B.serie
+//            fiscal.querySelector('#serie').value = pageData.NFe.B.serie
             fiscal.querySelector('#dhEmi').value = today.getFormatDate()
             fiscal.querySelector('#dhSaiEnt').value = today.getFormatDate()
             fiscal.querySelector('#tpNF').value = pageData.NFe.B.tpNF
             fiscal.querySelector('#idDest').value = pageData.NFe.B.idDest
-            fiscal.querySelector('#cMunFG').value = pageData.NFe.B.cMunFG
+//            fiscal.querySelector('#cMunFG').value = pageData.NFe.B.cMunFG
             fiscal.querySelector('#tpImp').value = pageData.NFe.B.tpImp
             fiscal.querySelector('#tpEmis').value = pageData.NFe.B.tpEmis
-            fiscal.querySelector('#cDV').value = pageData.NFe.B.cDV
+//            fiscal.querySelector('#cDV').value = pageData.NFe.B.cDV
             fiscal.querySelector('#tpAmb').value = pageData.NFe.B.tpAmb
             fiscal.querySelector('#finNFe').value = pageData.NFe.B.finNFe
             fiscal.querySelector('#indFinal').value = pageData.NFe.B.indFinal
             fiscal.querySelector('#indPres').value = pageData.NFe.B.indPres
             fiscal.querySelector('#procEmi').value = pageData.NFe.B.procEmi
-            fiscal.querySelector('#verProc').value = pageData.NFe.B.verProc
-            fiscal.querySelector('#dhCont').value = pageData.NFe.B.dhCont
-            fiscal.querySelector('#xJust').value = pageData.NFe.B.xJust
+//            fiscal.querySelector('#verProc').value = pageData.NFe.B.verProc
+//            fiscal.querySelector('#dhCont').value = pageData.NFe.B.dhCont
+//            fiscal.querySelector('#xJust').value = pageData.NFe.B.xJust
     }
 
     function fillCliente(){      
@@ -595,6 +599,23 @@
         delete link
     }
 
+    function saveNFe(){
+        const out = new Object
+        const grupo = pageScreen.querySelectorAll('.grupo')
+        for(let g=0; g<grupo.length; g++){
+            out[grupo[g].id] = new Object
+            const campo = grupo[g].querySelectorAll('.campo')
+            for(let c=0; c<campo.length; c++){
+                out[grupo[g].id][campo[c].id] = campo[c].value
+            }
+        }
+        pageData.NFe.import(out)
+    }
+
+    function fatura(){
+
+    }
+
 /* FUNÇÕES GLOBAIS */    
 
     pageFunc.somaNFeItens = ()=>{
@@ -604,15 +625,14 @@
         for(let i=1; i<tbl.length; i++){
             pageData.NFe.addItem(tbl[i].data)
             const index = pageData.NFe.itens.length -1
-//            pageData.NFe.itens[index].I.cProd = tbl[i].data.cProd
             const value = parseFloat(tbl[i].cells[4].innerHTML)
             total += value == NaN ? 0 : value
         }
 
         const txt_1 = `DOC. EMITIDO POR ME OU EPP OPTANTE S.NACIONAL, NÃO GERA DIREITO A CREDITO FISCAL DE ISSQN E IPI, PERMITE O APROVEITAMENTO DE CREDITO DO ICMS NO VALOR DE  R$${(total*0.0282).toFixed(2)} CORRESPONDENTE A ALIQUOTA DE 2,82% NOS TERMOS DO ARTIGO 23 DA LC 123. Aprovado conforme pedido(s) ${pageScreen.querySelector('#hdnPed').value}`
-        const txt_2 = `DOC. GERA DIREITO A CREDITO FISCAL DO ICMS NO VALOR DE  R$${(total*0.18).toFixed(2)} CORRESPONDENTE A ALIQUOTA DE 18%. Aprovado conforme pedido(s) ${pageScreen.querySelector('#hdnPed').value}`
-        pageScreen.querySelector('#txaTextoCompl').value =  pageData.NFe.C.CRT != '3' ? txt_1 : txt_2 
-        pageScreen.querySelector('#edtValorNF').value = total.toFixed(2)
+        const txt_2 = `DOC. GERA DIREITO A CREDITO FISCAL DO ICMS NO VALOR DE R$${(total*0.18).toFixed(2)} CORRESPONDENTE A ALIQUOTA DE 18%. Aprovado conforme pedido(s) ${pageScreen.querySelector('#hdnPed').value}`
+        pageScreen.querySelector('#infCpl').value =  pageData.NFe.C.CRT != '3' ? txt_1 : txt_2 
+        pageScreen.querySelector('#vNF').value = total.toFixed(2)
     }
 
 /* CHAMADA DE FUNÇÕES DO DOM */    
@@ -656,24 +676,29 @@
 /***** EMISSOR *****/
 
     pageScreen.querySelector('#btnSaveEmit').addEventListener('click',(event)=>{
-        NFeConf(pageData.config)        
+        saveNFe()
+//        NFeConf(pageData.config)        
     })
                 
 /***** FISCAL *****/
 
     pageScreen.querySelector('#btnSaveFiscal').addEventListener('click',(event)=>{
-        NFeConf(pageData.config)
+        saveNFe()        
+//        NFeConf(pageData.config)
     })
 
 /***** CLIENTE *****/
 
     pageScreen.querySelector('#btnSaveCli').addEventListener('click',()=>{
-        NFeConf(pageData.config)
+        saveNFe()        
+//        NFeConf(pageData.config)
     })
 
 /***** FATURA *****/
 
     pageScreen.querySelector('#btnGeraNFe').addEventListener('click',()=>{
+        saveNFe()
+        fatura()
         pageData.NFe.geraChave()
         const txt = pageData.NFe.geraTXT()
 
