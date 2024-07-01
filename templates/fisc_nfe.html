@@ -297,11 +297,12 @@
                 <div class="inline">
                     <label>  Municipio</label>
                     <input type="text" id="xMun" maxlength="60"/>
+                    <label> UF </label>
+                    <input type="text" id="UF" maxlength="2" style="width: 70px ;"/>                      
                     <label> Cod.</label>
-                    <input type="text" id="cMun" maxlength="7" onkeyup="valInt(this)" style="width: 200px ;"/>
+                    <input type="text" id="cMun" maxlength="7" onkeyup="valInt(this)" style="width: 200px ;" readonly/>
                     <button id="btnBuscaIBGE" class="btn-round"><span class="mdi mdi-magnify"></span></button>
-                    <label> Sigla da UF </label>
-                    <input type="text" id="UF" maxlength="2" style="width: 70px ;"/>                        
+                      
                 </div>
                 
                 <div class="inline">
@@ -573,12 +574,11 @@
                     pageScreen.querySelector('#hdnPed').value = data.num_ped
                     tbl.head('Cod.|mobHide,Descrição,Qtd.,Preço Unit.,Sub Total,ICMS,%,CFOP')        
                 }
-
                 for(let i=0; i<json.length;i++){                        
-                    json[i].cfop = (pageData.NFe.C05.UF == pageData.NFe.E05.UF ? '51' : '61')+(json[i].id_emp == '13' ? '01' : '02')
+                    json[i].CFOP = (pageData.NFe.C05.UF == pageData.NFe.E05.UF ? '51' : '61')+(json[i].id_emp == '13' ? '01' : '02')
                     json[i].ICMS = pageData.NFe.C.CRT == '3' ? json[i].pICMS : 0
                     json[i].TOT_ICMS = pageData.NFe.C.CRT == '3' ? json[i].vICMS : 0
-                    tbl.plot(json[i],'cProd|mobHide,xProd,qTrib,vUnCom,vProd,TOT_ICMS,ICMS,cfop','str,Upp,str,flo,flo,flo,flo,str')
+                    tbl.plot(json[i],'cProd|mobHide,xProd,qTrib,vUnCom,vProd,TOT_ICMS,ICMS,CFOP','str,Upp,str,flo,flo,flo,flo,str')
                 }
 
                 pageFunc.somaNFeItens()
@@ -604,7 +604,7 @@
         for(let i=1; i<tbl.length; i++){
             pageData.NFe.addItem(tbl[i].data)
             const index = pageData.NFe.itens.length -1
-            pageData.NFe.itens[index].I.cProd = tbl[i].data.id_prod
+//            pageData.NFe.itens[index].I.cProd = tbl[i].data.cProd
             const value = parseFloat(tbl[i].cells[4].innerHTML)
             total += value == NaN ? 0 : value
         }
@@ -656,99 +656,28 @@
 /***** EMISSOR *****/
 
     pageScreen.querySelector('#btnSaveEmit').addEventListener('click',(event)=>{
-        const emitente = pageScreen.querySelector('#emitente')
-        pageData.config.C.xNome = emitente.querySelector('#xNome').value.trim().toUpperCase()
-        pageData.config.C.xFant = emitente.querySelector('#xFant').value.trim().toUpperCase()
-        pageData.config.C.IE = getNum(emitente.querySelector('#IE').value)
-        pageData.config.C.IEST = emitente.querySelector('#IEST').value.trim().toUpperCase()
-        pageData.config.C.IM = getNum(emitente.querySelector('#IM').value)
-        pageData.config.C.CNAE = getNum(emitente.querySelector('#CNAE').value)
-        pageData.config.C.CRT = emitente.querySelector('#CRT').value.trim().toUpperCase()
-        pageData.config.C02.CNPJ = getNum(emitente.querySelector('#CNPJ').value)
-        pageData.config.C05.xLgr = emitente.querySelector('#xLgr').value.trim().toUpperCase()
-        pageData.config.C05.nro = emitente.querySelector('#nro').value.trim().toUpperCase()
-        pageData.config.C05.cpl = emitente.querySelector('#cpl').value.trim().toUpperCase()
-        pageData.config.C05.bairro = emitente.querySelector('#bairro').value.trim().toUpperCase()
-        pageData.config.C05.cMun = getNum(emitente.querySelector('#cMun').value)
-        pageData.config.C05.xMun = emitente.querySelector('#xMun').value.trim().toUpperCase()
-        pageData.config.C05.UF = emitente.querySelector('#UF').value.trim().toUpperCase()
-        pageData.config.C05.CEP = getNum(emitente.querySelector('#CEP').value)
-        pageData.config.C05.cPais = getNum(emitente.querySelector('#cPais').value)
-        pageData.config.C05.xPais = emitente.querySelector('#xPais').value.trim().toUpperCase()
-        pageData.config.C05.fone = getNum(emitente.querySelector('#fone').value)
         NFeConf(pageData.config)        
     })
                 
 /***** FISCAL *****/
 
     pageScreen.querySelector('#btnSaveFiscal').addEventListener('click',(event)=>{
-        const fiscal = pageScreen.querySelector('#fiscal')
-        const emitente = pageScreen.querySelector('#emitente')
-        const now = new Date(fiscal.querySelector('#dhEmi').value)
-        now.change(1)
-        pageData.config.A.versao = '4.00'
-        pageData.config.A.id = ''
-        pageData.config.A.indSinc = ''
-        pageData.config.B.nNF = fiscal.querySelector('#nNF').value.trim()
-        pageData.config.B.cUF = fiscal.querySelector('#cUF').value
-        pageData.config.B.cNF = Math.floor(Math.random() * 89999999 + 10000000)
-        pageScreen.querySelector('#fiscal').querySelector('#cNF').value = pageData.config.B.cNF
-        pageData.config.B.natOp = fiscal.querySelector('#natOp').value.trim().toUpperCase()
-        pageData.config.B.mod = fiscal.querySelector('#mod').value.trim()
-        pageData.config.B.serie = fiscal.querySelector('#serie').value
-        now.setHours(7)
-//        pageData.config.B.dhEmi = now.getFullDateTime()
-        pageData.config.B.dhEmi = fiscal.querySelector('#dhEmi').value+'T'+now.getFullHour()+'-03:00'
-        now.setHours(16)
-//        pageData.config.B.dhSaiEnt = now.getFullDateTime()
-        pageData.config.B.dhSaiEnt = fiscal.querySelector('#dhSaiEnt').value+'T'+now.getFullHour()+'-03:00'
-        pageData.config.B.tpNF = fiscal.querySelector('#tpNF').value
-        pageData.config.B.idDest = fiscal.querySelector('#idDest').value
-        pageData.config.B.cMunFG = getNum(emitente.querySelector('#cMun').value)
-        pageData.config.B.tpImp = fiscal.querySelector('#tpImp').value
-        pageData.config.B.tpEmis = fiscal.querySelector('#tpEmis').value
-        pageData.config.B.cDV = fiscal.querySelector('#cDV').value
-        pageData.config.B.tpAmb = fiscal.querySelector('#tpAmb').value
-        pageData.config.B.finNFe = fiscal.querySelector('#finNFe').value
-        pageData.config.B.indFinal = fiscal.querySelector('#indFinal').value
-        pageData.config.B.indPres = fiscal.querySelector('#indPres').value
-        pageData.config.B.procEmi = fiscal.querySelector('#procEmi').value
-        pageData.config.B.verProc = fiscal.querySelector('#verProc').value
-        pageData.config.B.dhCont = fiscal.querySelector('#dhCont').value
-        pageData.config.B.xJust = fiscal.querySelector('#xJust').value
-        pageData.config.A.id = geraChave(pageData.config.B.nNF,pageData.config.B.cNF,pageData.config.C02.CNPJ)
         NFeConf(pageData.config)
     })
 
 /***** CLIENTE *****/
 
     pageScreen.querySelector('#btnSaveCli').addEventListener('click',()=>{
-        const cliente = pageScreen.querySelector('#cliente')
-        pageData.config.E.xNome = cliente.querySelector('#xNome').value.trim().toUpperCase()
-        pageData.config.E.indIEDest = cliente.querySelector('#indIEDest').value
-        pageData.config.E.IE = getNum(cliente.querySelector('#IE').value)
-        pageData.config.E.ISUF = cliente.querySelector('#ISUF').value
-        pageData.config.E.IM = getNum(cliente.querySelector('#IM').value)
-        pageData.config.E.email = cliente.querySelector('#email').value.trim().toLowerCase()
-        pageData.config.E02.CNPJ = getNum(cliente.querySelector('#CNPJ').value)
-        pageData.config.E05.xLgr = cliente.querySelector('#xLgr').value.trim().toUpperCase()
-        pageData.config.E05.nro = cliente.querySelector('#nro').value
-        pageData.config.E05.XCpl = cliente.querySelector('#XCpl').value.trim().toUpperCase()
-        pageData.config.E05.xBairro = cliente.querySelector('#xBairro').value.trim().toUpperCase()
-        pageData.config.E05.cMun = getNum(cliente.querySelector('#cMun').value)
-        pageData.config.E05.xMun = cliente.querySelector('#xMun').value.trim().toUpperCase()
-        pageData.config.E05.UF = cliente.querySelector('#UF').value.trim().toUpperCase()
-        pageData.config.E05.CEP = getNum(cliente.querySelector('#CEP').value)
-        pageData.config.E05.cPais = cliente.querySelector('#cPais').value.trim().toUpperCase()
-        pageData.config.E05.xPais = cliente.querySelector('#xPais').value.trim().toUpperCase()
-        pageData.config.E05.fone = getNum(cliente.querySelector('#fone').value)
         NFeConf(pageData.config)
     })
 
 /***** FATURA *****/
 
     pageScreen.querySelector('#btnGeraNFe').addEventListener('click',()=>{
+        pageData.NFe.geraChave()
+        const txt = pageData.NFe.geraTXT()
 
+/*        
         if(pageScreen.querySelector('#cliente').querySelector('#cMun').value.trim() != '' ){
             pageScreen.querySelector('#btnSaveFiscal').click()
             geraNFeItens()
@@ -761,7 +690,8 @@
             pageScreen.querySelector('#tab-cliente').click()
             pageScreen.querySelector('#cliente').querySelector('#cMun').focus()
         }
-
+*/
+        console.log(txt)
     })
 
     pageScreen.querySelector('#btnBuscaIBGE').addEventListener('click',()=>{
@@ -770,19 +700,18 @@
         const cMun = cliente.querySelector('#cMun')
         const UF = cliente.querySelector('#UF')
 
-        const out = IBGE_cMun(xMun.value,UF.value).then((response)=>{
-        const json = JSON.parse(response)
-        for(let i=0; i<json.length; i++){
-            if(json[i].nome.trim().toLowerCase() == xMun.value.trim().toLowerCase()){
-                xMun.value = json[i].nome
-                cMun.value = json[i].id
-                pageData.NFe.E05.xMun = json[i].nome
-                pageData.NFe.E05.cMun = json[i].id
+        IBGE_cMun(xMun.value,UF.value).then((response)=>{
+            const json = JSON.parse(response)
+            for(let i=0; i<json.length; i++){
+                if(json[i].nome.trim().toLowerCase() == xMun.value.trim().toLowerCase()){
+                    xMun.value = json[i].nome
+                    cMun.value = json[i].id
+                    UF.value = UF.value.toUpperCase()
+                    pageData.NFe.E05.xMun = json[i].nome
+                    pageData.NFe.E05.cMun = json[i].id
+                }
             }
-        }
-    })
-
-        IBGE_cMun(pageScreen.querySelector('#E05').querySelector('#xMun').value,pageScreen.querySelector('#E05').querySelector('#UF').value)
+        })
     })
 
 /* INICIO */

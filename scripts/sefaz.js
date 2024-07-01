@@ -51,14 +51,14 @@ NFe.prototype.make = function(key_name){
     return this[key_name]
 }
 
-NFe.prototype.addItem = function(data){
+NFe.prototype.addItem = function(data){  
     const keys = ['H','I','M','N','N02','O','O07','O10','Q','Q05','Q07','S','S05','S07']
     const out = new Object
     for(let i=0; i<keys.length; i++){
         out[keys[i]] = this.make(keys[i])
         for (const key in out[keys[i]]) {
             if(data.hasOwnProperty(key)){
-                out[keys[i]][key] = data[key]
+                out[keys[i]][key] = data[key].split('\r')[0].trim()
             }
         }               
     }
@@ -128,14 +128,44 @@ NFe.prototype.geraChave = function(){
 }
 
 NFe.prototype.geraTXT = function(){
+
+    const NFe = Object.keys(this).sort().reduce(
+        (obj, key) => { 
+          obj[key] = this[key]; 
+          return obj;
+        }, 
+        {}
+      ); 
+
     let out = 'NOTAFISCAL|1|\n'
-    for (const key in this) {
-        if(typeof this[key] === 'object' && !Array.isArray(this[key])){
-            let line = key+'|'
-            for(const obj_key in this[key]){
-                line += this[key][obj_key] +'|'
+
+    function makeLine(obj,key){
+        let line = key+'|'
+        for(const obj_key in obj[key]){
+            line += obj[key][obj_key] +'|'
+        }
+        return line + '\n'
+    }
+
+    function addItens(itens){
+        let lines = ''
+        for(let i=0; i<itens.length; i++){
+            for (const item_key in itens[i]) {
+                lines += makeLine(itens[i],item_key)
             }
-            out += line + '\n'
+        }
+        return lines
+    }
+
+    let makeItem = 0
+
+    for (const key in NFe) {
+        if(typeof NFe[key] === 'object' && !Array.isArray(NFe[key])){
+            if(key.charCodeAt() > 72 && !makeItem){
+                out += addItens(NFe.itens)
+                makeItem = 1
+            }            
+            out += makeLine(NFe,key) 
         }
         
     }
@@ -153,53 +183,25 @@ function onlyNum(V){
     return out
 }
 
-
-
 function IBGE_cMun(C,E){
     C = C.trim().toLowerCase()
     E = E.trim().toUpperCase()
-    const cod_UF = [{"id":11,"sigla":"RO"},{"id":12,"sigla":"AC"},{"id":13,"sigla":"AM"},
-        {"id":14,"sigla":"RR"},{"id":15,"sigla":"PA"},{"id":16,"sigla":"AP"},{"id":17,"sigla":"TO"},
-        {"id":21,"sigla":"MA"},{"id":22,"sigla":"PI"},{"id":23,"sigla":"CE"},{"id":24,"sigla":"RN"},
-        {"id":25,"sigla":"PB"},{"id":26,"sigla":"PE"},{"id":27,"sigla":"AL"},{"id":28,"sigla":"SE"},
-        {"id":29,"sigla":"BA"},{"id":31,"sigla":"MG"},{"id":32,"sigla":"ES"},{"id":33,"sigla":"RJ"},
-        {"id":35,"sigla":"SP"},{"id":41,"sigla":"PR"},{"id":42,"sigla":"SC"},{"id":43,"sigla":"RS"},
-        {"id":50,"sigla":"MS"},{"id":51,"sigla":"MT"},{"id":52,"sigla":"GO"},{"id":53,"sigla":"DF"}]
+    const cod_UF = {"RO":11,"AC":12,"AM":13,"RR":14,"PA":15,"AP":16,"TO":17,"MA":21,"PI":22,"CE":23,
+    "RN":24,"PB":25,"PE":26,"AL":27,"SE":28,"BA":29,"MG":31,"ES":32,"RJ":33,"SP":35,"PR":41,"SC":42,
+    "RS":43,"MS":50,"MT":51,"GO":52,"DF":53} 
 
         if(C != '' && E != ''){
-        for(let i=0; i<cod_UF.length; i++){
-            if(cod_UF[i].sigla == E){
-                const Mun_cod = new Promise((resolve,reject) =>{
-                    fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${cod_UF[i].id}/municipios`)
-                    .then(function (response){                           
-                        if (response.status === 200) { 
-//                                console.log(response.text()) 
-                            resolve(response.text());
-                        } else { 
-                            reject(new Error("Houve algum erro na comunicação com o servidor"));
-                        } 
-                    })                    
-                }); 
 
-                return Mun_cod
-
-                Mun_cod.then((resolve)=>{
-                    const json = JSON.parse(resolve);                   
-                    for(let j=0; j<json.length; j++){
-                        if(json[j].nome.trim().toLowerCase() == C){
-                            console.log(json[j]) 
-/*                                
-                            pageScreen.querySelector('#E05').querySelector('#cMun').value =  json[j].id;
-                            pageScreen.querySelector('#btnSaveCli').click()
-                            break;
-*/                                
-                            
-                        }
-                    }
-                })                
-            }
-        }
+            const Mun_cod = new Promise((resolve,reject) =>{
+                fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${cod_UF[E]}/municipios`)
+                .then(function (response){                           
+                    if (response.status === 200) { 
+                        resolve(response.text());
+                    } else { 
+                        reject(new Error("Houve algum erro na comunicação com o servidor"));
+                    } 
+                })                    
+            })
+            return Mun_cod
     }
 }
-
-IBGE_cMun('Caçapava','SP')
