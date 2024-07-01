@@ -391,9 +391,9 @@
                         <label>Valor da NF R$</label>
                         <input type="text" id="vNF" class="campo" value="0.00" onkeyup="valFloat(this)">
                         <label>Dias entre as Parcelas (separar por /)</label>
-                        <input type="text" id="edtDiasParcelas" value="28">
+                        <input type="text" id="dfat" value="28">
                         <label>Desconto R$</label>
-                        <input type="text" id="edtDesconto" value="0" onkeyup="valFloat(this)">
+                        <input type="text" id="vDesc" value="0" onkeyup="valFloat(this)">
                     </div>
                 </div> 
                 <div id="YB" class="grupo">
@@ -613,7 +613,35 @@
     }
 
     function fatura(){
+        const fat = pageScreen.querySelector('#W').querySelector('#dfat').value.split('/')
+        const obj = new Object
+        
+        for(let i=fat.length-1; i>=0; i--){
+            fat[i] = getNum(fat[i])
+            if(fat[i] == ''){
+                fat.splice(i,1)
+            }
 
+        }
+
+        const vNF = parseFloat(pageScreen.querySelector('#W').querySelector('#vNF').value)
+        const vDesc = parseFloat(pageScreen.querySelector('#W').querySelector('#vDesc').value)
+        const vDupl = parseFloat((vNF/fat.length).toFixed(2))
+
+        pageData.NFe.Y02.vOrig = vNF.toFixed(2)
+        pageData.NFe.Y02.nFat = fat.length
+        pageData.NFe.Y02.vDesc = vDesc.toFixed(2)
+        pageData.NFe.Y02.vLiq = (vNF - vDesc).toFixed(2)
+
+        for(let i=0; i<fat.length; i++){
+            const day = new Date()
+            day.change(parseInt(fat[i]))
+            const Y07 = new Object
+            Y07.nDup = i+1
+            Y07.dVenc = day.getFormatDate()
+            Y07.vDup = vDupl.toFixed(2)
+            pageData.NFe.addFat(Y07)
+        }
     }
 
 /* FUNÇÕES GLOBAIS */    

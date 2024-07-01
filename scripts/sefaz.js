@@ -8,6 +8,7 @@ class NFe{
     constructor(fds){
         fds = fds.split(',')
         this.itens = new Array
+        this.faturas = new Array
         for(let i=0; i<fds.length; i++){
             this[fds[i]] = this.make(fds[i])
         }
@@ -69,6 +70,12 @@ NFe.prototype.addItem = function(data){
     }
 }
 
+NFe.prototype.addFat = function(data){
+    const out = new Object
+    out.Y07 = data
+    this.faturas.push(out)
+}
+
 NFe.prototype.addCliente = function(data){
 
     const keys = ['E','E02','E05']
@@ -101,19 +108,17 @@ NFe.prototype.addCliente = function(data){
 }
 
 NFe.prototype.import = function(obj){
-    console.log(obj)
     for (const grupo in obj) {
         if(this.hasOwnProperty(grupo)){
             for (const campo in obj[grupo]){
                 if(this[grupo].hasOwnProperty(campo)){
-                //  exceções
-                if(['N','C'].includes(rules[grupo][campo].tipo)){
-                    obj[grupo][campo] = onlyAlpha(obj[grupo][campo])
-                }else{ // D, H ou DH
-                    obj[grupo][campo] += campo == 'dhEmi' ? 'T07:00:00-03:00' : ''
-                    obj[grupo][campo] += campo == 'dhSaiEnt' ? 'T16:00:00-03:00' : ''
-                }
-
+                    //  exceções
+                    if(['N','C'].includes(rules[grupo][campo].tipo)){
+                        obj[grupo][campo] = onlyAlpha(obj[grupo][campo])
+                    }else{ // D, H ou DH
+                        obj[grupo][campo] += campo == 'dhEmi' ? 'T07:00:00-03:00' : ''
+                        obj[grupo][campo] += campo == 'dhSaiEnt' ? 'T16:00:00-03:00' : ''
+                    }
                     this[grupo][campo] =  obj[grupo][campo]
                 }
             }
@@ -178,16 +183,25 @@ NFe.prototype.geraTXT = function(){
         return lines
     }
 
-    let makeItem = 0
-    for (const key in NFe) {
-        if(typeof NFe[key] === 'object' && !Array.isArray(NFe[key])){
-            if(key.charCodeAt() > 72 && !makeItem){
-                out += addItens(NFe.itens)
-                makeItem = 1
-            }            
-            out += makeLine(NFe,key) 
+    function addFatura(fat){
+        let lines = ''
+        for(let i=0; i<fat.length; i++){
+            lines += makeLine(fat[i],'Y07')
         }
-        
+    }
+
+    for (const key in NFe) {
+        if(typeof NFe[key] === 'object' && !Array.isArray(NFe[key])){                 
+           
+            if(key == 'W'){
+                out += addItens(NFe.itens)
+            }
+            if(key == 'YA'){
+                out += addFatura(NFe.faturas)
+            }    
+
+            out += makeLine(NFe,key)
+        }
     }
     return out
 }
