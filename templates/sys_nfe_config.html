@@ -1,0 +1,95 @@
+<template>
+    <link rel="stylesheet" href="style/tree.css">
+    <style>
+
+    </style>
+        <fieldset>
+            <legend>Regras</legend>
+            <ul class="tree">
+                <li>
+                <details open>
+                    <summary>
+                        NFe
+                        <ul class="tree">
+
+                        </ul>
+                    </summary>
+                </details>
+                </li>
+            </ul>
+        </fieldset>
+
+</template>
+<script>
+    const pageData = main_data.sys_nfe_config.data
+    const pageFunc = main_data.sys_nfe_config.func
+    const pageScreen = document.querySelector('#card-sys_nfe_config')
+
+    console.log(rules)
+
+    createTree()
+
+    function createTree(){
+        const tree = pageScreen.querySelector('.tree')
+        for(const grupo in rules){
+            if(typeof rules[grupo] === 'object' && !Array.isArray(rules[grupo])){
+                const li_grupo = document.createElement('li')                
+                const details_grupo = document.createElement('details')
+                const summary_grupo = document.createElement('summary')
+                summary_grupo.innerHTML = grupo
+                details_grupo.appendChild(summary_grupo)
+                li_grupo.appendChild(details_grupo)
+                const ul_grupo = document.createElement('ul')
+                for(const campo in rules[grupo]){
+                    const li = document.createElement('li')
+                    const details = document.createElement('details')
+                    const summary = document.createElement('summary')
+                    summary.innerHTML = campo
+                    summary.className = 'last'
+                    details.appendChild(summary)
+                    li.appendChild(details)
+                    ul_grupo.appendChild(li)
+                }
+                li_grupo.appendChild(ul_grupo)
+                tree.appendChild(li_grupo)
+
+            }
+        }
+
+/*        
+        const ul = document.createElement('ul')
+        for(let i=0; i<data.length; i++){          
+            const li = document.createElement('li')
+            const details = document.createElement('details')
+            const summary = document.createElement('summary')
+            summary.access = data[i].access
+            summary.innerHTML = data[i].modulo
+            summary.itens = data[i].itens
+            summary.index = index.concat(i)
+            summary.link = data[i].link
+            summary.icone = data[i].icone
+            summary.janela = data[i].janela
+            summary.width = data[i].width
+            summary.label = data[i].label
+            if(data[i].itens.length == 0){
+                summary.className = 'last'
+            }
+            summary.addEventListener('click',(e)=>{                        
+                if(data[i].itens.length == 0){                            
+                    openHTML('sys_view_perm.html','pop-up',`Controle de Permissão - ${data[i].modulo}`,summary,800)
+                }
+            })
+            summary.addEventListener('contextmenu',(e)=>{
+                e.preventDefault()
+                openHTML('sys_new_menu.html','pop-up',`Item de Menu - ${data[i].modulo}`,summary,600)
+            })
+            details.appendChild(summary)
+            details.appendChild(createTree(data[i].itens,index.concat(i)))
+            li.appendChild(details)
+            ul.appendChild(li)
+        }
+        return ul
+*/        
+    }
+
+</script>
