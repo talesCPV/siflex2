@@ -1,7 +1,7 @@
 
 <template>
     <style>
-
+/*
     #fiscal > *{
         display: flex;
         flex-direction: column;
@@ -13,14 +13,7 @@
     #fiscal > label{
         margin-left: 20px;
     }
-
-
-    button{
-        width: 98%;
-    }
-
-
-
+*/
     </style>
   
 
@@ -109,7 +102,9 @@
                     <input type="text" id="fone" class="campo" maxlength="14" onkeyup="phone(this)"/>
                 </div>
             </div>
-            <button id="btnSaveEmit">Salvar</button>
+            <div class="line">
+                <button id="btnSaveEmit">Salvar</button>
+            </div>
                             
         </div>
 
@@ -117,93 +112,98 @@
 
         <div id="fiscal" class="tab">        
             <div id="B" class="grupo">
-            
-                <label> Numero da NF</label>    
-                <input type="text" id="nNF" class="campo" maxlength="9" />
-                
-                <label> Nat. Operação *</label>
-                <input type="text" id="natOp" class="campo" maxlength="60" />
+                <div class="inline">
+                    <label> Numero da NF</label>    
+                    <input type="text" id="nNF" class="campo" maxlength="9" style="max-width: 150px;"/>                
+                    <label> Nat. Operação *</label>
+                    <input type="text" id="natOp" class="campo" maxlength="60" />
+                    <label> Cod. do Modelo do Doc. Fiscal </label>
+                    <input type="text" id="mod" class="campo" maxlength="2" style="max-width: 50px;"/>
+                </div>
+                <div class="inline">
+                    <label> Data Emissão</label>
+                    <input type="date" id="dhEmi" class="campo" >
+                    <label> Tipo de Operação</label>
+                    <select id="tpNF" class="campo" style="max-width: 150px;">
+                        <option value="0" selected>Entrada</option>
+                        <option value="1">Saída</option>
+                    </select>
+                    <label> Data Operação </label>
+                    <input type="date" id="dhSaiEnt" class="campo" >
+                </div>                
+                <div class="inline">
+                    <label> Finalidade</label>
+                    <select id="finNFe" class="campo" >
+                        <option value="1">NF-e normal</option>
+                        <option value="2">NF-e complementar</option>
+                        <option value="3">NF-e de ajuste</option>
+                        <option value="4">Devolução de mercadoria</option>
+                    </select>
 
-                <label> Código do Modelo do Documento Fiscal </label>
-                <input type="text" id="mod" class="campo" maxlength="2"/>
-                
-                <label> Data de emissão do Documento Fiscal </label>
-                <input type="date" id="dhEmi" class="campo">
-
-                <label> Data e hora de Saída ou da Entrada da Mercadoria/Produto </label>
-                <input type="date" id="dhSaiEnt" class="campo" >
-
-                <label> Tipo de Operação</label>
-                <select id="tpNF" class="campo" >
-                    <option value="0" selected>Entrada</option>
-                    <option value="1">Saída</option>
-                </select>
-
-                <label> Identificador de Local de destino da operação</label>
-                <select id="idDest" class="campo" >
-                    <option value="1">Operação Interna</option>
-                    <option value="2">Operação Interestadual</option>
-                    <option value="3">Operação com o Exterior</option>
-                </select>
+                    <label>Local de Destino</label>
+                    <select id="idDest" class="campo" style="max-width: 150px;">
+                        <option value="1">Operação Interna</option>
+                        <option value="2">Operação Interestadual</option>
+                        <option value="3">Operação com o Exterior</option>
+                    </select>
+                    <label>Tipo de Emissão</label>
+                    <select id="tpEmis" class="campo" style="max-width: 150px;">
+                        <option value="1">Normal</option>
+                        <option value="2">Contingência FS - emissão em contingência com impressão do DANFE em Formulário de Segurança</option>
+                        <option value="4">Contingência EPEC - emissão em contingência com envio da Evento Prévio de Emissão em Contingência - EPEC</option>
+                        <option value="5">Contingência FS-DA - emissão em contingência com impressão do DANFE em Formulário de Segurança para Impressão de Documento Auxiliar de Documento Fiscal Eletrônico (FS-DA)</option>
+                        <option value="6">Contingência SVC-AN</option>
+                        <option value="7">Contingência SVC-RS</option>
+                        <option value="9">Contingência off-line NFC-e</option>
+                    </select>    
+                </div>
+                <div class="inline">
+                    <label> Formato</label>
+                    <select id="tpImp" class="campo" >
+                        <option value="1">Retrato</option>
+                        <option value="2">Paisagem</option>
+                    </select>
+                    <label> Identificação do Ambiente</label>
+                    <select id="tpAmb" class="campo" >
+                        <option value="1">Produção</option>
+                        <option value="2">Homologação</option>
+                    </select>
+                    <label>Op. Consumidor Final</label>
+                    <select id="indFinal" class="campo" >
+                        <option value="0">Normal</option>    
+                        <option value="1">Consumidor Final</option>
+                    </select>
     
-                <label> Formato de Impressão do DANFE</label>
-                <select id="tpImp" class="campo" >
-                    <option value="1">Retrato</option>
-                    <option value="2">Paisagem</option>
-                </select>
-
-                <label>Tipo de Emissão da NF-e</label>
-                <select id="tpEmis" class="campo">
-                    <option value="1">Normal</option>
-                    <option value="2">Contingência FS - emissão em contingência com impressão do DANFE em Formulário de Segurança</option>
-                    <option value="4">Contingência EPEC - emissão em contingência com envio da Evento Prévio de Emissão em Contingência - EPEC</option>
-                    <option value="5">Contingência FS-DA - emissão em contingência com impressão do DANFE em Formulário de Segurança para Impressão de Documento Auxiliar de Documento Fiscal Eletrônico (FS-DA)</option>
-                    <option value="6">Contingência SVC-AN</option>
-                    <option value="7">Contingência SVC-RS</option>
-                    <option value="9">Contingência off-line NFC-e</option>
-                </select>
-    
-                <label> Identificação do Ambiente</label>
-                <select id="tpAmb" class="campo" >
-                    <option value="1">Produção</option>
-                    <option value="2">Homologação</option>
-                </select>
-
-                <label> Finalidade de emissão da NF-e</label>
-                <select id="finNFe" class="campo" >
-                    <option value="1">NF-e normal</option>
-                    <option value="2">NF-e complementar</option>
-                    <option value="3">NF-e de ajuste</option>
-                    <option value="4">Devolução de mercadoria</option>
-                </select>
-
-                <label>Indica operação com o consumidor final</label>
-                <select id="indFinal" class="campo" >
-                    <option value="0">Normal</option>    
-                    <option value="1">Consumidor Final</option>
-                </select>
-
-                <label>Indicador de presença do comprador no estabelecimento comercial no momento da operação</label>
-                <select id="indPres" class="campo" >
-                    <option value="0">Não se aplica (por exemplo Nota Fiscal Complementar ou de ajuste)</option>
-                    <option value="1">Operação presencial</option>
-                    <option value="2">Operação não presencial, pela Internet</option>
-                    <option value="3">Operação não presencial, pelo tele atendimento</option>
-                    <option value="4">NFC-e em operação com entrega em domicílio</option>
-                    <option value="5">Operação não presencial, fora do estabelecimento</option>
-                    <option value="9">Operação não presencial, outros</option>
-                </select>
-
-                <label>Processo de emissão da NF-e</label>
-                <select id="procEmi" class="campo" >
-                    <option value="" selected></option>
-                    <option value="0">emissão de NF-e com aplicativo do contribuinte</option>
-                    <option value="1">emissão de NF-e avulsa pelo Fisco</option>
-                    <option value="2">emissão de NF-e avulsa, pelo contribuinte com seu certificado digital, através do site do Fisco</option>
-                    <option value="3">emissão NF-e pelo contribuinte com aplicativo fornecido pelo Fisco</option>
-                </select>
-            </div>                
+                </div>
+                <div class="inline">
+                    <label>Emissão</label>
+                    <select id="procEmi" class="campo" >
+                        <option value="" selected></option>
+                        <option value="0">Emissão de NF-e com aplicativo do contribuinte</option>
+                        <option value="1">Emissão de NF-e avulsa pelo Fisco</option>
+                        <option value="2">Emissão de NF-e avulsa, pelo contribuinte com seu certificado digital, através do site do Fisco</option>
+                        <option value="3">Emissão NF-e pelo contribuinte com aplicativo fornecido pelo Fisco</option>
+                    </select>
+                    <label>Indicador de Presença</label>
+                    <select id="indPres" class="campo" >
+                        <option value="0">Não se aplica (por exemplo Nota Fiscal Complementar ou de ajuste)</option>
+                        <option value="1">Operação presencial</option>
+                        <option value="2">Operação não presencial, pela Internet</option>
+                        <option value="3">Operação não presencial, pelo tele atendimento</option>
+                        <option value="4">NFC-e em operação com entrega em domicílio</option>
+                        <option value="5">Operação não presencial, fora do estabelecimento</option>
+                        <option value="9">Operação não presencial, outros</option>
+                    </select>
+                    <label for="indIntermed">Marketplace</label>
+                    <select id="indIntermed">
+                        <option value="0">Operação sem intermediador (em site ou plataforma própria)</option>
+                        <option value="1">Operação em site ou plataforma de terceiros</option>
+                    </select>
+                </div>
+            </div>
+            <div class="line">
                 <button id="btnSaveFiscal">Salvar</button>                
+            </div>
         </div>
 
 <!-- PEDIDO -->
@@ -315,7 +315,9 @@
                     <input type="text" id="fone" class="campo" maxlength="14" onkeyup="phone(this)"/>    
                 </div>
             </div>
-            <button id="btnSaveCli">Salvar</button>
+            <div class="line">
+                <button id="btnSaveCli">Salvar</button>
+            </div>
         </div>        
         <div id="itens" class="tab">
             <table id="tblItens"></table>
@@ -431,7 +433,9 @@
                     <textarea  id="infCpl" class="campo" rows="10"></textarea>
                 </div>
             </fieldset>
-            <button id="btnGeraNFe">Gerar NFe</button>
+            <div class="line">
+                <button id="btnGeraNFe">Gerar NFe</button>
+            </div>
         </div>
     
 <!-- ARQUIVOS -->
@@ -451,89 +455,42 @@
 </template>
 <script>
 
+/* VARIÁVEIS */
+
     const pageData = main_data.fisc_nfe.data
     const pageFunc = main_data.fisc_nfe.func
     const pageScreen = document.querySelector('#card-fisc_nfe')
-
     pageData.NFe = new NFe('A,B,C,C02,C05,W,W02,W04c,W04e,W04g,X,Y,Y02,YA,YA01,Z')
 
-/* CHAMADA DE FUNÇÕES INICIAL */    
-
-    function startPage(){
-        pageScreen.querySelector('#tab-emitente').click()
-        pageScreen.querySelector('#edtIni').value =  today.iniMonth()
-        pageScreen.querySelector('#edtFin').value =  today.finMonth()
-
-        listNF('../NF/NFe/txt')
-        listNF('../NF/NFe/pdf','pdf')
-        fillEmitente()
-        fillFiscal()
-    }
 
 /* FUNÇÔES */
 
-    function fillEmitente(){
-            const emitente = pageScreen.querySelector('#emitente')            
-            emitente.querySelector('#xNome').value = pageData.NFe.C.xNome
-            emitente.querySelector('#xFant').value = pageData.NFe.C.xFant
-            emitente.querySelector('#IE').value = getIE(pageData.NFe.C.IE)
-            emitente.querySelector('#IM').value = pageData.NFe.C.IM
-            emitente.querySelector('#CNAE').value = pageData.NFe.C.CNAE
-            emitente.querySelector('#CRT').value = pageData.NFe.C.CRT
-            emitente.querySelector('#CNPJ').value = getCNPJ(pageData.NFe.C02.CNPJ)
-            emitente.querySelector('#xLgr').value = pageData.NFe.C05.xLgr
-            emitente.querySelector('#nro').value = pageData.NFe.C05.nro
-            emitente.querySelector('#bairro').value = pageData.NFe.C05.bairro
-            emitente.querySelector('#cpl').value = pageData.NFe.C05.cpl
-            emitente.querySelector('#xMun').value = pageData.NFe.C05.xMun
-            emitente.querySelector('#cMun').value = pageData.NFe.C05.cMun
-            emitente.querySelector('#UF').value = pageData.NFe.C05.UF
-            emitente.querySelector('#xPais').value = pageData.NFe.C05.xPais
-            emitente.querySelector('#cPais').value = pageData.NFe.C05.cPais
-            emitente.querySelector('#CEP').value = getCEP(pageData.NFe.C05.CEP)
-            emitente.querySelector('#fone').value = getFone(pageData.NFe.C05.fone)
-            getICMS(pageData.NFe.C05.UF).then((response)=>{
-                const json = JSON.parse(response)
-                pageData.ICMS = parseFloat(json[0].valor)
-            })
+    function startPage(){
+        listNF('../NF/NFe/txt')
+        listNF('../NF/NFe/pdf','pdf')
+        fillForms('B,C,C02,C05')
+        getICMS(pageData.NFe.C05.UF).then((response)=>{
+            const json = JSON.parse(response)
+            pageData.ICMS = parseFloat(json[0].valor)
+        })
+        pageScreen.querySelector('#tab-emitente').click()
+        pageScreen.querySelector('#edtIni').value =  today.iniMonth()
+        pageScreen.querySelector('#edtFin').value =  today.finMonth()
+        pageScreen.querySelector('#B').querySelector('#dhEmi').value = today.getFormatDate()
+        pageScreen.querySelector('#B').querySelector('#dhSaiEnt').value = today.getFormatDate()
+        pageScreen.querySelector('#B').querySelector('#nNF').value = parseInt(pageData.NFe.B.nNF)+1
     }
 
-    function fillFiscal(){            
-            const fiscal = pageScreen.querySelector('#fiscal')            
-            fiscal.querySelector('#nNF').value = parseInt(pageData.NFe.B.nNF) + 1
-            fiscal.querySelector('#natOp').value = pageData.NFe.B.natOp
-            fiscal.querySelector('#mod').value = pageData.NFe.B.mod
-            fiscal.querySelector('#dhEmi').value = today.getFormatDate()
-            fiscal.querySelector('#dhSaiEnt').value = today.getFormatDate()
-            fiscal.querySelector('#tpNF').value = pageData.NFe.B.tpNF
-            fiscal.querySelector('#idDest').value = pageData.NFe.B.idDest
-            fiscal.querySelector('#tpImp').value = pageData.NFe.B.tpImp
-            fiscal.querySelector('#tpEmis').value = pageData.NFe.B.tpEmis
-            fiscal.querySelector('#tpAmb').value = pageData.NFe.B.tpAmb
-            fiscal.querySelector('#finNFe').value = pageData.NFe.B.finNFe
-            fiscal.querySelector('#indFinal').value = pageData.NFe.B.indFinal
-            fiscal.querySelector('#indPres').value = pageData.NFe.B.indPres
-            fiscal.querySelector('#procEmi').value = pageData.NFe.B.procEmi
-    }
-
-    function fillCliente(){      
-        const cliente = pageScreen.querySelector('#cliente')
-        cliente.querySelector('#xNome').value = pageData.NFe.E.xNome
-        cliente.querySelector('#indIEDest').value = pageData.NFe.E.indIEDest
-        cliente.querySelector('#IE').value = getIE(pageData.NFe.E.IE)
-        cliente.querySelector('#IM').value = pageData.NFe.E.IM
-        cliente.querySelector('#CNPJ').value = getCNPJ(pageData.NFe.E02.CNPJ)
-        cliente.querySelector('#xLgr').value = pageData.NFe.E05.xLgr
-        cliente.querySelector('#nro').value = pageData.NFe.E05.nro
-        cliente.querySelector('#XCpl').value = pageData.NFe.E05.xCpl
-        cliente.querySelector('#xBairro').value = pageData.NFe.E05.xBairro
-        cliente.querySelector('#xMun').value = pageData.NFe.E05.xMun
-        cliente.querySelector('#cMun').value = pageData.NFe.E05.cMun
-        cliente.querySelector('#UF').value = pageData.NFe.E05.UF
-        cliente.querySelector('#CEP').value = getCEP(pageData.NFe.E05.CEP)
-        cliente.querySelector('#cPais').value = pageData.NFe.E05.cPais
-        cliente.querySelector('#xPais').value = pageData.NFe.E05.xPais
-        cliente.querySelector('#fone').value = getFone(pageData.NFe.E05.fone)
+    function fillForms(grupos){
+        grupos = grupos.split(',')
+        for(let i=0; i<grupos.length; i++){
+            for(const key in pageData.NFe[grupos[i]]){
+                const field = pageScreen.querySelector(`#${grupos[i]}`).querySelector(`#${key}`)
+                if(field != undefined){
+                    field.value = pageData.NFe[grupos[i]][key]
+                }
+            }
+        }
     }
 
     function loadPed(){
@@ -607,6 +564,7 @@
             }
         }
         pageData.NFe.import(out)
+        pageData.NFe.saveRules()
     }
 
     function fatura(){
@@ -649,6 +607,7 @@
             dupl.push(Y07)
         }
         pageData.NFe.addDupl(dupl)
+        pageScreen.querySelector('#B').querySelector('#nNF').value = parseInt(pageData.NFe.B.nNF)+1
     }
 
     function getICMS(UF){
@@ -679,10 +638,7 @@
         pageScreen.querySelector('#vNF').value = total.toFixed(2)
     }
 
-/* CHAMADA DE FUNÇÕES DO DOM */    
-
-
- /***** PEDIDO *****/
+/* CHAMADA DE FUNÇÕES DO DOM */
 
     pageScreen.querySelector('#tblBuscaPed').addEventListener('click',(e)=>{
         data = e.target.parentNode.data
@@ -690,7 +646,7 @@
         if (confirm(`Carregar Ped.${data.num_ped} de ${data.xFANT.toUpperCase()}?`)) {
             pageData.NFe.addCliente(data)
             .then(()=>{
-                fillCliente()
+                fillForms('E,E02,E05')
                 loadItemPed(data.id)
                 pageScreen.querySelector('#tab-cliente').click()
             })
@@ -708,7 +664,6 @@
         openHTML('fisc_nfeItens.html','pop-up','Edição de Ítem de NFe',data)
     })    
 
-/***** FILES *****/    
     pageScreen.querySelector('#txtFiles').addEventListener('dblclick',()=>{
         downloadFile('../NF/NFe/txt/' + pageScreen.querySelector('#txtFiles').value)
     })
@@ -717,28 +672,17 @@
         downloadFile('../NF/NFe/pdf/' + pageScreen.querySelector('#pdfFiles').value)         
     })
 
-/***** EMISSOR *****/
-
     pageScreen.querySelector('#btnSaveEmit').addEventListener('click',(event)=>{
         saveNFe()
-//        NFeConf(pageData.config)        
     })
                 
-/***** FISCAL *****/
-
     pageScreen.querySelector('#btnSaveFiscal').addEventListener('click',(event)=>{
         saveNFe()        
-//        NFeConf(pageData.config)
     })
-
-/***** CLIENTE *****/
 
     pageScreen.querySelector('#btnSaveCli').addEventListener('click',()=>{
         saveNFe()        
-//        NFeConf(pageData.config)
     })
-
-/***** FATURA *****/
 
     pageScreen.querySelector('#btnGeraNFe').addEventListener('click',()=>{
         if(confirm('Deseja gerar esta NFe?')){
@@ -747,8 +691,7 @@
             pageData.NFe.geraChave()
             const txt = pageData.NFe.geraTXT()
             const filename = 'NFe-'+(pageData.NFe.B.nNF).padStart(6,'0')
-            uploadNFe(txt, filename)
-            pageData.NFe.saveRules()
+            uploadNFe(txt, filename)            
         }
     })
 
@@ -773,6 +716,7 @@
     })
 
 /* INICIO */
+
     startPage()
 
 </script>
