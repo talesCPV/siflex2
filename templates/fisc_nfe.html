@@ -396,10 +396,10 @@
                         <input type="text" id="vDesc" value="0" onkeyup="valFloat(this)">
                     </div>
                 </div> 
-                <div id="YB" class="grupo">
+                <div id="YA01" class="grupo">
                     <div class="inline">
-                        <label for="IndPag">Modo de Pgto.</label>
-                        <select id="IndPag" class="campo">
+                        <label for="indPag">Modo de Pgto.</label>
+                        <select id="indPag" class="campo">
                             <option value="0">A Vista</option>
                             <option value="1" selected>A Prazo</option>
                         </select>
@@ -442,9 +442,7 @@
                     <select id="pdfFiles" size="20"></select>
                 </fieldset>
         </div>
-
     </div>   
-
 
 </template>
 <script>
@@ -453,7 +451,7 @@
     const pageFunc = main_data.fisc_nfe.func
     const pageScreen = document.querySelector('#card-fisc_nfe')
 
-    pageData.NFe = new NFe('A,B,C,C02,C05,W,W02,X,Y,Y02,YA,YB,Z')
+    pageData.NFe = new NFe('A,B,C,C02,C05,W,W02,W04c,W04e,W04g,X,Y,Y02,YA,YA01,Z')
 
 /* CHAMADA DE FUNÇÕES INICIAL */    
 
@@ -490,32 +488,28 @@
             emitente.querySelector('#cPais').value = pageData.NFe.C05.cPais
             emitente.querySelector('#CEP').value = getCEP(pageData.NFe.C05.CEP)
             emitente.querySelector('#fone').value = getFone(pageData.NFe.C05.fone)
+            getICMS(pageData.NFe.C05.UF).then((response)=>{
+                const json = JSON.parse(response)
+                pageData.ICMS = parseFloat(json[0].valor)
+            })
     }
 
     function fillFiscal(){            
             const fiscal = pageScreen.querySelector('#fiscal')            
             fiscal.querySelector('#nNF').value = parseInt(pageData.NFe.B.nNF) + 1
-//            fiscal.querySelector('#cNF').value = pageData.NFe.B.cNF
-//            fiscal.querySelector('#cUF').value = pageData.NFe.B.cUF
             fiscal.querySelector('#natOp').value = pageData.NFe.B.natOp
             fiscal.querySelector('#mod').value = pageData.NFe.B.mod
-//            fiscal.querySelector('#serie').value = pageData.NFe.B.serie
             fiscal.querySelector('#dhEmi').value = today.getFormatDate()
             fiscal.querySelector('#dhSaiEnt').value = today.getFormatDate()
             fiscal.querySelector('#tpNF').value = pageData.NFe.B.tpNF
             fiscal.querySelector('#idDest').value = pageData.NFe.B.idDest
-//            fiscal.querySelector('#cMunFG').value = pageData.NFe.B.cMunFG
             fiscal.querySelector('#tpImp').value = pageData.NFe.B.tpImp
             fiscal.querySelector('#tpEmis').value = pageData.NFe.B.tpEmis
-//            fiscal.querySelector('#cDV').value = pageData.NFe.B.cDV
             fiscal.querySelector('#tpAmb').value = pageData.NFe.B.tpAmb
             fiscal.querySelector('#finNFe').value = pageData.NFe.B.finNFe
             fiscal.querySelector('#indFinal').value = pageData.NFe.B.indFinal
             fiscal.querySelector('#indPres').value = pageData.NFe.B.indPres
             fiscal.querySelector('#procEmi').value = pageData.NFe.B.procEmi
-//            fiscal.querySelector('#verProc').value = pageData.NFe.B.verProc
-//            fiscal.querySelector('#dhCont').value = pageData.NFe.B.dhCont
-//            fiscal.querySelector('#xJust').value = pageData.NFe.B.xJust
     }
 
     function fillCliente(){      
@@ -546,7 +540,7 @@
             params.value = query[2]
             params.dt_ini = pageScreen.querySelector('#edtIni').value
             params.dt_fin = pageScreen.querySelector('#edtFin').value
-        const myPromisse = queryDB(params,'FIN-3');
+        const myPromisse = queryDB(params,'FIN-3')
         myPromisse.then((resolve)=>{            
             const json = JSON.parse(resolve)                   
             const tbl = pageScreen.querySelector('#tblBuscaPed')
@@ -559,14 +553,13 @@
     }
 
     function loadItemPed(ped_id){
-        const params = new Object;
+        const params = new Object
                 params.ped_id = ped_id
-            const myPromisse = queryDB(params,'FIN-4');
+            const myPromisse = queryDB(params,'FIN-4')
             myPromisse.then((resolve)=>{
                 const json = JSON.parse(resolve)       
                 const tbl = pageScreen.querySelector('#tblItens')
                 pageData.NFe.C.CRT = pageScreen.querySelector('#CRT').value
-
                 if(tbl.rows.length > 0){
                     if (confirm(`Adicionar os ítens deste pedido a NFe atual?`)) {
                         pageScreen.querySelector('#hdnPed').value += ', '+ data.num_ped   
@@ -621,7 +614,6 @@
             if(fat[i] == ''){
                 fat.splice(i,1)
             }
-
         }
 
         const vNF = parseFloat(pageScreen.querySelector('#W').querySelector('#vNF').value)
@@ -633,6 +625,16 @@
         pageData.NFe.Y02.vDesc = vDesc.toFixed(2)
         pageData.NFe.Y02.vLiq = (vNF - vDesc).toFixed(2)
 
+        pageData.NFe.YA01.vPag = vNF.toFixed(2)
+
+        if(pageData.NFe.C.CRT == '3'){
+            pageData.NFe.W02.vBC = vNF.toFixed(2)
+            pageData.NFe.W02.vICMS = (vNF * pageData.ICMS /100).toFixed(2)
+            pageData.NFe.W02.vST = vNF.toFixed(2)
+            pageData.NFe.W02.vNF = vNF.toFixed(2)
+        }
+
+        const dupl = new Array
         for(let i=0; i<fat.length; i++){
             const day = new Date()
             day.change(parseInt(fat[i]))
@@ -640,8 +642,18 @@
             Y07.nDup = i+1
             Y07.dVenc = day.getFormatDate()
             Y07.vDup = vDupl.toFixed(2)
-            pageData.NFe.addFat(Y07)
+            dupl.push(Y07)
         }
+        pageData.NFe.addDupl(dupl)
+    }
+
+    function getICMS(UF){
+        const params = new Object;     
+            params.field = 'sigla'
+            params.signal = '='
+            params.value = `'${UF.toUpperCase().trim()}'`
+
+        return queryDB(params,'FIN-1')
     }
 
 /* FUNÇÕES GLOBAIS */    
@@ -658,7 +670,7 @@
         }
 
         const txt_1 = `DOC. EMITIDO POR ME OU EPP OPTANTE S.NACIONAL, NÃO GERA DIREITO A CREDITO FISCAL DE ISSQN E IPI, PERMITE O APROVEITAMENTO DE CREDITO DO ICMS NO VALOR DE  R$${(total*0.0282).toFixed(2)} CORRESPONDENTE A ALIQUOTA DE 2,82% NOS TERMOS DO ARTIGO 23 DA LC 123. Aprovado conforme pedido(s) ${pageScreen.querySelector('#hdnPed').value}`
-        const txt_2 = `DOC. GERA DIREITO A CREDITO FISCAL DO ICMS NO VALOR DE R$${(total*0.18).toFixed(2)} CORRESPONDENTE A ALIQUOTA DE 18%. Aprovado conforme pedido(s) ${pageScreen.querySelector('#hdnPed').value}`
+        const txt_2 = `DOC. GERA DIREITO A CREDITO FISCAL DO ICMS NO VALOR DE R$${(total*pageData.ICMS /100 ).toFixed(2)} CORRESPONDENTE A ALIQUOTA DE ${pageData.ICMS.toFixed(2)}%. Aprovado conforme pedido(s) ${pageScreen.querySelector('#hdnPed').value}`
         pageScreen.querySelector('#infCpl').value =  pageData.NFe.C.CRT != '3' ? txt_1 : txt_2 
         pageScreen.querySelector('#vNF').value = total.toFixed(2)
     }

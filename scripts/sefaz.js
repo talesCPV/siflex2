@@ -8,7 +8,7 @@ class NFe{
     constructor(fds){
         fds = fds.split(',')
         this.itens = new Array
-        this.faturas = new Array
+        this.duplicatas = new Array
         for(let i=0; i<fds.length; i++){
             this[fds[i]] = this.make(fds[i])
         }
@@ -70,10 +70,13 @@ NFe.prototype.addItem = function(data){
     }
 }
 
-NFe.prototype.addFat = function(data){
-    const out = new Object
-    out.Y07 = data
-    this.faturas.push(out)
+NFe.prototype.addDupl = function(data){
+    this.duplicatas = new Array
+    for(let i=0; i<data.length; i++){
+        const out = new Object
+        out.Y07 = data[i]
+        this.duplicatas.push(out)
+    }
 }
 
 NFe.prototype.addCliente = function(data){
@@ -183,13 +186,6 @@ NFe.prototype.geraTXT = function(){
         return lines
     }
 
-    function addFatura(fat){
-        let lines = ''
-        for(let i=0; i<fat.length; i++){
-            lines += makeLine(fat[i],'Y07')
-        }
-    }
-
     for (const key in NFe) {
         if(typeof NFe[key] === 'object' && !Array.isArray(NFe[key])){                 
            
@@ -197,7 +193,7 @@ NFe.prototype.geraTXT = function(){
                 out += addItens(NFe.itens)
             }
             if(key == 'YA'){
-                out += addFatura(NFe.faturas)
+                out += addItens(NFe.duplicatas)
             }    
 
             out += makeLine(NFe,key)
@@ -221,7 +217,7 @@ function onlyAlpha(V){
     let out = ''
     for(let i=0; i< V.length; i++){
         const ascii = V[i].charCodeAt()
-        if((ascii>=48 && ascii<=57)||(ascii>=65 && ascii<=90)||(ascii>=97 && ascii<=122)|| ascii==32){
+        if((ascii>=48 && ascii<=57)||(ascii>=65 && ascii<=90)||(ascii>=97 && ascii<=122)|| [32,199,231].includes(ascii)){
             out+=V[i]
         }
     }

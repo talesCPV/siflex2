@@ -81,30 +81,32 @@
     "H" :{},
     "I" : {
         "cProd" :{"tam" : "1-60","tipo": "C","ocor" : "1-1","dec" : 0,"def" : ""},
-        "cEAN"  :{"tam" : "0-14","tipo": "N","ocor" : "1-1","dec" : 0,"def" : ""},
+        "cEAN"  :{"tam" : "0-14","tipo": "N","ocor" : "0-1","dec" : 0,"def" : ""},
+        "EXTIPI":{"tam" : "2-3" ,"tipo": "C","ocor" : "0-1","dec" : 0,"def" : ""},
         "xProd" :{"tam" : "1-120","tipo":"C","ocor" : "1-1","dec" : 0,"def" : ""},
         "NCM"   :{"tam" : "2-8" ,"tipo": "C","ocor" : "1-1","dec" : 0,"def" : ""},
         "cBenef":{"tam" : "8-10","tipo": "C","ocor" : "0-1","dec" : 0,"def" : ""},
-        "EXTIPI":{"tam" : "2-3" ,"tipo": "C","ocor" : "0-1","dec" : 0,"def" : ""},
         "CFOP"  :{"tam" : "4"   ,"tipo": "N","ocor" : "1-1","dec" : 0,"def" : ""},
         "uCom"  :{"tam" : "1-6" ,"tipo": "C","ocor" : "1-1","dec" : 0,"def" : ""},
         "qCom"  :{"tam" : "11"  ,"tipo": "N","ocor" : "1-1","dec" : 4,"def" : ""},
         "vUnCom":{"tam" : "11"  ,"tipo": "N","ocor" : "1-1","dec" : 10,"def" : ""},
         "vProd" :{"tam" : "15"  ,"tipo": "N","ocor" : "1-1","dec" : 2,"def" : ""},
+        "epty1" :{"tam" : "1"   ,"tipo": "C","ocor" : "0-1","dec" : 2,"def" : ""},
         "cEANTrib":{"tam":"0-14","tipo": "N","ocor" : "0-1","dec" : 0,"def" : ""},
-        "uTrib" :{"tam" : "1-6" ,"tipo": "C","ocor" : "1-1","dec" : 0,"def" : ""},
+        "uTrib" :{"tam" : "1-6" ,"tipo": "C","ocor" : "1-1","dec" : 4,"def" : ""},
         "qTrib" :{"tam" : "11"  ,"tipo": "N","ocor" : "1-1","dec" : 4,"def" : ""},
         "vUnTrib":{"tam": "11"  ,"tipo": "N","ocor" : "0-1","dec" : 10,"def" : ""},
         "vFrete":{"tam" : "15"  ,"tipo": "N","ocor" : "0-1","dec" : 2,"def" : ""},
         "vSeg"  :{"tam" : "15"  ,"tipo": "N","ocor" : "0-1","dec" : 2,"def" : ""},
         "vDesc" :{"tam" : "15"  ,"tipo": "N","ocor" : "0-1","dec" : 2,"def" : ""},
         "vOutro":{"tam" : "15"  ,"tipo": "N","ocor" : "0-1","dec" : 2,"def" : ""},
-        "indTot":{"tam" : "1"   ,"tipo": "N","ocor" : "1-1","dec" : 0,"def" : ""},
+        "indTot":{"tam" : "1"   ,"tipo": "N","ocor" : "1-1","dec" : 0,"def" : "1", "opt" : "0-O valor do item (vProd) não compõe o valor total da NFe(vProd)|1-O valor do item (vProd) compõe o valor total da NFe(vProd).(v.2.0)"},
         "xPed"  :{"tam" : "1-15","tipo": "C","ocor" : "0-1","dec" : 0,"def" : ""},
         "nItemPed":{"tam":"6"   ,"tipo": "N","ocor" : "0-1","dec" : 0,"def" : ""},
         "nFCI"  :{"tam" : "50"  ,"tipo": "C","ocor" : "0-1","dec" : 0,"def" : ""},
         "cBarra":{"tam" : "3-30","tipo": "C","ocor" : "0-1","dec" : 0,"def" : ""},
-        "cBarraTrib":{"tam":"3-30","tipo":"C","ocor": "0-1","dec" : 0,"def" : ""}
+        "cBarraTrib":{"tam":"3-30","tipo":"C","ocor": "0-1","dec" : 0,"def" : ""},
+        "epty2" :{"tam" : "1"   ,"tipo": "C","ocor" : "0-1","dec" : 2,"def" : ""}
     },
     "M" : {},
     "N" : {},
@@ -120,7 +122,8 @@
     }, 
     "O" : {
         "CNPJProd":{"tam" : "14",   "tipo": "C","ocor" : "0-1","dec" : 0,"def" : ""},
-        "qSelo"   :{"tam" : "1-12", "tipo": "N","ocor" : "0-1","dec" : 0,"def" : ""},
+        "cSelo"   :{"tam" : "1-60", "tipo": "C","ocor" : "0-1","dec" : 0,"def" : ""},        
+        "qSelo"   :{"tam" : "1-12", "tipo": "C","ocor" : "0-1","dec" : 0,"def" : ""},
         "cEnq"    :{"tam" : "3",    "tipo": "N","ocor" : "1-1","dec" : 0,"def" : "999"}
     },
     "O07" : {
@@ -128,8 +131,8 @@
         "vIPI"  :{"tam" : "15","tipo": "N","ocor" : "1-1","dec" : 2,"def" : "0"}
     },
     "O10" : {
-        "vBC"   :{"tam" : "15","tipo": "N","ocor" : "1-1","dec" : 2,"def" : "0"},
-        "pIPI"  :{"tam" : "5", "tipo": "N","ocor" : "1-1","dec" : 2,"def" : "0"}
+        "vBC_IPI":{"tam" : "15","tipo": "N","ocor" : "1-1","dec" : 2,"def" : "0"},
+        "pIPI"   :{"tam" : "5", "tipo": "N","ocor" : "1-1","dec" : 2,"def" : "0"}
     },
     "Q" : {},
     "Q05" : {
@@ -137,8 +140,8 @@
         "vPIS"  :{"tam" : "15","tipo": "N","ocor" : "1-1","dec" : 2,"def" : "0"}
     },
     "Q07" : {
-        "vBC"   :{"tam" : "15","tipo": "N","ocor" : "1-1","dec" : 2,"def" : "0"},
-        "pPIS"  :{"tam" : "5" ,"tipo": "N","ocor" : "1-1","dec" : 2,"def" : "0"}
+        "vBC_PIS":{"tam" : "15","tipo": "N","ocor" : "1-1","dec" : 2,"def" : "0"},
+        "pPIS"   :{"tam" : "5" ,"tipo": "N","ocor" : "1-1","dec" : 2,"def" : "0"}
     },
     "S" : {},
     "S05" : {
@@ -146,8 +149,8 @@
         "vCOFINS":{"tam" : "15","tipo": "N","ocor" : "1-1","dec" : 2,"def" : "0"}
     },
     "S07" : {
-        "vBC"    :{"tam" : "15","tipo": "N","ocor" : "1-1","dec" : 2,"def" : "0"},
-        "pCOFINS":{"tam" : "5" ,"tipo": "N","ocor" : "1-1","dec" : 2,"def" : "0"}
+        "vBCCOFINS":{"tam" : "15","tipo": "N","ocor" : "1-1","dec" : 2,"def" : "0"},
+        "pCOFINS"  :{"tam" : "5" ,"tipo": "N","ocor" : "1-1","dec" : 2,"def" : "0"}
     },
     "W" : {},
     "W02" : {
@@ -168,20 +171,21 @@
         "vDesc"         :{"tam":"15","tipo": "N","ocor":"1-1","dec":2,"def":"0"},
         "vII"           :{"tam":"15","tipo": "N","ocor":"1-1","dec":2,"def":"0"},
         "vIPI"          :{"tam":"15","tipo": "N","ocor":"1-1","dec":2,"def":"0"},
-        "vIPIDevol"     :{"tam":"15","tipo": "N","ocor":"0-1","dec":2,"def":"0"},
-        "vPIS"          :{"tam":"15","tipo": "N","ocor":"1-1","dec":2,"def":"0"},
-        "vCOFINS"       :{"tam":"15","tipo": "N","ocor":"1-1","dec":2,"def":"0"},
-        "vOutro"        :{"tam":"15","tipo": "N","ocor":"1-1","dec":2,"def":"0"},
+        "vIPIDevol"     :{"tam":"15","tipo": "N","ocor":"0-1","dec":2,"def":"0"},        
         "vNF"           :{"tam":"15","tipo": "N","ocor":"1-1","dec":2,"def":"0"},
-        "vTotTrib"      :{"tam":"15","tipo": "N","ocor":"0-1","dec":2,"def":"0"},
-        "qBCMono"       :{"tam":"15","tipo": "N","ocor":"0-1","dec":0,"def":"0"},
-        "vICMSMono"     :{"tam":"15","tipo": "N","ocor":"0-1","dec":0,"def":"0"},
-        "qBCMonoReten"  :{"tam":"15","tipo": "N","ocor":"0-1","dec":0,"def":"0"},
-        "vICMSMonoReten":{"tam":"15","tipo": "N","ocor":"0-1","dec":0,"def":"0"},
-        "qBCMonoRet"    :{"tam":"15","tipo": "N","ocor":"0-1","dec":0,"def":"0"},
-        "vICMSMonoRet"  :{"tam":"15","tipo": "N","ocor":"0-1","dec":0,"def":"0"}
+        "vTotTrib"      :{"tam":"15","tipo": "N","ocor":"0-1","dec":2,"def":"0"}
+        
     },
-    "X ": {
+    "W04c" : {
+        "vFCPUFDest":{"tam":"13","tipo": "N","ocor":"1-1","dec":2,"def":""}
+    },
+    "W04e" : {
+        "vICMSUFDest":{"tam":"13","tipo": "N","ocor":"1-1","dec":2,"def":""}
+    },
+    "W04g" : {
+        "vICMSUFRemet":{"tam":"13","tipo": "N","ocor":"1-1","dec":2,"def":""}
+    },
+    "X": {
         "modFrete":{"tam":"1","tipo": "N","ocor":"1-1","dec":2,"def":"", "opt" : "0-Contratação do Frete por conta do Remetente (CIF)|1-Contratação do Frete por conta do Destinatário (FOB)|2-Contratação do Frete por conta de Terceiros|3-Transporte Próprio por conta do Remetente|4-Transporte Próprio por conta do Destinatário|9-Sem ocorrência de transporte"}
     },
     "X03" : {
@@ -233,15 +237,11 @@
     "YA" : {
         "vTroco":{"tam":"15","tipo": "N","ocor":"0-1","dec":2,"def":""}        
     },
-    "YB" : {
+    "YA01" : {
+        "indPag"    :{"tam":"2"   ,"tipo": "N","ocor":"1-1","dec":0,"def":"", "opt" : "0-Pagamento à Vista|1-Pagamento à Prazo"},
         "tPag"      :{"tam":"2"   ,"tipo": "N","ocor":"1-1","dec":0,"def":"", "opt" : "01-Dinheiro|02-Cheque|03-Cartão de Crédito|04-Cartão de Débito|05-Crédito Loja|10-Vale Alimentação|11-Vale Refeição|12-Vale Presente|13-Vale Combustível|14-Duplicata Mercantil|15-Boleto bancário|16-Depósito Bancário|17-Pagamento Instantâneo (PIX)|18-Transferência bancária, Carteira Digital|19-Programa de fidelidade, Cashback, Crédito Virtual|90-Sem pagamento|99-Outros"},
         "xPag"      :{"tam":"2-60","tipo": "C","ocor":"0-1","dec":0,"def":""},
-        "vPag"      :{"tam":"15"  ,"tipo": "N","ocor":"0-1","dec":2,"def":""},
-        "indPag"    :{"tam":"1"   ,"tipo": "N","ocor":"0-1","dec":0,"def":"", "opt" : "0-Pagamento à Vista|1-Pagamento à Prazo"},
-        "tpIntegra" :{"tam":"1"   ,"tipo": "N","ocor":"1-1","dec":0,"def":"2", "opt" : "1-Pagamento integrado com o sistema de automação da empresa (Ex.: equipamento TEF, Comércio Eletrônico)|2-Pagamento não integrado com o sistema de automação da empresa (Ex.: equipamento POS)"},
-        "CNPJ"      :{"tam":"14"  ,"tipo": "C","ocor":"0-1","dec":0,"def":""},
-        "tBand"     :{"tam":"2"   ,"tipo": "N","ocor":"0-1","dec":0,"def":"", "opt" : "01-Visa|02-Mastercard|03-American Express|04-Sorocred|05-Diners Club|06-Elo|07-Hipercard|08-Aura|09-Cabal|99-Outros"},
-        "cAut"      :{"tam":"1-20","tipo": "C","ocor":"0-1","dec":0,"def":""}
+        "vPag"      :{"tam":"15"  ,"tipo": "N","ocor":"0-1","dec":2,"def":""}
     },
     "Z" : {
         "infAdFisco":{"tam":"1-2000","tipo": "C","ocor":"0-1","dec":0,"def":""},
