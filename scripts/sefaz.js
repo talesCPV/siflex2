@@ -22,8 +22,8 @@ NFe.prototype.make = function(key_name){
         const out = new Object
         const rule = rules[key_name]
         
-        for (const key in rule) {
-            let value = rule[key].def.trim()
+        for (const key in rule) {         
+            let value = rule[key].def.toString().trim()
             const tipo = rule[key].tipo
             const tam = rule[key].tam.split('-')
             const min = tam.length == 1 ? '0' : tam[0]
@@ -200,6 +200,22 @@ NFe.prototype.geraTXT = function(){
         }
     }
     return out
+}
+
+NFe.prototype.saveRules = function(){
+    const grupos = ['B','C','C02','C07']
+
+    for(let i=0; i<grupos.length; i++){
+        for (const key in rules[grupos[i]]) {
+            if(this[grupos[i]].hasOwnProperty(key)){
+                rules[grupos[i]][key].def = this[grupos[i]][key]
+            }
+        }
+    }
+
+    const file_rules = JSON.stringify(rules)
+    saveFile(file_rules,'/../config/rules.json')
+//    .then((resolve)=>{})
 }
 
 function onlyNum(V){

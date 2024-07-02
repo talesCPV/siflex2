@@ -1,7 +1,7 @@
 <?php   
 
         function getEmail(){
-echo 1;                
+//echo 1;                
                 include_once "connect.php";
 
                 $hash = $_POST["hash"];
