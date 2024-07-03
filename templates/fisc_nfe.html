@@ -114,20 +114,22 @@
             <div id="B" class="grupo">
                 <div class="inline">
                     <label> Numero da NF</label>    
-                    <input type="text" id="nNF" class="campo" maxlength="9" style="max-width: 150px;"/>                
+                    <input type="text" id="nNF" class="campo" maxlength="9"/>                
                     <label> Nat. Operação *</label>
-                    <input type="text" id="natOp" class="campo" maxlength="60" />
+                    <input type="text" id="natOp" class="campo" maxlength="60"/>
+                </div>
+                <div class="inline">
+                    <label>Operação</label>
+                    <select id="tpNF" class="campo" >
+                        <option value="0" selected>Entrada</option>
+                        <option value="1">Saída</option>
+                    </select>
                     <label> Cod. do Modelo do Doc. Fiscal </label>
-                    <input type="text" id="mod" class="campo" maxlength="2" style="max-width: 50px;"/>
+                    <input type="text" id="mod" class="campo" maxlength="2" />
                 </div>
                 <div class="inline">
                     <label> Data Emissão</label>
                     <input type="date" id="dhEmi" class="campo" >
-                    <label> Tipo de Operação</label>
-                    <select id="tpNF" class="campo" style="max-width: 150px;">
-                        <option value="0" selected>Entrada</option>
-                        <option value="1">Saída</option>
-                    </select>
                     <label> Data Operação </label>
                     <input type="date" id="dhSaiEnt" class="campo" >
                 </div>                
@@ -141,13 +143,20 @@
                     </select>
 
                     <label>Local de Destino</label>
-                    <select id="idDest" class="campo" style="max-width: 150px;">
+                    <select id="idDest" class="campo">
                         <option value="1">Operação Interna</option>
                         <option value="2">Operação Interestadual</option>
                         <option value="3">Operação com o Exterior</option>
                     </select>
+                </div>
+                <div class="inline">
+                    <label> Formato</label>
+                    <select id="tpImp" class="campo" >
+                        <option value="1">Retrato</option>
+                        <option value="2">Paisagem</option>
+                    </select>
                     <label>Tipo de Emissão</label>
-                    <select id="tpEmis" class="campo" style="max-width: 150px;">
+                    <select id="tpEmis" class="campo" >
                         <option value="1">Normal</option>
                         <option value="2">Contingência FS - emissão em contingência com impressão do DANFE em Formulário de Segurança</option>
                         <option value="4">Contingência EPEC - emissão em contingência com envio da Evento Prévio de Emissão em Contingência - EPEC</option>
@@ -158,12 +167,7 @@
                     </select>    
                 </div>
                 <div class="inline">
-                    <label> Formato</label>
-                    <select id="tpImp" class="campo" >
-                        <option value="1">Retrato</option>
-                        <option value="2">Paisagem</option>
-                    </select>
-                    <label> Identificação do Ambiente</label>
+                    <label>Ambiente</label>
                     <select id="tpAmb" class="campo" >
                         <option value="1">Produção</option>
                         <option value="2">Homologação</option>
@@ -173,7 +177,6 @@
                         <option value="0">Normal</option>    
                         <option value="1">Consumidor Final</option>
                     </select>
-    
                 </div>
                 <div class="inline">
                     <label>Emissão</label>
@@ -194,6 +197,8 @@
                         <option value="5">Operação não presencial, fora do estabelecimento</option>
                         <option value="9">Operação não presencial, outros</option>
                     </select>
+                </div>
+                <div class="inline">
                     <label for="indIntermed">Marketplace</label>
                     <select id="indIntermed">
                         <option value="0">Operação sem intermediador (em site ou plataforma própria)</option>
@@ -460,7 +465,7 @@
     const pageData = main_data.fisc_nfe.data
     const pageFunc = main_data.fisc_nfe.func
     const pageScreen = document.querySelector('#card-fisc_nfe')
-    pageData.NFe = new NFe('A,B,C,C02,C05,W,W02,W04c,W04e,W04g,X,Y,Y02,YA,YA01,Z')
+    pageData.NFe = new NFe('B,A,C,C02,C05,W,W02,W04c,W04e,W04g,X,Y,Y02,YA,YA01,Z')
 
 
 /* FUNÇÔES */

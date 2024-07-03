@@ -1,5 +1,9 @@
 <template>
-    <style></style>
+    <style>
+        .fds-opt{
+            padding: 10px;
+        }
+    </style>
 
     <fieldset>
         <legend>Edição de Campos</legend>
@@ -29,7 +33,7 @@
                 <option value="0-1" selected>Não</option>
             </select>
         </div>
-        <fieldset>
+        <fieldset class="fds-opt">
             <legend>Opções</legend>
             <select id="cmbOpt" size="5"></select>
             <div class="line">
@@ -44,7 +48,6 @@
     </fieldset>
     <div class="line">
         <button id="btnSave">Salvar</button>
-        <button id="btnDel">Deletar</button>
     </div>
 </template>
 <script>
@@ -81,17 +84,9 @@
             rule.tipo = pageScreen.querySelector('#cmbTipo').value
             rule.ocor = pageScreen.querySelector('#cmbOcor').value
             rule.dec = pageScreen.querySelector('#edtDec').value
-            main_data.sys_nfe_config.func.saveRules()
+            main_data.sys_nfe_config.func.saveRules(pageData.grupo)
             closeModal('sys_nfe_config_detail')
         }
-    })
-
-    pageScreen.querySelector('#btnDel').addEventListener('click',()=>{
-        if(confirm(`Deseja remover definitivamente este campo?`)){
-            delete rules[pageData.grupo][pageData.campo]
-            main_data.sys_nfe_config.func.saveRules()
-            closeModal('sys_nfe_config_detail')
-        }        
     })
 
     pageStart()

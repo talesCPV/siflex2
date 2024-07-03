@@ -8,7 +8,7 @@
             <ul class="tree">
                 <li>
                 <details open>
-                    <summary>NFe</summary>
+                    <summary id="main-summary">NFe</summary>
                     <ul id="nfe-itens"></ul>
                 </details>
                 </li>
@@ -20,6 +20,22 @@
     const pageData = main_data.sys_nfe_config.data
     const pageFunc = main_data.sys_nfe_config.func
     const pageScreen = document.querySelector('#card-sys_nfe_config')
+
+    pageScreen.querySelector('#main-summary').addEventListener('contextmenu',(e)=>{
+        e.preventDefault()
+        const tbl = []
+        const obj = new Object
+        obj.label = 'Adicionar novo Grupo'
+        obj.link = ()=>{
+            const grp_nome = prompt('Digite o nome do novo grupo:')
+            if(grp_nome){
+                rules[grp_nome] = new Object
+                pageFunc.saveRules()
+            }
+        }
+        tbl.push(obj)
+        menuContext(tbl,e)          
+    })
 
     pageFunc.createTree = (grp='')=>{
         const tree = pageScreen.querySelector('#nfe-itens')
@@ -33,10 +49,37 @@
                 summary_grupo.innerHTML = grupo
                 summary_grupo.addEventListener('contextmenu',(e)=>{
                     e.preventDefault()
-                    const grp_nome = prompt(`Digite o nome do novo campo em ${grupo}:`)
-                    rules[grupo][grp_nome] = {"def":"", "tam" : 0, "tipo":"C","ocor":"0-1","dec":0}
-                    pageFunc.saveRules()
+                    const tbl = []
+                    const n_campo = new Object
+                    n_campo.label = 'Adicionar novo Campo'
+                    n_campo.link = ()=>{
+                        const grp_nome = prompt(`Digite o nome do novo campo em ${grupo}:`)
+                        if(grp_nome){
+                            rules[grupo][grp_nome] = {"def":"", "tam" : 0, "tipo":"C","ocor":"0-1","dec":0}
+                            pageFunc.saveRules(grupo)
+                        }
+                    }
+                    tbl.push(n_campo)
+                    const up_grupo = new Object
+                    up_grupo.label = 'Subir Grupo na pilha'
+                    up_grupo.link = ()=>{
+                        pageFunc.bubble(rules,grupo)
+                        rules = pageFunc.bubble(rules,grupo)           
+                        pageFunc.saveRules()  
+                    }
+                    tbl.push(up_grupo)
+                    const del_grupo = new Object
+                    del_grupo.label = 'Remover Grupo'
+                    del_grupo.link = ()=>{
+                        if(confirm(`Confirma a remoção deficitiva do grupo ${grupo}?`)){
+                            delete rules[grupo]
+                            pageFunc.saveRules()
+                        }
+                    }
+                    tbl.push(del_grupo) 
+                    menuContext(tbl,e) 
                 }) 
+
                 details_grupo.appendChild(summary_grupo)
                 const ul_grupo = document.createElement('ul')
                 for(const campo in rules[grupo]){
@@ -53,10 +96,25 @@
                     })
                     summary.addEventListener('contextmenu',(e)=>{
                         e.preventDefault()
-                        if(confirm(`Deseja subir o campo ${campo}?`)){
-                            pageFunc.bubble(grupo,campo)
+                        const tbl = []
+                        const up_campo = new Object
+                        up_campo.label = 'Subir Campo'
+                        up_campo.link = ()=>{
+                            rules[grupo] = pageFunc.bubble(rules[grupo],campo)
+                            pageFunc.saveRules(grupo)
                         }
-                    })
+                        tbl.push(up_campo)
+                        const del_campo = new Object
+                        del_campo.label = 'Remover Campo'
+                        del_campo.link = ()=>{
+                            if(confirm(`Deseja remover definitivamente ${grupo}-${campo}?`)){
+                                delete rules[grupo][campo]
+                                pageFunc.saveRules(grupo)
+                            } 
+                        }
+                        tbl.push(del_campo)                        
+                        menuContext(tbl,e) 
+                    })                    
                     details.appendChild(summary)
                     li.appendChild(details)
                     ul_grupo.appendChild(li)
@@ -76,21 +134,18 @@
     }
 
     pageFunc.bubble = (grupo,campo)=>{
-        const keys = Object.keys(rules[grupo])
+        const keys = Object.keys(grupo)
         const index = keys.indexOf(campo)
         if(index>0){
             const aux = keys[index]
             keys[index] = keys[index-1]
             keys[index-1] = aux
         }
-
         const obj = new Object
         for(let i=0; i<keys.length; i++){
-            obj[keys[i]] = rules[grupo][campo]
+            obj[keys[i]] = grupo[keys[i]]
         }
-
-        rules[grupo] = obj
-        pageFunc.saveRules(grupo)
+        return obj
     }
 
     pageFunc.createTree()
