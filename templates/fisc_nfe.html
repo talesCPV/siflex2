@@ -399,6 +399,7 @@
                         <input type="text" id="vNF" class="campo" value="0.00" onkeyup="valFloat(this)">
                         <label>Dias entre as Parcelas (separar por /)</label>
                         <input type="text" id="dfat" value="28">
+                        <button class="btn-round" id="btnCalendar"><span class="mdi mdi-calendar-range"></span></button>
                         <label>Desconto R$</label>
                         <input type="text" id="vDesc" value="0" onkeyup="valFloat(this)">
                     </div>
@@ -688,6 +689,27 @@
     pageScreen.querySelector('#btnSaveCli').addEventListener('click',()=>{
         saveNFe()        
     })
+
+    pageScreen.querySelector('#btnCalendar').addEventListener('click',()=>{
+        const fat = pageScreen.querySelector('#W').querySelector('#dfat').value.split('/')
+        let out = ''
+        
+        for(let i=fat.length-1; i>=0; i--){
+            fat[i] = getNum(fat[i])
+            if(fat[i] == ''){
+                fat.splice(i,1)
+            }
+        }
+
+        for(let i=0; i<fat.length; i++){
+            const day = new Date()
+            day.change(parseInt(fat[i]))
+            out += `Parcela ${i+1} - ${day.getFormatBR()}\n`
+        }        
+
+        alert(out)
+
+    })    
 
     pageScreen.querySelector('#btnGeraNFe').addEventListener('click',()=>{
         if(confirm('Deseja gerar esta NFe?')){

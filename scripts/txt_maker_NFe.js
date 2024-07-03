@@ -1,7 +1,7 @@
     
-let rules = 0
-getFile('/../config/rules.json').then((json)=>{
-    rules = JSON.parse(json)
+var nfe_rules = 0
+getFile('/../config/NFe_rules.json').then((json)=>{
+    nfe_rules = JSON.parse(json)
 })
 
 class NFe{
@@ -20,7 +20,7 @@ NFe.prototype.make = function(key_name){
 
     if(!this.hasOwnProperty(key_name)){
         const out = new Object
-        const rule = rules[key_name]
+        const rule = nfe_rules[key_name]
         
         for (const key in rule) {         
             let value = rule[key].def.toString().trim()
@@ -116,7 +116,7 @@ NFe.prototype.import = function(obj){
             for (const campo in obj[grupo]){
                 if(this[grupo].hasOwnProperty(campo)){
                     //  exceções
-                    if(['N','C'].includes(rules[grupo][campo].tipo)){
+                    if(['N','C'].includes(nfe_rules[grupo][campo].tipo)){
                         obj[grupo][campo] = onlyAlpha(obj[grupo][campo])
                     }else{ // D, H ou DH
                         obj[grupo][campo] += campo == 'dhEmi' ? 'T07:00:00-03:00' : ''
@@ -206,15 +206,15 @@ NFe.prototype.saveRules = function(){
     const grupos = ['B','C','C02','C07']
 
     for(let i=0; i<grupos.length; i++){
-        for (const key in rules[grupos[i]]) {
+        for (const key in nfe_rules[grupos[i]]) {
             if(this[grupos[i]].hasOwnProperty(key)){
-                rules[grupos[i]][key].def = this[grupos[i]][key]
+                nfe_rules[grupos[i]][key].def = this[grupos[i]][key]
             }
         }
     }
 
-    const file_rules = JSON.stringify(rules)
-    saveFile(file_rules,'/../config/rules.json')
+    const file_rules = JSON.stringify(nfe_rules)
+    saveFile(file_rules,'/../config/NFe_rules.json')
 //    .then((resolve)=>{})
 }
 

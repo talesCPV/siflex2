@@ -8,8 +8,8 @@
             <ul class="tree">
                 <li>
                 <details open>
-                    <summary id="main-summary">NFe</summary>
-                    <ul id="nfe-itens"></ul>
+                    <summary id="main-summary">NFs</summary>
+                    <ul id="nfs-itens"></ul>
                 </details>
                 </li>
             </ul>
@@ -17,9 +17,9 @@
 
 </template>
 <script>
-    const pageData = main_data.sys_nfe_config.data
-    const pageFunc = main_data.sys_nfe_config.func
-    const pageScreen = document.querySelector('#card-sys_nfe_config')
+    const pageData = main_data.sys_nfs_config.data
+    const pageFunc = main_data.sys_nfs_config.func
+    const pageScreen = document.querySelector('#card-sys_nfs_config')
 
     pageScreen.querySelector('#main-summary').addEventListener('contextmenu',(e)=>{
         e.preventDefault()
@@ -29,7 +29,7 @@
         obj.link = ()=>{
             const grp_nome = prompt('Digite o nome do novo grupo:')
             if(grp_nome){
-                nfe_rules[grp_nome] = new Object
+                nfs_rules[grp_nome] = new Object
                 pageFunc.saveRules()
             }
         }
@@ -38,10 +38,10 @@
     })
 
     pageFunc.createTree = (grp='')=>{
-        const tree = pageScreen.querySelector('#nfe-itens')
+        const tree = pageScreen.querySelector('#nfs-itens')
         tree.innerHTML = ''
-        for(const grupo in nfe_rules){
-            if(typeof nfe_rules[grupo] === 'object' && !Array.isArray(nfe_rules[grupo])){
+        for(const grupo in nfs_rules){
+            if(typeof nfs_rules[grupo] === 'object' && !Array.isArray(nfs_rules[grupo])){
                 const li_grupo = document.createElement('li')                
                 const details_grupo = document.createElement('details')
                 details_grupo.open = grp==grupo ? 1 : 0
@@ -55,7 +55,7 @@
                     n_campo.link = ()=>{
                         const grp_nome = prompt(`Digite o nome do novo campo em ${grupo}:`)
                         if(grp_nome){
-                            nfe_rules[grupo][grp_nome] = {"def":"", "tam" : 0, "tipo":"C","ocor":"0-1","dec":0}
+                            nfs_rules[grupo][grp_nome] = {"def":"", "tam" : 0, "tipo":"C","ocor":"0-1","dec":0}
                             pageFunc.saveRules(grupo)
                         }
                     }
@@ -63,8 +63,8 @@
                     const up_grupo = new Object
                     up_grupo.label = 'Subir Grupo na pilha'
                     up_grupo.link = ()=>{
-                        pageFunc.bubble(nfe_rules,grupo)
-                        nfe_rules = pageFunc.bubble(nfe_rules,grupo)           
+                        pageFunc.bubble(nfs_rules,grupo)
+                        nfs_rules = pageFunc.bubble(nfs_rules,grupo)           
                         pageFunc.saveRules()  
                     }
                     tbl.push(up_grupo)
@@ -72,7 +72,7 @@
                     del_grupo.label = 'Remover Grupo'
                     del_grupo.link = ()=>{
                         if(confirm(`Confirma a remoção deficitiva do grupo ${grupo}?`)){
-                            delete nfe_rules[grupo]
+                            delete nfs_rules[grupo]
                             pageFunc.saveRules()
                         }
                     }
@@ -82,7 +82,7 @@
 
                 details_grupo.appendChild(summary_grupo)
                 const ul_grupo = document.createElement('ul')
-                for(const campo in nfe_rules[grupo]){
+                for(const campo in nfs_rules[grupo]){
                     const li = document.createElement('li')
                     const details = document.createElement('details')
                     const summary = document.createElement('summary')
@@ -90,9 +90,9 @@
                     summary.className = 'last'
                     summary.addEventListener('click',(e)=>{
                         const data = new Object
-                            data.grupo = grupo
-                            data.rule = nfe_rules[grupo][campo]
-                            data.save = pageFunc.saveRules
+                        data.grupo = grupo
+                        data.rule = nfs_rules[grupo][campo]
+                        data.save = pageFunc.saveRules
                         openHTML('sys_nfe_config_detail.html','pop-up',`Configuração (${grupo} - ${campo})`,data,800)
                     })
                     summary.addEventListener('contextmenu',(e)=>{
@@ -101,7 +101,7 @@
                         const up_campo = new Object
                         up_campo.label = 'Subir Campo'
                         up_campo.link = ()=>{
-                            nfe_rules[grupo] = pageFunc.bubble(nfe_rules[grupo],campo)
+                            nfs_rules[grupo] = pageFunc.bubble(nfs_rules[grupo],campo)
                             pageFunc.saveRules(grupo)
                         }
                         tbl.push(up_campo)
@@ -109,7 +109,7 @@
                         del_campo.label = 'Remover Campo'
                         del_campo.link = ()=>{
                             if(confirm(`Deseja remover definitivamente ${grupo}-${campo}?`)){
-                                delete nfe_rules[grupo][campo]
+                                delete nfs_rules[grupo][campo]
                                 pageFunc.saveRules(grupo)
                             } 
                         }
@@ -129,8 +129,8 @@
     }
 
     pageFunc.saveRules = (grp='')=>{
-        const file_rules = JSON.stringify(nfe_rules)
-        saveFile(file_rules,'/../config/NFe_rules.json')
+        const file_rules = JSON.stringify(nfs_rules)
+        saveFile(file_rules,'/../config/NFs_rules.json')
         pageFunc.createTree(grp)
     }
 
