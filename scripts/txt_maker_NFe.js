@@ -15,7 +15,6 @@ class NFe{
     }
 }
 
-
 NFe.prototype.make = function(key_name){
 
     if(!this.hasOwnProperty(key_name)){

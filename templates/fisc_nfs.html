@@ -25,44 +25,44 @@
     
     <div class="tab-screen">        
         <div id="emitente" class="tab">
-            <div class="20">
+            <div id="CONF">
                 <div class="inline">
-                    <label for="RazSocTom"> Razão Social *</label>
-                    <input type="text" id="RazSocTom" maxlength="60" />
+                    <label for="RazSocPre"> Razão Social *</label>
+                    <input type="text" id="RazSocPre" maxlength="60" />
                 </div>
                 <div class="inline">
-                    <label for="CpfCnpjTom"> CNPJ </label>
-                    <input type="text" id="CpfCnpjTom" maxlength="18" onkeyup="valCNPJ(this)"/>
+                    <label for="CpfCnpjPre"> CNPJ </label>
+                    <input type="text" id="CpfCnpjPre" maxlength="18" onkeyup="valCNPJ(this)"/>
                     <label for="IMTom">Insc. Mun.</label>
                     <input type="text" id="IMTom">
                 </div>
                 <div class="inline">
-                    <label for="LogTom"> Endereço </label>
-                    <input type="text" id="LogTom" maxlength="60" />
-                    <label for="NumEndTom"> Número: </label>
-                    <input type="text" id="NumEndTom" maxlength="10" style="max-width: 100px;" />
+                    <label for="LogPre"> Endereço </label>
+                    <input type="text" id="LogPre" maxlength="60" />
+                    <label for="NumEndPre"> Número: </label>
+                    <input type="text" id="NumEndPre" maxlength="10" style="max-width: 100px;" />
                 </div>
                 <div class="inline">
-                    <label for="BairroTom"> Bairro </label>
-                    <input type="text" id="BairroTom" maxlength="60" />
-                    <label for="ComplEndTom"> Complemento </label>
-                    <input type="text" id="ComplEndTom" maxlength="60" style="max-width: 200px;" />
+                    <label for="BairroPre"> Bairro </label>
+                    <input type="text" id="BairroPre" maxlength="60" />
+                    <label for="ComplEndPre"> Complemento </label>
+                    <input type="text" id="ComplEndPre" maxlength="60" style="max-width: 200px;" />
                 </div>
                 <div class="inline">
-                    <label for="MunTom"> Municipio</label>
-                    <input type="text" id="MunTom" maxlength="60" />
-                    <label for="SiglaUFTom"> Sigla da UF </label>
-                    <input type="text" id="SiglaUFTom" maxlength="2" style="max-width: 50px;" />
+                    <label for="MunPre"> Municipio</label>
+                    <input type="text" id="MunPre" maxlength="60" />
+                    <label for="SiglaUFPre"> Sigla da UF </label>
+                    <input type="text" id="SiglaUFPre" maxlength="2" style="max-width: 50px;" />
                 </div>
                 <div class="inline">
-                    <label for="CepTom"> CEP </label>
-                    <input type="text" id="CepTom" maxlength="10" onkeyup="valCEP(this)"/>
-                    <label for="Telefone"> Tel </label>
-                    <input type="text" id="Telefone" maxlength="15" onkeyup="phone(this)"/>
+                    <label for="CepPre"> CEP </label>
+                    <input type="text" id="CepPre" maxlength="10" onkeyup="valCEP(this)"/>
+                    <label for="TelPre"> Tel </label>
+                    <input type="text" id="TelPre" maxlength="15" onkeyup="phone(this)"/>
                 </div>
                 <div class="inline">
                     <label> Email </label>
-                    <input type="text" id="email" maxlength="50"/>
+                    <input type="text" id="EmailPre" maxlength="50"/>
                 </div>
             </div>
             <button id="btnSaveEmit">Salvar</button>
@@ -193,6 +193,7 @@
     const pageData = main_data.fisc_nfs.data
     const pageFunc = main_data.fisc_nfs.func
     const pageScreen = document.querySelector('#card-fisc_nfs')
+    pageData.NFs = new NFs('10,20,90')
 
     startPage()
 
@@ -205,15 +206,24 @@ function startPage(){
 
         listNF('../NF/NFs/txt')
         listNF('../NF/NFs/pdf','pdf')
-        importData()
+//        importData()
+        fillForms('CONF')
 
     }
 
-
-
-    document.querySelector('#tab-emitente').click()
-    document.querySelector('#edtIni').value = today.iniMonth()
-    document.querySelector('#edtFin').value = today.finMonth()
+    function fillForms(grupos){
+        grupos = grupos.split(',')      
+        for(let i=0; i<grupos.length; i++){  
+            for(const key in nfs_rules[grupos[i]]){               
+                const field = pageScreen.querySelector(`#${grupos[i]}`).querySelector(`#${key}`)           
+                if(field != undefined){              
+                    field.value = nfs_rules[grupos[i]][key].def  
+console.log(monitorEvents(field ['onkeyup']))
+                    field.onkeyup()                  
+                }
+            }
+        }
+    }
 
     function getTXT(){
         let out = ''
@@ -309,23 +319,7 @@ function startPage(){
         NFsConf(pageData.config)
     }
 
-    function addBoleto(obj){
 
-        const lanc = new Date
-        const params = new Object;
-                params.id = 'DEFAULT'
-                params.tipo = 'ENTRADA'
-                params.data_ini = lanc.getFormatDate() 
-                params.data_pg = obj.venc
-                params.preco = obj.val
-                params.ref = `NFs-${obj.nf} ${obj.ref}`
-                params.resp = 'SISTEMA'
-                params.emp = obj.sac
-                params.origem = 'SAN'
-                params.pgto = 'BOL'
-
-            const myPromisse = queryDB(params,21);
-    }
 
     function addCliente(obj){
         const cliente = document.querySelector('#cliente')
@@ -342,15 +336,7 @@ function startPage(){
         document.querySelector('#btnSaveCli').click()
     }
 
-    function importData(){
 
-        const resp = getFile('/../../NF/NFs/json/NFs.json')
-        resp.then((txt)=>{
-            pageData.config = JSON.parse(txt)
-            fillData()
-
-        })
-    }
     function fillData(){
 
         const emitente = document.querySelector('#emitente')
