@@ -90,6 +90,7 @@
         "FIN-2" => 'CALL sp_edtICMS(@access,@hash,x00,"x01");', // ID, VALOR
         "FIN-3" => 'CALL sp_view_pedido(@access,@hash,"x00","x01","x02","x03","x04");',
         "FIN-4" => 'CALL sp_view_item_ped(@access,@hash,x00);', // ID_PED
+
     );
 
 ?>

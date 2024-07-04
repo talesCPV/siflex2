@@ -493,6 +493,9 @@
                 const field = pageScreen.querySelector(`#${grupos[i]}`).querySelector(`#${key}`)
                 if(field != undefined){
                     field.value = pageData.NFe[grupos[i]][key]
+                    try{
+                        field.onkeyup()
+                    }catch{null}
                 }
             }
         }

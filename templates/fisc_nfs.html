@@ -95,46 +95,46 @@
 
         </div>
 
-        <div id="20" class="grupo">
+        <div id="G-20" class="grupo">
 
             <div id="cliente" class="tab">
                     <div class="inline">
                         <label> Razão Social *</label>
-                        <input type="text" id="RazSocTom" maxlength="60" />
+                        <input type="text" id="RazSocTom" class="campo" maxlength="60" />
                     </div>
                     <div class="inline">
                         <label> CNPJ </label>
-                        <input type="text" id="CpfCnpjTom" maxlength="18" onkeyup="valCNPJ(this)"/>
+                        <input type="text" id="CpfCnpjTom" class="campo" maxlength="18" onkeyup="valCNPJ(this)"/>
                         <label> Insc. MUn. </label>
-                        <input type="text" id="IMTom" maxlength="18" onkeyup="valInt(this)"/>
+                        <input type="text" id="IMTom" class="campo" maxlength="18" onkeyup="valInt(this)"/>
                     </div>
                     <div class="inline">
                         <label> Endereço </label>
-                        <input type="text" id="LogTom" maxlength="60" />
+                        <input type="text" id="LogTom" class="campo" maxlength="60" />
                         <label> Número: </label>
-                        <input type="text" id="NumEndTom" maxlength="5" style="max-width: 100px;" />
+                        <input type="text" id="NumEndTom" class="campo" maxlength="5" style="max-width: 100px;" />
                     </div>
                     <div class="inline">
                         <label> Bairro </label>
-                        <input type="text" id="BairroTom" maxlength="60" />
+                        <input type="text" id="BairroTom" class="campo" maxlength="60" />
                         <label> Complemento </label>
-                        <input type="text" id="ComplEndTom" maxlength="60" style="max-width: 200px;" />
+                        <input type="text" id="ComplEndTom" class="campo" maxlength="60" style="max-width: 200px;" />
                     </div>
                     <div class="inline">
                         <label> Municipio</label>
-                        <input type="text" id="MunTom" maxlength="60" />
+                        <input type="text" id="MunTom" class="campo" maxlength="60" />
                         <label> Sigla da UF </label>
-                        <input type="text" id="SiglaUFTom" maxlength="2" style="max-width: 50px;" />
+                        <input type="text" id="SiglaUFTom" class="campo" maxlength="2" style="max-width: 50px;" />
                     </div>
                     <div class="inline">
                         <label> CEP </label>
-                        <input type="text" id="CepTom" maxlength="8" onkeyup="valCEP(this)"/>
+                        <input type="text" id="CepTom" class="campo" maxlength="8" onkeyup="valCEP(this)"/>
                         <label for="Telefone">Fone</label>
-                        <input type="text" id="Telefone" onkeyup="phone(this)">
+                        <input type="text" id="Telefone" class="campo" onkeyup="phone(this)" maxlength="15">
                     </div>
                     <div class="inline">
                         <label> Email </label>
-                        <input type="text" id="EMail_1" maxlength="50" onkeyup="validaEmail(this)"/>
+                        <input type="text" id="EMail_1" class="campo" class="campo" maxlength="50" onkeyup="validaEmail(this)"/>
                     </div>
                 <button id="btnSaveCli">Salvar</button>
             </div>
@@ -153,11 +153,11 @@
                     <input type="text" id="edtRps" onkeyup="valInt(this)">
                 </div>
                 <div class="inline">
-                    <label for="VlNFS">Valor</label>
+                    <label for="VlNFS">Valor R$</label>
                     <input type="text" id="VlNFS" value="0.00" onkeyup="valFloat(this)">
-                    <label for="edtDias">Dias entre Parcelas</label>
+                    <label for="edtDias">Dias entre Parcelas (separar por /)</label>
                     <input type="text" id="edtDias" value="28">
-                    <label for="AlqIss">Alíquota</label>
+                    <label for="AlqIss">Alíq. ISS</label>
                     <input type="text" id="AlqIss" onkeyup="valFloat(this)">
                 </div>
                 <div class="inline">
@@ -202,7 +202,7 @@
     const pageData = main_data.fisc_nfs.data
     const pageFunc = main_data.fisc_nfs.func
     const pageScreen = document.querySelector('#card-fisc_nfs')
-    pageData.NFs = new NFs('10,20,90',nfs_rules)
+    pageData.NFs = new NFs('10,20,90,CONF',nfs_rules)
 
     startPage()
 
@@ -215,17 +215,18 @@ function startPage(){
 
         listNF('../NF/NFs/txt')
         listNF('../NF/NFs/pdf','pdf')
-        fillForms('CONF')
+        fillForms(pageData.NFs,'CONF')
 
     }
 
-    function fillForms(grupos){
-        grupos = grupos.split(',')      
-        for(let i=0; i<grupos.length; i++){  
-            for(const key in nfs_rules[grupos[i]]){               
-                const field = pageScreen.querySelector(`#${grupos[i]}`).querySelector(`#${key}`)           
-                if(field != undefined){              
-                    field.value = nfs_rules[grupos[i]][key].def  
+    function fillForms(obj,grupos){
+        grupos = grupos.split(',')
+        for(let i=0; i<grupos.length; i++){
+            for(const key in obj[grupos[i]]){
+                const id_grupo = isNaN(Number(grupos[i])) ? grupos[i] : 'g'+grupos[i]
+                const field = pageScreen.querySelector(`#${id_grupo}`).querySelector(`#${key}`)
+                if(field != undefined){
+                    field.value = obj[grupos[i]][key]
                     try{
                         field.onkeyup()
                     }catch{null}
@@ -233,6 +234,7 @@ function startPage(){
             }
         }
     }
+
 /*
     function getTXT(){
         let out = ''
@@ -247,10 +249,13 @@ function startPage(){
             return out   
     }
 */
+
+
     function saveNFs(){
         const out = new Object
         const grupo = pageScreen.querySelectorAll('.grupo')
         for(let g=0; g<grupo.length; g++){
+            grupo[g].id = grupo[g].id.substring(0,2) == 'G-' ? grupo[g].id.substring(2,99) : grupo[g].id
             out[grupo[g].id] = new Object
             const campo = grupo[g].querySelectorAll('.campo')
             for(let c=0; c<campo.length; c++){
@@ -259,7 +264,7 @@ function startPage(){
         }
 
     console.log(out)
-//        pageData.NFs.import(out)
+        pageData.NFs.import(out)
 //        pageData.NFs.saveRules()
     }
 
@@ -348,8 +353,6 @@ function startPage(){
 
 
     function addCliente(obj){
-        console.log(obj)
-/*        
         const cliente = document.querySelector('#cliente')
         cliente.querySelector('#xNome').value = obj.razao_social.trim().toUpperCase()
         cliente.querySelector('#CNPJ').value = getCNPJ(obj.cnpj)
@@ -361,11 +364,10 @@ function startPage(){
         cliente.querySelector('#UF').value = obj.estado.trim().toUpperCase()
         cliente.querySelector('#CEP').value = getCEP(obj.cep)
         cliente.querySelector('#email').value = ''
-        document.querySelector('#btnSaveCli').click()
-*/        
+        pageScreen.querySelector('#tab-cliente').click()
     }
 
-
+/*
     function fillData(){
 
         const emitente = document.querySelector('#emitente')
@@ -394,6 +396,7 @@ function startPage(){
         const filename = 'NFs-'+pageData.config['CONF'].numNFS
         uploadNFs(txt, filename)
     })
+*/
 
     document.querySelector('#btnSaveEmit').addEventListener('click',()=>{
         saveNFs()
@@ -480,9 +483,9 @@ function startPage(){
                 const json = JSON.parse(resolve)
                 tbl.style.display = json.length > 0 ? 'inline-table' : 'none'
                 pageScreen.querySelector('#btnAddAll').style.display = json.length > 0 ? 'inline-table' : 'none'
-                tbl.head('Cod.,Data,Cliente,Carro,NF,Valor')               
+                tbl.head('Cod.,Data,Cliente,Carro,Valor')               
                 for(let i=0; i<json.length;i++){
-                    tbl.plot(json[i],'id,data_exec,empresa,num_carro,nf,valor','str,dat,Upp,str,str,R$.')
+                    tbl.plot(json[i],'id,data_exec,empresa,num_carro,valor','str,dat,Upp,str,R$.')
                 }         
             });
         }else{
