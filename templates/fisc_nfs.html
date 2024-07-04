@@ -25,14 +25,14 @@
     
     <div class="tab-screen">        
         <div id="emitente" class="tab">
-            <div id="CONF">
+            <div id="CONF" class="grupo">
                 <div class="inline">
                     <label for="RazSocPre"> Razão Social *</label>
-                    <input type="text" id="RazSocPre" maxlength="60" />
+                    <input type="text" id="RazSocPre" class="campo" maxlength="60" />
                 </div>
                 <div class="inline">
                     <label for="CpfCnpjPre"> CNPJ </label>
-                    <input type="text" id="CpfCnpjPre" maxlength="18" onkeyup="valCNPJ(this)"/>
+                    <input type="text" id="CpfCnpjPre" class="campo" maxlength="18" onkeyup="valCNPJ(this)"/>
                     <label for="IMTom">Insc. Mun.</label>
                     <input type="text" id="IMTom">
                 </div>
@@ -40,29 +40,29 @@
                     <label for="LogPre"> Endereço </label>
                     <input type="text" id="LogPre" maxlength="60" />
                     <label for="NumEndPre"> Número: </label>
-                    <input type="text" id="NumEndPre" maxlength="10" style="max-width: 100px;" />
+                    <input type="text" id="NumEndPre" class="campo" maxlength="10" style="max-width: 100px;" />
                 </div>
                 <div class="inline">
                     <label for="BairroPre"> Bairro </label>
-                    <input type="text" id="BairroPre" maxlength="60" />
+                    <input type="text" id="BairroPre" class="campo" maxlength="60" />
                     <label for="ComplEndPre"> Complemento </label>
-                    <input type="text" id="ComplEndPre" maxlength="60" style="max-width: 200px;" />
+                    <input type="text" id="ComplEndPre" class="campo" maxlength="60" style="max-width: 200px;" />
                 </div>
                 <div class="inline">
                     <label for="MunPre"> Municipio</label>
-                    <input type="text" id="MunPre" maxlength="60" />
+                    <input type="text" id="MunPre" class="campo" maxlength="60" />
                     <label for="SiglaUFPre"> Sigla da UF </label>
-                    <input type="text" id="SiglaUFPre" maxlength="2" style="max-width: 50px;" />
+                    <input type="text" id="SiglaUFPre" class="campo" maxlength="2" style="max-width: 50px;" />
                 </div>
                 <div class="inline">
                     <label for="CepPre"> CEP </label>
-                    <input type="text" id="CepPre" maxlength="10" onkeyup="valCEP(this)"/>
+                    <input type="text" id="CepPre" class="campo" maxlength="10" onkeyup="valCEP(this)"/>
                     <label for="TelPre"> Tel </label>
-                    <input type="text" id="TelPre" maxlength="15" onkeyup="phone(this)"/>
+                    <input type="text" id="TelPre" class="campo" maxlength="15" onkeyup="phone(this)"/>
                 </div>
                 <div class="inline">
                     <label> Email </label>
-                    <input type="text" id="EmailPre" maxlength="50"/>
+                    <input type="text" id="EmailPre" class="campo" maxlength="50" onkeyup="validaEmail(this)"/>
                 </div>
             </div>
             <button id="btnSaveEmit">Salvar</button>
@@ -94,81 +94,90 @@
             <button id="btnAddAll">Adicionar Todos</button>
 
         </div>
-        <div id="cliente" class="tab">
-            <div class="inline">
-                <label> Razão Social *</label>
-                <input type="text" id="xNome" maxlength="60" />
+
+        <div id="20" class="grupo">
+
+            <div id="cliente" class="tab">
+                    <div class="inline">
+                        <label> Razão Social *</label>
+                        <input type="text" id="RazSocTom" maxlength="60" />
+                    </div>
+                    <div class="inline">
+                        <label> CNPJ </label>
+                        <input type="text" id="CpfCnpjTom" maxlength="18" onkeyup="valCNPJ(this)"/>
+                        <label> Insc. MUn. </label>
+                        <input type="text" id="IMTom" maxlength="18" onkeyup="valInt(this)"/>
+                    </div>
+                    <div class="inline">
+                        <label> Endereço </label>
+                        <input type="text" id="LogTom" maxlength="60" />
+                        <label> Número: </label>
+                        <input type="text" id="NumEndTom" maxlength="5" style="max-width: 100px;" />
+                    </div>
+                    <div class="inline">
+                        <label> Bairro </label>
+                        <input type="text" id="BairroTom" maxlength="60" />
+                        <label> Complemento </label>
+                        <input type="text" id="ComplEndTom" maxlength="60" style="max-width: 200px;" />
+                    </div>
+                    <div class="inline">
+                        <label> Municipio</label>
+                        <input type="text" id="MunTom" maxlength="60" />
+                        <label> Sigla da UF </label>
+                        <input type="text" id="SiglaUFTom" maxlength="2" style="max-width: 50px;" />
+                    </div>
+                    <div class="inline">
+                        <label> CEP </label>
+                        <input type="text" id="CepTom" maxlength="8" onkeyup="valCEP(this)"/>
+                        <label for="Telefone">Fone</label>
+                        <input type="text" id="Telefone" onkeyup="phone(this)">
+                    </div>
+                    <div class="inline">
+                        <label> Email </label>
+                        <input type="text" id="EMail_1" maxlength="50" onkeyup="validaEmail(this)"/>
+                    </div>
+                <button id="btnSaveCli">Salvar</button>
             </div>
-            <div class="inline">
-                <label> CNPJ </label>
-                <input type="text" id="CNPJ" maxlength="18" onkeyup="valCNPJ(this)"/>
-                <label> Insc. MUn. </label>
-                <input type="text" id="IM" maxlength="18" onkeyup="valInt(this)"/>
+            <div id="itens" class="tab">
+                <fieldset>
+                    <legend>Descriminação dos Serviços</legend>
+                    <textarea id="DiscrSrv" cols="30" rows="80"></textarea>
+                </fieldset>
             </div>
-            <div class="inline">
-                <label> Endereço </label>
-                <input type="text" id="xLgr" maxlength="60" />
-                <label> Número: </label>
-                <input type="text" id="nro" maxlength="5" style="max-width: 100px;" />
+
+            <div id="fatura" class="tab">
+                <div class="inline">
+                    <label for="edtNfsNum">Num NFs</label>
+                    <input type="text" id="edtNfsNum" onkeyup="valInt(this)">
+                    <label for="edtRps">RPS Defasagem</label>
+                    <input type="text" id="edtRps" onkeyup="valInt(this)">
+                </div>
+                <div class="inline">
+                    <label for="VlNFS">Valor</label>
+                    <input type="text" id="VlNFS" value="0.00" onkeyup="valFloat(this)">
+                    <label for="edtDias">Dias entre Parcelas</label>
+                    <input type="text" id="edtDias" value="28">
+                    <label for="AlqIss">Alíquota</label>
+                    <input type="text" id="AlqIss" onkeyup="valFloat(this)">
+                </div>
+                <div class="inline">
+                    <label for="cmbLocal">Local Execução</label>
+                    <select id="cmbLocal">
+                        <option value="TOM" selected>No Cliente</option>
+                        <option value="PRE">Na Empresa</option>
+                    </select>
+                    <label for="cmbRetFont">ISS Retido na Fonte</label>
+                    <select id="cmbRetFont">
+                        <option value="SIM">Sim</option>
+                        <option value="NAO" selected>Não</option>
+                    </select>
+                </div>
+                <fieldset>
+                    <legend>Dedução / Outras Informações</legend>
+                    <textarea id="txtInfo" cols="30" rows="15">Serviço aprovado conforme Pedido:</textarea>
+                </fieldset>
+                <button id="brnGeraNFs">Gerar NFs</button>
             </div>
-            <div class="inline">
-                <label> Bairro </label>
-                <input type="text" id="bairro" maxlength="60" />
-                <label> Complemento </label>
-                <input type="text" id="cpl" maxlength="60" style="max-width: 200px;" />
-            </div>
-            <div class="inline">
-                <label> Municipio</label>
-                <input type="text" id="xMun" maxlength="60" />
-                <label> Sigla da UF </label>
-                <input type="text" id="UF" maxlength="2" style="max-width: 50px;" />
-            </div>
-            <div class="inline">
-                <label> CEP </label>
-                <input type="text" id="CEP" maxlength="8" onkeyup="valCEP(this)"/>
-                <label> Email </label>
-                <input type="text" id="email" maxlength="50"/>
-            </div>
-            <button id="btnSaveCli">Salvar</button>
-        </div>
-        <div id="itens" class="tab">
-            <fieldset>
-                <legend>Descriminação dos Serviços</legend>
-                <textarea id="txtServicos" cols="30" rows="80"></textarea>
-            </fieldset>
-        </div>
-        <div id="fatura" class="tab">
-            <div class="inline">
-                <label for="edtNfsNum">Num NFs</label>
-                <input type="text" id="edtNfsNum" onkeyup="valInt(this)">
-                <label for="edtRps">RPS Defasagem</label>
-                <input type="text" id="edtRps" onkeyup="valInt(this)">
-            </div>
-            <div class="inline">
-                <label for="edtValor">Valor</label>
-                <input type="text" id="edtValor" value="0.00" onkeyup="valFloat(this)">
-                <label for="edtDias">Dias entre Parcelas</label>
-                <input type="text" id="edtDias" value="28">
-                <label for="edtAliq">Alíquota</label>
-                <input type="text" id="edtAliq" onkeyup="valFloat(this)">
-            </div>
-            <div class="inline">
-                <label for="cmbLocal">Local Execução</label>
-                <select id="cmbLocal">
-                    <option value="TOM" selected>No Cliente</option>
-                    <option value="PRE">Na Empresa</option>
-                </select>
-                <label for="cmbRetFont">ISS Retido na Fonte</label>
-                <select id="cmbRetFont">
-                    <option value="SIM">Sim</option>
-                    <option value="NAO" selected>Não</option>
-                </select>
-            </div>
-            <fieldset>
-                <legend>Dedução / Outras Informações</legend>
-                <textarea id="txtInfo" cols="30" rows="15">Serviço aprovado conforme Pedido:</textarea>
-            </fieldset>
-            <button id="brnGeraNFs">Gerar NFs</button>
         </div>
         <div id="export" class="tab">
             <fieldset>
@@ -193,7 +202,7 @@
     const pageData = main_data.fisc_nfs.data
     const pageFunc = main_data.fisc_nfs.func
     const pageScreen = document.querySelector('#card-fisc_nfs')
-    pageData.NFs = new NFs('10,20,90')
+    pageData.NFs = new NFs('10,20,90',nfs_rules)
 
     startPage()
 
@@ -206,7 +215,6 @@ function startPage(){
 
         listNF('../NF/NFs/txt')
         listNF('../NF/NFs/pdf','pdf')
-//        importData()
         fillForms('CONF')
 
     }
@@ -218,13 +226,14 @@ function startPage(){
                 const field = pageScreen.querySelector(`#${grupos[i]}`).querySelector(`#${key}`)           
                 if(field != undefined){              
                     field.value = nfs_rules[grupos[i]][key].def  
-console.log(monitorEvents(field ['onkeyup']))
-                    field.onkeyup()                  
+                    try{
+                        field.onkeyup()
+                    }catch{null}
                 }
             }
         }
     }
-
+/*
     function getTXT(){
         let out = ''
             for(let key in pageData.config){
@@ -237,6 +246,23 @@ console.log(monitorEvents(field ['onkeyup']))
             }
             return out   
     }
+*/
+    function saveNFs(){
+        const out = new Object
+        const grupo = pageScreen.querySelectorAll('.grupo')
+        for(let g=0; g<grupo.length; g++){
+            out[grupo[g].id] = new Object
+            const campo = grupo[g].querySelectorAll('.campo')
+            for(let c=0; c<campo.length; c++){
+                out[grupo[g].id][campo[c].id] = campo[c].value
+            }
+        }
+
+    console.log(out)
+//        pageData.NFs.import(out)
+//        pageData.NFs.saveRules()
+    }
+
 
     function saveFiscal(){
 
@@ -322,6 +348,8 @@ console.log(monitorEvents(field ['onkeyup']))
 
 
     function addCliente(obj){
+        console.log(obj)
+/*        
         const cliente = document.querySelector('#cliente')
         cliente.querySelector('#xNome').value = obj.razao_social.trim().toUpperCase()
         cliente.querySelector('#CNPJ').value = getCNPJ(obj.cnpj)
@@ -334,6 +362,7 @@ console.log(monitorEvents(field ['onkeyup']))
         cliente.querySelector('#CEP').value = getCEP(obj.cep)
         cliente.querySelector('#email').value = ''
         document.querySelector('#btnSaveCli').click()
+*/        
     }
 
 
@@ -367,6 +396,8 @@ console.log(monitorEvents(field ['onkeyup']))
     })
 
     document.querySelector('#btnSaveEmit').addEventListener('click',()=>{
+        saveNFs()
+/*        
         const emitente = document.querySelector('#emitente')
         pageData.config.CONF.RazSocPre = emitente.querySelector('#xNome').value.trim().toUpperCase()
         pageData.config.CONF.TipoCpfCnpjPre = '2'
@@ -380,6 +411,7 @@ console.log(monitorEvents(field ['onkeyup']))
         pageData.config.CONF.CepPre = getNum(emitente.querySelector('#CEP').value)
         pageData.config['20'].EMail_1 = emitente.querySelector('#email').value.trim().toLowerCase()
         NFsConf(pageData.config)
+*/        
     })
 
     document.querySelector('#btnSaveCli').addEventListener('click',()=>{
@@ -458,18 +490,18 @@ console.log(monitorEvents(field ['onkeyup']))
         }
     }
 
-    document.querySelector('#tblServExec').addEventListener('click',(e)=>{
+    pageScreen.querySelector('#tblServExec').addEventListener('click',(e)=>{
         data = e.target.parentNode.data
         data.mode = 'edit'
         if (confirm(`Carregar Carro.${data.num_carro} de ${data.empresa.toUpperCase()}?`)) {
-            const serv = document.querySelector('#txtServicos')
+            const serv = pageScreen.querySelector('#DiscrSrv')
             if(serv.innerHTML.trim() == ''){
                 addCliente(data)          
                 serv.innerHTML = `CARRO:${data.num_carro}\n` + data.obs +'\n'
-                document.querySelector('#edtValor').value = data.valor
+                pageScreen.querySelector('#VlNFS').value = data.valor
             }else if (confirm(`Adicionar o carro ${data.num_carro} a NFs atual?`)){
                 serv.innerHTML += `\nCARRO:${data.num_carro}\n` + data.obs +'\n'
-                document.querySelector('#edtValor').value =  (parseFloat(document.querySelector('#edtValor').value)+parseFloat(data.valor)).toFixed(2)
+                pageScreen.querySelector('#VlNFS').value =  (parseFloat(pageScreen.querySelector('#VlNFS').value)+parseFloat(data.valor)).toFixed(2)
             }
         }
     })

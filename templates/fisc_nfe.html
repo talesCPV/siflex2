@@ -466,7 +466,7 @@
     const pageData = main_data.fisc_nfe.data
     const pageFunc = main_data.fisc_nfe.func
     const pageScreen = document.querySelector('#card-fisc_nfe')
-    pageData.NFe = new NFe('A,B,C,C02,C05,W,W02,W04c,W04e,W04g,X,Y,Y02,YA,YA01,Z')
+    pageData.NFe = new NFe('A,B,C,C02,C05,W,W02,W04c,W04e,W04g,X,Y,Y02,YA,YA01,Z',nfe_rules)
 
 /* FUNÇÔES */
 
@@ -570,6 +570,7 @@
         }
         pageData.NFe.import(out)
         pageData.NFe.saveRules()
+        alert('Dados Salvos com sucesso!')
     }
 
     function fatura(){

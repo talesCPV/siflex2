@@ -1,61 +1,23 @@
-    
-var nfe_rules = 0
-getFile('/../config/NFe_rules.json').then((json)=>{
-    nfe_rules = JSON.parse(json)
-})
+
+/***** NFe-VENDA ******/
 
 class NFe{
-    constructor(fds){
+    constructor(fds,rules){
         fds = fds.split(',')
         this.itens = new Array
         this.duplicatas = new Array
+        this.rules = rules
         for(let i=0; i<fds.length; i++){
-            this[fds[i]] = this.make(fds[i])
+            this[fds[i]] = makeGroup(fds[i],this.rules)
         }
     }
-}
-
-NFe.prototype.make = function(key_name){
-
-    if(!this.hasOwnProperty(key_name)){
-        const out = new Object
-        const rule = nfe_rules[key_name]
-        
-        for (const key in rule) {         
-            let value = rule[key].def.toString().trim()
-            const tipo = rule[key].tipo
-            const tam = rule[key].tam.split('-')
-            const min = tam.length == 1 ? '0' : tam[0]
-            const max = tam.length == 1 ? tam[0] : tam[1]
-            const ocor = rule[key].ocor.split('-')
-    
-            if(tipo=='N'){
-                const dec = rule[key].dec
-                value = (ocor[0] == '1' && value == '') ? '0' : value
-                value = (value != '' && dec > 0) ? Number(value).toFixed(dec) : value
-                value = value.substr(0,max)
-                value = value.padStart(min,0)
-            }else if(['C','D','H','DH'].includes(tipo)){
-                value = value.substr(0,max)
-                if(ocor[0] == '1' && value == ''){
-                    console.log(`Campo obrigatório vazio: ${key_name}->${key}`)
-                }
-            }else{
-                null
-            }
-    
-            out[key] = value
-        }
-        return out
-    }
-    return this[key_name]
 }
 
 NFe.prototype.addItem = function(data){  
     const keys = ['H','I','M','N','N02','O','O07','O10','Q','Q05','Q07','S','S05','S07']
     const out = new Object
     for(let i=0; i<keys.length; i++){
-        out[keys[i]] = this.make(keys[i])
+        out[keys[i]] = makeGroup(keys[i],this.rules)
         for (const key in out[keys[i]]) {
             if(data.hasOwnProperty(key)){
                 out[keys[i]][key] = data[key].split('\r')[0].trim()
@@ -82,7 +44,7 @@ NFe.prototype.addCliente = function(data){
 
     const keys = ['E','E02','E05']
     for(let i=0; i<keys.length; i++){
-        this[keys[i]] = this.make(keys[i])
+        this[keys[i]] = makeGroup(keys[i],this.rules)
         for (const key in this[keys[i]]) {
             if(data.hasOwnProperty(key)){
                 this[keys[i]][key] = data[key]
@@ -110,22 +72,7 @@ NFe.prototype.addCliente = function(data){
 }
 
 NFe.prototype.import = function(obj){
-    for (const grupo in obj) {
-        if(this.hasOwnProperty(grupo)){
-            for (const campo in obj[grupo]){
-                if(this[grupo].hasOwnProperty(campo)){
-                    //  exceções
-                    if(['N','C'].includes(nfe_rules[grupo][campo].tipo)){
-                        obj[grupo][campo] = onlyAlpha(obj[grupo][campo])
-                    }else{ // D, H ou DH
-                        obj[grupo][campo] += campo == 'dhEmi' ? 'T07:00:00-03:00' : ''
-                        obj[grupo][campo] += campo == 'dhSaiEnt' ? 'T16:00:00-03:00' : ''
-                    }
-                    this[grupo][campo] =  obj[grupo][campo]
-                }
-            }
-        }
-    }
+    nfImport(obj,this)
 }
 
 NFe.prototype.geraChave = function(){
@@ -186,7 +133,7 @@ NFe.prototype.geraTXT = function(){
     }
 
     for (const key in NFe) {
-        if(typeof NFe[key] === 'object' && !Array.isArray(NFe[key])){                 
+        if(typeof NFe[key] === 'object' && !Array.isArray(NFe[key]) && key!='rules'){                 
            
             if(key == 'W'){
                 out += addItens(NFe.itens)
@@ -215,6 +162,78 @@ NFe.prototype.saveRules = function(){
     const file_rules = JSON.stringify(nfe_rules)
     saveFile(file_rules,'/../config/NFe_rules.json')
 //    .then((resolve)=>{})
+}
+
+/***** NFs-SERVIÇO ******/
+
+class NFs{
+    constructor(fds,rules){
+        this.rules = rules
+        fds = fds.split(',')
+        for(let i=0; i<fds.length; i++){
+            this[fds[i]] = makeGroup(fds[i],this.rules)
+        }
+    }
+}
+
+NFs.prototype.import = function(obj){
+    nfImport(obj,this)
+}
+
+/****** FUNÇÔES *******/
+
+function makeGroup (grupo,rules){
+
+    if(!this.hasOwnProperty(grupo)){
+        const out = new Object
+        
+        for (const campo in rules[grupo]) {         
+            let value = rules[grupo][campo].def.toString().trim()
+            const tipo = rules[grupo][campo].tipo
+            const tam = rules[grupo][campo].tam.toString().split('-')
+            const min = tam.length == 1 ? '0' : tam[0]
+            const max = tam.length == 1 ? tam[0] : tam[1]
+            const ocor = rules[grupo][campo].ocor.split('-')
+    
+            if(tipo=='N'){
+                const dec = rules[grupo][campo].dec
+                value = (ocor[0] == '1' && value == '') ? '0' : value
+                value = (value != '' && ocor[0] == '1') ? value.padStart(min,0) : value
+                value = value.substr(0,max)
+                value = (value != '' && dec > 0) ? Number(value).toFixed(dec) : value
+            }else if(['C','D','H','DH'].includes(tipo)){
+                value = value.substr(0,max)
+                if(ocor[0] == '1' && value == ''){
+                    console.log(`Campo obrigatório vazio: ${grupo}->${campo}`)
+                }
+            }else{
+                null
+            }
+    
+            out[campo] = value.toString().trim()
+        }
+        return out
+    }
+    return this[grupo]
+}
+
+function nfImport(obj,NF){
+    for (const grupo in obj) {
+        if(NF.hasOwnProperty(grupo)){
+            for (const campo in obj[grupo]){
+                if(NF[grupo].hasOwnProperty(campo)){
+                    if(['N','C'].includes(NF.rules[grupo][campo].tipo)){
+                        obj[grupo][campo] = onlyAlpha(obj[grupo][campo])
+                    }else{ // D, H ou DH
+                        //  exceções
+                        obj[grupo][campo] += campo == 'dhEmi' ? 'T07:00:00-03:00' : ''
+                        obj[grupo][campo] += campo == 'dhSaiEnt' ? 'T16:00:00-03:00' : ''
+                    }
+                    NF[grupo][campo] =  obj[grupo][campo]
+                }
+            }
+        }
+    }
 }
 
 function onlyNum(V){
