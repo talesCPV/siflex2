@@ -147,18 +147,20 @@
 
             <div id="fatura" class="tab">
                 <div class="inline">
-                    <label for="edtNfsNum">Num NFs</label>
-                    <input type="text" id="edtNfsNum" onkeyup="valInt(this)">
-                    <label for="edtRps">RPS Defasagem</label>
-                    <input type="text" id="edtRps" onkeyup="valInt(this)">
+                    <label for="numNFS">Num NFs</label>
+                    <input type="text" id="numNFS" onkeyup="valInt(this)">
+                    <label for="DefRPS">RPS Defasagem</label>
+                    <input type="text" id="DefRPS" class="campo" onkeyup="valInt(this)">
+                    <label for="">Data Emissão</label>
+                    <input type="date" id="dtEmit">
                 </div>
                 <div class="inline">
                     <label for="VlNFS">Valor R$</label>
                     <input type="text" id="VlNFS" value="0.00" onkeyup="valFloat(this)">
                     <label for="edtDias">Dias entre Parcelas (separar por /)</label>
                     <input type="text" id="edtDias" value="28">
-                    <label for="AlqIss">Alíq. ISS</label>
-                    <input type="text" id="AlqIss" onkeyup="valFloat(this)">
+                    <label for="AlqIssSN">Alíq. ISS</label>
+                    <input type="text" id="AlqIssSN" onkeyup="valFloat(this)">
                 </div>
                 <div class="inline">
                     <label for="cmbLocal">Local Execução</label>
@@ -174,7 +176,7 @@
                 </div>
                 <fieldset>
                     <legend>Dedução / Outras Informações</legend>
-                    <textarea id="txtInfo" cols="30" rows="15">Serviço aprovado conforme Pedido:</textarea>
+                    <textarea id="DiscrDed" cols="30" rows="15">Serviço aprovado conforme Pedido:</textarea>
                 </fieldset>
                 <button id="brnGeraNFs">Gerar NFs</button>
             </div>
@@ -192,10 +194,6 @@
         </div>                
     </div>
 
-
-
-
-
 </template>
 <script>
 
@@ -212,6 +210,10 @@ function startPage(){
         pageScreen.querySelector('#tab-emitente').click()
         pageScreen.querySelector('#edtIni').value =  today.iniMonth()
         pageScreen.querySelector('#edtFin').value =  today.finMonth()
+        pageScreen.querySelector('#dtEmit').value = today.getFormatDate()
+        pageScreen.querySelector('#DefRPS').value = pageData.NFs.CONF.DefRPS
+        pageScreen.querySelector('#numNFS').value = parseInt(pageData.NFs.CONF.numNFS) + 1
+        pageScreen.querySelector('#AlqIssSN').value = pageData.NFs.CONF.AlqIssSN.replace(',','.')
 
         listNF('../NF/NFs/txt')
         listNF('../NF/NFs/pdf','pdf')
@@ -223,7 +225,7 @@ function startPage(){
         grupos = grupos.split(',')
         for(let i=0; i<grupos.length; i++){
             for(const key in obj[grupos[i]]){
-                const id_grupo = isNaN(Number(grupos[i])) ? grupos[i] : 'g'+grupos[i]
+                const id_grupo = isNaN(Number(grupos[i])) ? grupos[i] : 'G-'+grupos[i]
                 const field = pageScreen.querySelector(`#${id_grupo}`).querySelector(`#${key}`)
                 if(field != undefined){
                     field.value = obj[grupos[i]][key]
@@ -234,22 +236,6 @@ function startPage(){
             }
         }
     }
-
-/*
-    function getTXT(){
-        let out = ''
-            for(let key in pageData.config){
-                if(['10','20','90'].includes(key)){
-                    for(let item in pageData.config[key]){
-                        out += pageData.config[key][item]+'|'
-                    }
-                    out += '\n'
-                }
-            }
-            return out   
-    }
-*/
-
 
     function saveNFs(){
         const out = new Object
@@ -270,7 +256,7 @@ function startPage(){
 
 
     function saveFiscal(){
-
+/*
         pageData.config.CONF.DefRPS = document.querySelector('#edtRps').value.trim()
 
         const emitente = document.querySelector('#emitente')
@@ -318,7 +304,7 @@ function startPage(){
         pageData.config['20'].DiscrSrv = document.querySelector('#txtServicos').value.replaceAll('\n', '\\\\')
         pageData.config['20'].VlNFS = getNumComa(document.querySelector('#edtValor').value)
         pageData.config['20'].VlDed =  '0,00'
-        pageData.config['20'].DiscrDed = document.querySelector('#txtInfo').value.replaceAll('\n', '\\\\') + fatura
+        pageData.config['20'].DiscrDed = document.querySelector('#DiscrDed').value.replaceAll('\n', '\\\\') + fatura
         pageData.config['20'].VlBasCalc = getNumComa(document.querySelector('#edtValor').value)
         pageData.config['20'].AlqIss = getNumComa(document.querySelector('#edtAliq').value)
         pageData.config['20'].VlIss = retido=='SIM' ? '0,00' : iss
@@ -348,121 +334,57 @@ function startPage(){
         pageData.config['CONF'].DtHrGerNf = now.getFullDate()
 
         NFsConf(pageData.config)
+*/        
     }
 
 
+    function downloadFile(path){
+        const link = document.createElement("a")
+        link.download = path.split('/')[path.split('/').length-1]
+        link.href = path
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        delete link
+    }
 
     function addCliente(obj){
-        const cliente = document.querySelector('#cliente')
-        cliente.querySelector('#xNome').value = obj.razao_social.trim().toUpperCase()
-        cliente.querySelector('#CNPJ').value = getCNPJ(obj.cnpj)
-        cliente.querySelector('#xLgr').value = obj.endereco.trim().toUpperCase()
-        cliente.querySelector('#nro').value = obj.num.trim().toUpperCase()
-        cliente.querySelector('#bairro').value = obj.bairro.trim().toUpperCase()
-        cliente.querySelector('#cpl').value = ''
-        cliente.querySelector('#xMun').value = obj.cidade.trim().toUpperCase()
-        cliente.querySelector('#UF').value = obj.estado.trim().toUpperCase()
-        cliente.querySelector('#CEP').value = getCEP(obj.cep)
-        cliente.querySelector('#email').value = ''
-        pageScreen.querySelector('#tab-cliente').click()
-    }
-
-/*
-    function fillData(){
-
-        const emitente = document.querySelector('#emitente')
-        emitente.querySelector('#xNome').value = pageData.config.CONF.RazSocPre
-        emitente.querySelector('#CNPJ').value = getCNPJ(pageData.config.CONF.CpfCnpjPre)
-        emitente.querySelector('#xLgr').value = pageData.config.CONF.LogPre
-        emitente.querySelector('#nro').value = pageData.config.CONF.NumEndPre
-        emitente.querySelector('#bairro').value = pageData.config.CONF.BairroPre
-        emitente.querySelector('#cpl').value = pageData.config.CONF.ComplEndPre
-        emitente.querySelector('#xMun').value = pageData.config.CONF.MunPre
-        emitente.querySelector('#UF').value = pageData.config.CONF.SiglaUFPre
-        emitente.querySelector('#CEP').value = getCEP(pageData.config.CONF.CepPre)
-        emitente.querySelector('#email').value = pageData.config['20'].EMail_1.toLowerCase()
-
-        const fatura = document.querySelector('#fatura')
-        fatura.querySelector('#edtNfsNum').value = parseInt(pageData.config.CONF.numNFS)+1
-        fatura.querySelector('#edtRps').value = pageData.config.CONF.DefRPS
-        fatura.querySelector('#edtAliq').value = (pageData.config['10'].AlqIssSN_IP)
-        document.querySelector('#edtAliq').onkeyup()
+        for(const key in obj){
+            const field = pageScreen.querySelector(`#G-20`).querySelector(`#${key}`)
+            if(field != undefined){
+                field.value =  obj[key]
+                try{
+                    field.onkeyup()
+                }catch{null}
+            }
+        }
+        pageData.NFs.import({"20" : obj})
 
     }
-
-    document.querySelector('#brnGeraNFs').addEventListener('click',()=>{
-        saveFiscal()
-        const txt = getTXT()
-        const filename = 'NFs-'+pageData.config['CONF'].numNFS
-        uploadNFs(txt, filename)
-    })
-*/
 
     document.querySelector('#btnSaveEmit').addEventListener('click',()=>{
-        saveNFs()
-/*        
-        const emitente = document.querySelector('#emitente')
-        pageData.config.CONF.RazSocPre = emitente.querySelector('#xNome').value.trim().toUpperCase()
-        pageData.config.CONF.TipoCpfCnpjPre = '2'
-        pageData.config.CONF.CpfCnpjPre = getNum(emitente.querySelector('#CNPJ').value)
-        pageData.config.CONF.LogPre = emitente.querySelector('#xLgr').value.trim().toUpperCase()
-        pageData.config.CONF.NumEndPre = emitente.querySelector('#nro').value.trim().toUpperCase()
-        pageData.config.CONF.ComplEndPre = emitente.querySelector('#cpl').value.trim().toUpperCase()
-        pageData.config.CONF.BairroPre = emitente.querySelector('#bairro').value.trim().toUpperCase()
-        pageData.config.CONF.MunPre = emitente.querySelector('#xMun').value.trim().toUpperCase()
-        pageData.config.CONF.SiglaUFPre = emitente.querySelector('#UF').value.trim().toUpperCase()
-        pageData.config.CONF.CepPre = getNum(emitente.querySelector('#CEP').value)
-        pageData.config['20'].EMail_1 = emitente.querySelector('#email').value.trim().toLowerCase()
-        NFsConf(pageData.config)
-*/        
+        saveNFs()      
     })
 
     document.querySelector('#btnSaveCli').addEventListener('click',()=>{
-        const cliente = document.querySelector('#cliente')
-        pageData.config['20'].RazSocTom = cliente.querySelector('#xNome').value.trim().toUpperCase()
-        pageData.config['20'].CpfCnpjTom = getNum(cliente.querySelector('#CNPJ').value)
-        pageData.config['20'].TipoLogtom = ''
-        pageData.config['20'].LogTom = cliente.querySelector('#xLgr').value.trim().toUpperCase()
-        pageData.config['20'].NumEndTom = cliente.querySelector('#nro').value.trim().toUpperCase()
-        pageData.config['20'].ComplEndTom = cliente.querySelector('#cpl').value.trim().toUpperCase()
-        pageData.config['20'].BairroTom = cliente.querySelector('#bairro').value.trim().toUpperCase()
-        pageData.config['20'].MunTom = cliente.querySelector('#xMun').value.trim().toUpperCase()
-        pageData.config['20'].SiglaUFTom = cliente.querySelector('#UF').value.trim().toUpperCase()
-        pageData.config['20'].CepTom = getNum(cliente.querySelector('#CEP').value)
-        pageData.config['20'].Telefone = ''
-        pageData.config['20'].EMail_2 = cliente.querySelector('#email').value.trim().toLowerCase()
-        NFsConf(pageData.config)
+        saveNFs()       
     })
 
+
+
     document.querySelector('#txtFiles').addEventListener('dblclick',()=>{
-        const file = document.getElementById('txtFiles').value
-        const path = '../NF/NFs/txt/' + file;
-        var link = document.createElement("a");
-            link.download = file;
-            link.href = path;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            delete link; 
+        downloadFile('../NF/NFs/txt/' + pageScreen.querySelector('#txtFiles').value)
     })
 
     document.querySelector('#pdfFiles').addEventListener('dblclick',()=>{
-        const file = document.getElementById('pdfFiles').value
-        const path = '../NF/NFs/pdf/' + file;
-        var link = document.createElement("a");
-            link.download = file;
-            link.href = path;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            delete link; 
+        downloadFile('../NF/NFs/pdf/' + pageScreen.querySelector('#pdfFiles').value)
     })
 
     document.querySelector('#btnBuscaServ').addEventListener('click',()=>{
         pageFunc.fillServExec()
     })
 
-    pageFunc.fillServExec = ()=>{    
+    pageFunc.fillServExec = ()=>{
         
         function getDate(){
             return (pageScreen.querySelector('#edtIni').value.length > 0 && pageScreen.querySelector('#edtFin').value.length > 0) || !document.getElementById('ckbData').checked
@@ -510,22 +432,18 @@ function startPage(){
     })
 
     document.querySelector('#btnUpPDF').addEventListener('click',()=>{
-
         const data = new Object
         data.ext = '.pdf'
         data.path = '../NF/NFs/pdf/'
         data.filename = ''
-
         openHTML('uploadFile.html','pop-up','Nota Fiscal de Serviço',data)
-
-
     })
 
     document.querySelector('#btnAddAll').addEventListener('click',()=>{        
         if (confirm('Deseja adicionar todos os ítens acima?')) {
             const rows = document.querySelector('#tblServExec').querySelectorAll('tr')
-            const serv = document.querySelector('#txtServicos')
-            const info = document.querySelector('#txtInfo')
+            const serv = document.querySelector('#DiscrSrv')
+            const info = document.querySelector('#DiscrDed')
             let pedidos = ['']
             document.querySelector('#edtValor').value = '0'
             serv.innerHTML = ''

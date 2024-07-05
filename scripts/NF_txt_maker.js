@@ -134,14 +134,12 @@ NFe.prototype.geraTXT = function(){
 
     for (const key in NFe) {
         if(typeof NFe[key] === 'object' && !Array.isArray(NFe[key]) && key!='rules'){                 
-           
             if(key == 'W'){
                 out += addItens(NFe.itens)
             }
             if(key == 'YA'){
                 out += addItens(NFe.duplicatas)
-            }    
-
+            }
             out += makeLine(NFe,key)
         }
     }
@@ -178,6 +176,21 @@ class NFs{
 
 NFs.prototype.import = function(obj){
     nfImport(obj,this)
+    this.formatFields()
+}
+
+NFs.prototype.formatFields  = function(){
+    this[20].VlNFS          = this[20].VlNFS.replace('.',',') 
+    this[20].VlDed          = this[20].VlDed.replace('.',',') 
+    this[20].VlBasCalc      = this[20].VlBasCalc.replace('.',',') 
+    this[20].AlqIss         = this[20].AlqIss.replace('.',',') 
+    this[20].VlIss          = this[20].VlIss.replace('.',',') 
+    this[20].VlIssRet       = this[20].VlIssRet.replace('.',',') 
+    this[90].ValorNFS       = this[90].ValorNFS.replace('.',',') 
+    this[90].ValorISS       = this[90].ValorISS.replace('.',',') 
+    this[90].ValorDed       = this[90].ValorDed.replace('.',',') 
+    this[90].ValorIssRetTom = this[90].ValorIssRetTom.replace('.',',') 
+    this[90].ValTrib        = this[90].ValTrib.replace('.',',') 
 }
 
 /****** FUNÇÔES *******/
