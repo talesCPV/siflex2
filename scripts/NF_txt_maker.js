@@ -150,14 +150,14 @@ NFe.prototype.saveRules = function(){
     const grupos = ['B','C','C02','C07']
 
     for(let i=0; i<grupos.length; i++){
-        for (const key in nfe_rules[grupos[i]]) {
+        for (const key in this.rules[grupos[i]]) {
             if(this[grupos[i]].hasOwnProperty(key)){
-                nfe_rules[grupos[i]][key].def = this[grupos[i]][key]
+                this.rules[grupos[i]][key].def = this[grupos[i]][key]
             }
         }
     }
 
-    const file_rules = JSON.stringify(nfe_rules)
+    const file_rules = JSON.stringify(this.rules)
     saveFile(file_rules,'/../config/NFe_rules.json')
 //    .then((resolve)=>{})
 }
@@ -171,6 +171,7 @@ class NFs{
         for(let i=0; i<fds.length; i++){
             this[fds[i]] = makeGroup(fds[i],this.rules)
         }
+        this.formatFields()        
     }
 }
 
@@ -180,6 +181,10 @@ NFs.prototype.import = function(obj){
 }
 
 NFs.prototype.formatFields  = function(){
+    this[10].DtIni          = dateBR(this[10].DtIni)
+    this[10].DtFin          = dateBR(this[10].DtFin)
+    this[10].AlqIssSN_IP    = this[10].AlqIssSN_IP.replace('.',',') 
+    this[20].DtEmi          = dateBR(this[20].DtEmi)
     this[20].VlNFS          = this[20].VlNFS.replace('.',',') 
     this[20].VlDed          = this[20].VlDed.replace('.',',') 
     this[20].VlBasCalc      = this[20].VlBasCalc.replace('.',',') 
@@ -190,7 +195,26 @@ NFs.prototype.formatFields  = function(){
     this[90].ValorISS       = this[90].ValorISS.replace('.',',') 
     this[90].ValorDed       = this[90].ValorDed.replace('.',',') 
     this[90].ValorIssRetTom = this[90].ValorIssRetTom.replace('.',',') 
-    this[90].ValTrib        = this[90].ValTrib.replace('.',',') 
+    this[90].ValTrib        = this[90].ValTrib.replace('.',',')
+
+}
+
+NFs.prototype.saveRules = function(){
+    const grupos = ['10','20','30','90','CONF']
+
+    for(let i=0; i<grupos.length; i++){
+        if(this.hasOwnProperty(grupos[i])){
+            for (const key in this.rules[grupos[i]]) {
+                if(this[grupos[i]].hasOwnProperty(key)){
+                    this.rules[grupos[i]][key].def = this[grupos[i]][key]
+                }
+            }
+        }
+    }
+
+    const file_rules = JSON.stringify(this.rules)
+    saveFile(file_rules,'/../config/NFs_rules.json')
+//    .then((resolve)=>{})
 }
 
 /****** FUNÇÔES *******/
@@ -214,15 +238,19 @@ function makeGroup (grupo,rules){
                 value = (value != '' && ocor[0] == '1') ? value.padStart(min,0) : value
                 value = value.substr(0,max)
                 value = (value != '' && dec > 0) ? Number(value).toFixed(dec) : value
+            }else if(tipo=='D'){
+                let dt = new Date()
+                dt = `${dt.getFullYear()}-${(dt.getMonth()+1).toString().padStart(2,'0')}-${dt.getDate().toString().padStart(2,'0')}`
+                value = (ocor[0] == '1' && value == '') ? dt : value
             }else if(['C','D','H','DH'].includes(tipo)){
-                value = value.substr(0,max)
-                if(ocor[0] == '1' && value == ''){
-                    console.log(`Campo obrigatório vazio: ${grupo}->${campo}`)
-                }
-            }else{
                 null
             }
-    
+
+            value = value.substr(0,max)    
+            if(ocor[0] == '1' && value == ''){
+                console.log(`Campo obrigatório vazio: ${grupo}->${campo}`)
+            }
+
             out[campo] = value.toString().trim()
         }
         return out
@@ -269,6 +297,10 @@ function onlyAlpha(V){
         }
     }
     return out.trim()
+}
+
+function dateBR(DT){
+    return DT.substring(8,10)+'/'+DT.substring(5,7)+'/'+DT.substring(0,4)
 }
 
 function IBGE_cMun(C,E){

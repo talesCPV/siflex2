@@ -34,11 +34,11 @@
                     <label for="CpfCnpjPre"> CNPJ </label>
                     <input type="text" id="CpfCnpjPre" class="campo" maxlength="18" onkeyup="valCNPJ(this)"/>
                     <label for="IMTom">Insc. Mun.</label>
-                    <input type="text" id="IMTom">
+                    <input type="text" id="IMTom" class="campo">
                 </div>
                 <div class="inline">
                     <label for="LogPre"> Endereço </label>
-                    <input type="text" id="LogPre" maxlength="60" />
+                    <input type="text" id="LogPre" class="campo" maxlength="60" />
                     <label for="NumEndPre"> Número: </label>
                     <input type="text" id="NumEndPre" class="campo" maxlength="10" style="max-width: 100px;" />
                 </div>
@@ -214,6 +214,8 @@ function startPage(){
         pageScreen.querySelector('#DefRPS').value = pageData.NFs.CONF.DefRPS
         pageScreen.querySelector('#numNFS').value = parseInt(pageData.NFs.CONF.numNFS) + 1
         pageScreen.querySelector('#AlqIssSN').value = pageData.NFs.CONF.AlqIssSN.replace(',','.')
+        pageData.NFs['10'].AlqIssSN_IP = pageData.NFs.CONF.AlqIssSN
+        pageData.NFs['20'].AlqIss = pageData.NFs.CONF.AlqIssSN
 
         listNF('../NF/NFs/txt')
         listNF('../NF/NFs/pdf','pdf')
@@ -248,10 +250,9 @@ function startPage(){
                 out[grupo[g].id][campo[c].id] = campo[c].value
             }
         }
-
-    console.log(out)
+console.log(out)
         pageData.NFs.import(out)
-//        pageData.NFs.saveRules()
+        pageData.NFs.saveRules()
     }
 
 
@@ -362,25 +363,33 @@ function startPage(){
 
     }
 
-    document.querySelector('#btnSaveEmit').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnSaveEmit').addEventListener('click',()=>{
         saveNFs()      
     })
 
-    document.querySelector('#btnSaveCli').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnSaveCli').addEventListener('click',()=>{
         saveNFs()       
     })
 
+    pageScreen.querySelector('#brnGeraNFs').addEventListener('click',()=>{
+        saveNFs()
+/*        
+        pageData.NFs.CONF.AlqIssSN = pageScreen.querySelector('#AlqIssSN').value.replace('.',',')
+        pageData.NFs['10'].AlqIssSN_IP = pageData.NFs.CONF.AlqIssSN
+        pageData.NFs['20'].AlqIss = pageData.NFs.CONF.AlqIssSN
+        pageScreen.querySelector('#dtEmit').value
+*/
+    })
 
-
-    document.querySelector('#txtFiles').addEventListener('dblclick',()=>{
+    pageScreen.querySelector('#txtFiles').addEventListener('dblclick',()=>{
         downloadFile('../NF/NFs/txt/' + pageScreen.querySelector('#txtFiles').value)
     })
 
-    document.querySelector('#pdfFiles').addEventListener('dblclick',()=>{
+    pageScreen.querySelector('#pdfFiles').addEventListener('dblclick',()=>{
         downloadFile('../NF/NFs/pdf/' + pageScreen.querySelector('#pdfFiles').value)
     })
 
-    document.querySelector('#btnBuscaServ').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnBuscaServ').addEventListener('click',()=>{
         pageFunc.fillServExec()
     })
 
@@ -431,7 +440,7 @@ function startPage(){
         }
     })
 
-    document.querySelector('#btnUpPDF').addEventListener('click',()=>{
+    pageScreen.querySelector('#btnUpPDF').addEventListener('click',()=>{
         const data = new Object
         data.ext = '.pdf'
         data.path = '../NF/NFs/pdf/'
@@ -439,20 +448,20 @@ function startPage(){
         openHTML('uploadFile.html','pop-up','Nota Fiscal de Serviço',data)
     })
 
-    document.querySelector('#btnAddAll').addEventListener('click',()=>{        
+    pageScreen.querySelector('#btnAddAll').addEventListener('click',()=>{        
         if (confirm('Deseja adicionar todos os ítens acima?')) {
-            const rows = document.querySelector('#tblServExec').querySelectorAll('tr')
-            const serv = document.querySelector('#DiscrSrv')
-            const info = document.querySelector('#DiscrDed')
+            const rows = pageScreen.querySelector('#tblServExec').querySelectorAll('tr')
+            const serv = pageScreen.querySelector('#DiscrSrv')
+            const info = pageScreen.querySelector('#DiscrDed')
             let pedidos = ['']
-            document.querySelector('#edtValor').value = '0'
+            pageScreen.querySelector('#edtValor').value = '0'
             serv.innerHTML = ''
 
             info.innerHTML = rows.length > 2 ? 'Serviço aprovado conforme Pedidos:' : 'Serviço aprovado conforme Pedido:'
             addCliente(rows[1].data)
             for(let i=1; i<rows.length; i++){
                 serv.innerHTML += `\nCARRO:${rows[i].data.num_carro}\n` + rows[i].data.obs +'\n'
-                document.querySelector('#edtValor').value =  (parseFloat(document.querySelector('#edtValor').value)+parseFloat(rows[i].data.valor)).toFixed(2)
+                pageScreen.querySelector('#edtValor').value =  (parseFloat(pageScreen.querySelector('#edtValor').value)+parseFloat(rows[i].data.valor)).toFixed(2)
                 info.innerHTML += pedidos.includes(rows[i].data.pedido.trim()) ? '' : rows[i].data.pedido.trim()+' '
                 pedidos.push(rows[i].data.pedido.trim())
             }
