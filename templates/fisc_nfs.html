@@ -157,8 +157,9 @@
                 <div class="inline">
                     <label for="VlNFS">Valor R$</label>
                     <input type="text" id="VlNFS" value="0.00" onkeyup="valFloat(this)">
-                    <label for="edtDias">Dias entre Parcelas (separar por /)</label>
-                    <input type="text" id="edtDias" value="28">
+                    <label for="dfat">Dias entre Parcelas (separar por /)</label>
+                    <input type="text" id="dfat" value="28">
+                    <button class="btn-round" id="btnCalendar"><span class="mdi mdi-calendar-range"></span></button>
                     <label for="AlqIssSN">Alíq. ISS</label>
                     <input type="text" id="AlqIssSN" onkeyup="valFloat(this)">
                 </div>
@@ -214,8 +215,6 @@ function startPage(){
         pageScreen.querySelector('#DefRPS').value = pageData.NFs.CONF.DefRPS
         pageScreen.querySelector('#numNFS').value = parseInt(pageData.NFs.CONF.numNFS) + 1
         pageScreen.querySelector('#AlqIssSN').value = pageData.NFs.CONF.AlqIssSN.replace(',','.')
-        pageData.NFs['10'].AlqIssSN_IP = pageData.NFs.CONF.AlqIssSN
-        pageData.NFs['20'].AlqIss = pageData.NFs.CONF.AlqIssSN
 
         listNF('../NF/NFs/txt')
         listNF('../NF/NFs/pdf','pdf')
@@ -250,13 +249,59 @@ function startPage(){
                 out[grupo[g].id][campo[c].id] = campo[c].value
             }
         }
-console.log(out)
+
+        saveFiscal()
         pageData.NFs.import(out)
         pageData.NFs.saveRules()
     }
 
 
     function saveFiscal(){
+
+        const fat =  getFat()
+        const vNF = parseFloat(document.querySelector('#VlNFS').value)
+        let fatura = ''
+        let sum = 0
+        for(let i=0; i<fat.length; i++){
+            const day = new Date()
+            day.change(parseInt(fat[i]))
+       
+            const pgto = new Object            
+                pgto.ref =  (i+1).toString().padStart(2,"0") +'/'+ (fat.length).toString().padStart(2,"0")
+                pgto.val = i != (fat.length-1) ? (vNF/fat.length).toFixed(2) : (vNF-sum).toFixed(2)
+            
+                fatura += `\\\\Pgto ${pgto.ref} Venc.${day.getFormatBR()} Valor R$${pgto.val}`
+                sum += parseFloat(pgto.val)
+        }  
+        fatura += '\\\\**Tributado pelo ANEXO III Simples Nacional Conforme LC 123/2006'
+
+        pageData.NFs.CONF.AlqIssSN = pageScreen.querySelector('#AlqIssSN').value.replace('.',',')
+        pageData.NFs.CONF.DefRPS = pageScreen.querySelector('#DefRPS').value
+        pageData.NFs.CONF.numNFS = pageScreen.querySelector('#numNFS').value
+        pageData.NFs['10'].AlqIssSN_IP = pageData.NFs.CONF.AlqIssSN
+        pageData.NFs['20'].AlqIss = pageData.NFs.CONF.AlqIssSN
+        pageData.NFs.CONF.LocalTom = document.querySelector('#cmbLocal').value
+
+        const local = pageData.NFs.CONF.LocalTom     
+        const cliente = document.querySelector('#cliente')
+        pageData.NFs['20'].DiscrDed = document.querySelector('#DiscrDed').value.replaceAll('\n', '\\\\') + fatura        
+        pageData.NFs['20'].TipoLogLocPre = local=='TOM' ? '.' : ''
+        pageData.NFs['20'].LogLocPre = local=='TOM' ? cliente.querySelector('#LogTom').value : ''
+        pageData.NFs['20'].NumEndLocPre = local=='TOM' ? cliente.querySelector('#NumEndTom').value : ''
+        pageData.NFs['20'].ComplEndLocPre = local=='TOM' ? cliente.querySelector('#ComplEndTom').value : ''
+        pageData.NFs['20'].BairroLocPre = local=='TOM' ? cliente.querySelector('#BairroTom').value : ''
+        pageData.NFs['20'].MunLocPre = local=='TOM' ? cliente.querySelector('#MunTom').value : ''
+        pageData.NFs['20'].SiglaUFLocPre = local=='TOM' ? cliente.querySelector('#SiglaUFTom').value : ''
+        pageData.NFs['20'].CepLocPre = local=='TOM' ? getNum(cliente.querySelector('#CepTom').value) : ''
+        pageData.NFs['20'].Telefone = local=='TOM' ? getNum(cliente.querySelector('#Telefone').value) : ''
+//        pageData.NFs['20'].EMail_1 = cliente.querySelector('#EMail_1').value.trim().toLowerCase()
+    
+        const retido = document.querySelector('#cmbRetFont').value
+        const iss = (parseFloat(document.querySelector('#VlNFS').value)*(parseFloat(pageData.NFs.CONF.AlqIssSN)/100)).toFixed(2).replace('.',',')
+        pageData.NFs['90'].ValorNFS = document.querySelector('#VlNFS').value.replace('.',',')
+        pageData.NFs['90'].ValorISS = retido=='SIM' ? '0,00' : iss
+        pageData.NFs['90'].ValorIssRet = retido=='SIM' ? iss : '0,00'
+
 /*
         pageData.config.CONF.DefRPS = document.querySelector('#edtRps').value.trim()
 
@@ -468,5 +513,30 @@ console.log(out)
         }
 
     })
+
+    function getFat(){
+        const fat = pageScreen.querySelector('#fatura').querySelector('#dfat').value.split('/')
+        
+        for(let i=fat.length-1; i>=0; i--){
+            fat[i] = getNum(fat[i])
+            if(fat[i] == ''){
+                fat.splice(i,1)
+            }
+        }
+        console.log(fat)        
+        return fat
+    }
+
+    pageScreen.querySelector('#btnCalendar').addEventListener('click',()=>{
+        const fat = getFat()
+
+        let out = ''
+        for(let i=0; i<fat.length; i++){
+            const day = new Date()
+            day.change(parseInt(fat[i]))
+            out += `Parcela ${i+1} - ${day.getFormatBR()}\n`
+        }        
+        alert(out)
+    })   
 
 </script>

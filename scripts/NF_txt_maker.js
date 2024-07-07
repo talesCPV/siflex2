@@ -171,7 +171,7 @@ class NFs{
         for(let i=0; i<fds.length; i++){
             this[fds[i]] = makeGroup(fds[i],this.rules)
         }
-        this.formatFields()        
+        this.formatFields()                
     }
 }
 
@@ -262,7 +262,7 @@ function nfImport(obj,NF){
     for (const grupo in obj) {
         if(NF.hasOwnProperty(grupo)){
             for (const campo in obj[grupo]){
-                if(NF[grupo].hasOwnProperty(campo)){
+                if(NF.rules[grupo].hasOwnProperty(campo)){
                     if(['N','C'].includes(NF.rules[grupo][campo].tipo)){
                         obj[grupo][campo] = onlyAlpha(obj[grupo][campo])
                     }else{ // D, H ou DH
@@ -270,7 +270,7 @@ function nfImport(obj,NF){
                         obj[grupo][campo] += campo == 'dhEmi' ? 'T07:00:00-03:00' : ''
                         obj[grupo][campo] += campo == 'dhSaiEnt' ? 'T16:00:00-03:00' : ''
                     }
-                    NF[grupo][campo] =  obj[grupo][campo]
+                    NF[grupo][campo] =  obj[grupo][campo].trim()
                 }
             }
         }
@@ -289,14 +289,7 @@ function onlyNum(V){
 }
 
 function onlyAlpha(V){    
-    let out = ''
-    for(let i=0; i< V.length; i++){
-        const ascii = V[i].charCodeAt()
-        if((ascii>=48 && ascii<=57)||(ascii>=65 && ascii<=90)||(ascii>=97 && ascii<=122)|| [32,199,231].includes(ascii)){
-            out+=V[i]
-        }
-    }
-    return out.trim()
+    return V.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
 }
 
 function dateBR(DT){
