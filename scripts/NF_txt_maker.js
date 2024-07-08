@@ -181,7 +181,10 @@ NFs.prototype.import = function(obj){
 }
 
 NFs.prototype.formatFields  = function(){
-    this[10].DtIni          = dateBR(this[10].DtIni)
+    const day = new Date()
+//    const td = day.ge
+
+    this[10].DtIni          = this[10].DtIni != '' ? dateBR(this[10].DtIni) : ''
     this[10].DtFin          = dateBR(this[10].DtFin)
     this[10].AlqIssSN_IP    = this[10].AlqIssSN_IP.replace('.',',') 
     this[20].DtEmi          = dateBR(this[20].DtEmi)
@@ -216,6 +219,36 @@ NFs.prototype.saveRules = function(){
     saveFile(file_rules,'/../config/NFs_rules.json')
 //    .then((resolve)=>{})
 }
+
+NFs.prototype.export = function(keys){
+
+    keys = keys.split(',')
+    const NFs = Object.keys(this).sort().reduce(
+        (obj, key) => { 
+          obj[key] = this[key]; 
+          return obj;
+        }, 
+        {}
+      ); 
+
+    let out = ''
+
+    function makeLine(obj,key){
+        let line = key+'|'
+        for(const obj_key in obj[key]){
+            line += obj[key][obj_key] +'|'
+        }
+        return line + '\n'
+    }
+
+    for (let i=0; i<keys.length; i++) {        
+        if(typeof NFs[keys[i]] === 'object' && !Array.isArray(NFe[keys[i]]) && keys[i]!='rules'){
+            out += makeLine(NFs,keys[i])
+        }
+    }
+    return out
+}
+
 
 /****** FUNÇÔES *******/
 

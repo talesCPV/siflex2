@@ -422,8 +422,10 @@ function startPage(){
         pageData.NFs.CONF.AlqIssSN = pageScreen.querySelector('#AlqIssSN').value.replace('.',',')
         pageData.NFs['10'].AlqIssSN_IP = pageData.NFs.CONF.AlqIssSN
         pageData.NFs['20'].AlqIss = pageData.NFs.CONF.AlqIssSN
-        pageScreen.querySelector('#dtEmit').value
+        pageScreen.querySelector('#dtEmit').value        
 */
+        const txt = pageData.NFs.export('10,20,90')
+        console.log(txt)
     })
 
     pageScreen.querySelector('#txtFiles').addEventListener('dblclick',()=>{
@@ -523,7 +525,6 @@ function startPage(){
                 fat.splice(i,1)
             }
         }
-        console.log(fat)        
         return fat
     }
 
