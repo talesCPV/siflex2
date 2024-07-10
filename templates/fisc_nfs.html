@@ -260,6 +260,7 @@ function startPage(){
 
         const fat =  getFat()
         const vNF = parseFloat(document.querySelector('#VlNFS').value)
+
         let fatura = ''
         let sum = 0
         for(let i=0; i<fat.length; i++){
@@ -282,9 +283,19 @@ function startPage(){
         pageData.NFs['20'].AlqIss = pageData.NFs.CONF.AlqIssSN
         pageData.NFs.CONF.LocalTom = document.querySelector('#cmbLocal').value
 
+        const vISS = vNF * (parseFloat(pageData.NFs.CONF.AlqIssSN)/100)
+        const nRPS = (parseInt(pageData.NFs.CONF.numNFS)-parseInt(pageData.NFs.CONF.DefRPS)).toString().padStart(9,'0')
+ 
         const local = pageData.NFs.CONF.LocalTom     
         const cliente = document.querySelector('#cliente')
-        pageData.NFs['20'].DiscrDed = document.querySelector('#DiscrDed').value.replaceAll('\n', '\\\\') + fatura        
+        const retido = document.querySelector('#cmbRetFont').value
+
+        pageData.NFs['20'].NumRPS = nRPS
+        pageData.NFs['20'].VlNFS = vNF
+        pageData.NFs['20'].VlIss = vISS.toFixed(2).replace('.',',')
+        pageData.NFs['20'].VlDed = vISS.toFixed(2)     
+        pageData.NFs['20'].DiscrSrv = document.querySelector('#DiscrSrv').value.replaceAll('\n', '\\\\')
+        pageData.NFs['20'].DiscrDed = document.querySelector('#DiscrDed').value.replaceAll('\n', '\\\\') + fatura
         pageData.NFs['20'].TipoLogLocPre = local=='TOM' ? '.' : ''
         pageData.NFs['20'].LogLocPre = local=='TOM' ? cliente.querySelector('#LogTom').value : ''
         pageData.NFs['20'].NumEndLocPre = local=='TOM' ? cliente.querySelector('#NumEndTom').value : ''
@@ -294,13 +305,11 @@ function startPage(){
         pageData.NFs['20'].SiglaUFLocPre = local=='TOM' ? cliente.querySelector('#SiglaUFTom').value : ''
         pageData.NFs['20'].CepLocPre = local=='TOM' ? getNum(cliente.querySelector('#CepTom').value) : ''
         pageData.NFs['20'].Telefone = local=='TOM' ? getNum(cliente.querySelector('#Telefone').value) : ''
-//        pageData.NFs['20'].EMail_1 = cliente.querySelector('#EMail_1').value.trim().toLowerCase()
-    
-        const retido = document.querySelector('#cmbRetFont').value
-        const iss = (parseFloat(document.querySelector('#VlNFS').value)*(parseFloat(pageData.NFs.CONF.AlqIssSN)/100)).toFixed(2).replace('.',',')
+        pageData.NFs['20'].VlIss = retido=='SIM' ? '0,00' : vISS.toFixed(2).replace('.',',')
+        pageData.NFs['20'].VlIssRet = retido=='SIM' ? vISS.toFixed(2).replace('.',',') : '0,00'
         pageData.NFs['90'].ValorNFS = document.querySelector('#VlNFS').value.replace('.',',')
-        pageData.NFs['90'].ValorISS = retido=='SIM' ? '0,00' : iss
-        pageData.NFs['90'].ValorIssRet = retido=='SIM' ? iss : '0,00'
+        pageData.NFs['90'].ValorISS = retido=='SIM' ? '0,00' : vISS.toFixed(2).replace('.',',')
+        pageData.NFs['90'].ValorIssRet = retido=='SIM' ? vISS.toFixed(2).replace('.',',') : '0,00'
 
 /*
         pageData.config.CONF.DefRPS = document.querySelector('#edtRps').value.trim()
@@ -501,14 +510,14 @@ function startPage(){
             const serv = pageScreen.querySelector('#DiscrSrv')
             const info = pageScreen.querySelector('#DiscrDed')
             let pedidos = ['']
-            pageScreen.querySelector('#edtValor').value = '0'
+            pageScreen.querySelector('#VlNFS').value = '0'
             serv.innerHTML = ''
 
             info.innerHTML = rows.length > 2 ? 'Serviço aprovado conforme Pedidos:' : 'Serviço aprovado conforme Pedido:'
             addCliente(rows[1].data)
             for(let i=1; i<rows.length; i++){
                 serv.innerHTML += `\nCARRO:${rows[i].data.num_carro}\n` + rows[i].data.obs +'\n'
-                pageScreen.querySelector('#edtValor').value =  (parseFloat(pageScreen.querySelector('#edtValor').value)+parseFloat(rows[i].data.valor)).toFixed(2)
+                pageScreen.querySelector('#VlNFS').value =  (parseFloat(pageScreen.querySelector('#VlNFS').value)+parseFloat(rows[i].data.valor)).toFixed(2)
                 info.innerHTML += pedidos.includes(rows[i].data.pedido.trim()) ? '' : rows[i].data.pedido.trim()+' '
                 pedidos.push(rows[i].data.pedido.trim())
             }

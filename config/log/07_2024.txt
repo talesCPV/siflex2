@@ -2,3 +2,4 @@
 02/07/2024 16:20 tales@flexibus.com.br : Menu Alterado (NFe Config, sys_nfe_config.html, pop-up, NFe Config)
 03/07/2024 14:56 tales@flexibus.com.br : Menu Incluido (NFs Config)
 03/07/2024 14:58 tales@flexibus.com.br : Menu Alterado (NFs Config, sys_nfs_config.html, pop-up, Configuracao de Regras da NFs)
+10/07/2024 15:24 tales@flexibus.com.br : Funcionario Editado MARCELO CUSTODIO DE SIQUEIRA -> MARCELO CUSTODIO DE SIQUEIRA

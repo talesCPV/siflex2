@@ -181,17 +181,17 @@ NFs.prototype.import = function(obj){
 }
 
 NFs.prototype.formatFields  = function(){
-    const day = new Date()
-//    const td = day.ge
+    const day = new Date()    
+    const td = day.getDate().toString().padStart(2,0)+'/'+(day.getMonth()+1).toString().padStart(2,0)+'/'+day.getFullYear()
 
-    this[10].DtIni          = this[10].DtIni != '' ? dateBR(this[10].DtIni) : ''
-    this[10].DtFin          = dateBR(this[10].DtFin)
-    this[10].AlqIssSN_IP    = this[10].AlqIssSN_IP.replace('.',',') 
-    this[20].DtEmi          = dateBR(this[20].DtEmi)
-    this[20].VlNFS          = this[20].VlNFS.replace('.',',') 
-    this[20].VlDed          = this[20].VlDed.replace('.',',') 
+    this[10].DtIni          = td
+    this[10].DtFin          = td
+    this[10].AlqIssSN_IP    = this['CONF'].AlqIssSN
+    this[20].DtEmi          = td
+    this[20].VlNFS          = this[20].VlNFS.toString().replace('.',',')
+    this[20].VlDed          = this[20].VlDed.toString().replace('.',',') 
     this[20].VlBasCalc      = this[20].VlBasCalc.replace('.',',') 
-    this[20].AlqIss         = this[20].AlqIss.replace('.',',') 
+    this[20].AlqIss         = this['CONF'].AlqIssSN
     this[20].VlIss          = this[20].VlIss.replace('.',',') 
     this[20].VlIssRet       = this[20].VlIssRet.replace('.',',') 
     this[90].ValorNFS       = this[90].ValorNFS.replace('.',',') 
@@ -230,12 +230,12 @@ NFs.prototype.export = function(keys){
         }, 
         {}
       ); 
-
     let out = ''
 
     function makeLine(obj,key){
-        let line = key+'|'
+        let line = key+'|'        
         for(const obj_key in obj[key]){
+//console.log(key,obj_key,obj[key][obj_key])
             line += obj[key][obj_key] +'|'
         }
         return line + '\n'
@@ -296,12 +296,16 @@ function nfImport(obj,NF){
         if(NF.hasOwnProperty(grupo)){
             for (const campo in obj[grupo]){
                 if(NF.rules[grupo].hasOwnProperty(campo)){
-                    if(['N','C'].includes(NF.rules[grupo][campo].tipo)){
-                        obj[grupo][campo] = onlyAlpha(obj[grupo][campo])
-                    }else{ // D, H ou DH
-                        //  exceções
-                        obj[grupo][campo] += campo == 'dhEmi' ? 'T07:00:00-03:00' : ''
-                        obj[grupo][campo] += campo == 'dhSaiEnt' ? 'T16:00:00-03:00' : ''
+                    switch(NF.rules[grupo][campo].tipo){
+                        case 'N':
+                            obj[grupo][campo] = onlyNum(obj[grupo][campo])
+                        break
+                        case 'C':
+                            obj[grupo][campo] = onlyAlpha(obj[grupo][campo])
+                        break
+                        default:
+                            obj[grupo][campo] += campo == 'dhEmi' ? 'T07:00:00-03:00' : ''
+                            obj[grupo][campo] += campo == 'dhSaiEnt' ? 'T16:00:00-03:00' : ''
                     }
                     NF[grupo][campo] =  obj[grupo][campo].trim()
                 }
