@@ -48,7 +48,7 @@ function pictab(e){
             const json = JSON.parse(resolve)[0]
             const unread = json.new_mail
             document.querySelector('#mail-badge').innerHTML = unread!='0' ? unread : ''
-//            document.querySelector('#mail-badge-mobile').innerHTML = document.querySelector('#mail-badge').innerHTML
+            document.querySelector('#mail-badge-menu').innerHTML  = unread!='0' ? unread : ''
         })
     }
 
@@ -125,7 +125,6 @@ function openMenu(){
                     a.appendChild(span)
 //                    lbl.appendChild(span)
                 }
-
                 const ckb = document.createElement('input')
                 ckb.type = 'checkbox';
                 ckb.id = `drop-${drop}`
@@ -140,6 +139,13 @@ function openMenu(){
                     li.appendChild(ul)
                 }
             }else{
+                if(obj[i].modulo == 'Mens.'){
+                    const badge = document.createElement('span')
+                    badge.id = 'mail-badge-menu'
+                    badge.className = 'badge'
+                    a.appendChild(badge)
+                }
+
                 a.addEventListener('click',()=>{
                     main_data.dashboard.data.access = obj[i].access                              
                     openHTML(obj[i].link,obj[i].janela,obj[i].label,{},obj[i].width)
