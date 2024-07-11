@@ -171,7 +171,12 @@ class NFs{
         for(let i=0; i<fds.length; i++){
             this[fds[i]] = makeGroup(fds[i],this.rules)
         }
-        this.formatFields()                
+        this.formatFields()
+        const day = new Date()    
+        const td = day.getDate().toString().padStart(2,0)+'/'+(day.getMonth()+1).toString().padStart(2,0)+'/'+day.getFullYear()
+        this[10].DtIni = td
+        this[10].DtFin = td
+        this[20].DtEmi = td
     }
 }
 
@@ -181,25 +186,18 @@ NFs.prototype.import = function(obj){
 }
 
 NFs.prototype.formatFields  = function(){
-    const day = new Date()    
-    const td = day.getDate().toString().padStart(2,0)+'/'+(day.getMonth()+1).toString().padStart(2,0)+'/'+day.getFullYear()
-
-    this[10].DtIni          = td
-    this[10].DtFin          = td
     this[10].AlqIssSN_IP    = this['CONF'].AlqIssSN
-    this[20].DtEmi          = td
     this[20].VlNFS          = this[20].VlNFS.toString().replace('.',',')
-    this[20].VlDed          = this[20].VlDed.toString().replace('.',',') 
-    this[20].VlBasCalc      = this[20].VlBasCalc.replace('.',',') 
+    this[20].VlDed          = this[20].VlDed.toString().replace('.',',')
+    this[20].VlBasCalc      = this[20].VlBasCalc.replace('.',',')
     this[20].AlqIss         = this['CONF'].AlqIssSN
-    this[20].VlIss          = this[20].VlIss.replace('.',',') 
-    this[20].VlIssRet       = this[20].VlIssRet.replace('.',',') 
-    this[90].ValorNFS       = this[90].ValorNFS.replace('.',',') 
-    this[90].ValorISS       = this[90].ValorISS.replace('.',',') 
-    this[90].ValorDed       = this[90].ValorDed.replace('.',',') 
-    this[90].ValorIssRetTom = this[90].ValorIssRetTom.replace('.',',') 
+    this[20].VlIss          = this[20].VlIss.replace('.',',')
+    this[20].VlIssRet       = this[20].VlIssRet.replace('.',',')
+    this[90].ValorNFS       = this[90].ValorNFS.replace('.',',')
+    this[90].ValorISS       = this[90].ValorISS.replace('.',',')
+    this[90].ValorDed       = this[90].ValorDed.replace('.',',')
+    this[90].ValorIssRetTom = this[90].ValorIssRetTom.replace('.',',')
     this[90].ValTrib        = this[90].ValTrib.replace('.',',')
-
 }
 
 NFs.prototype.saveRules = function(){
@@ -224,7 +222,7 @@ NFs.prototype.export = function(keys){
 
     keys = keys.split(',')
     const NFs = Object.keys(this).sort().reduce(
-        (obj, key) => { 
+        (obj, key) => {
           obj[key] = this[key]; 
           return obj;
         }, 
@@ -235,7 +233,6 @@ NFs.prototype.export = function(keys){
     function makeLine(obj,key){
         let line = key+'|'        
         for(const obj_key in obj[key]){
-//console.log(key,obj_key,obj[key][obj_key])
             line += obj[key][obj_key] +'|'
         }
         return line + '\n'
@@ -257,7 +254,7 @@ function makeGroup (grupo,rules){
     if(!this.hasOwnProperty(grupo)){
         const out = new Object
         
-        for (const campo in rules[grupo]) {         
+        for (const campo in rules[grupo]) {
             let value = rules[grupo][campo].def.toString().trim()
             const tipo = rules[grupo][campo].tipo
             const tam = rules[grupo][campo].tam.toString().split('-')

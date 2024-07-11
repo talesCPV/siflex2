@@ -6,6 +6,8 @@ echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
 
+    cp ~/Documentos/SQL/siflex/*.sql sql/
+
     git init
 
     git add assets/

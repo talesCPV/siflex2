@@ -226,12 +226,14 @@ function uploadNFs(txt, filename){
         alert('NFs exportada com sucesso!!')
         listNF('../NF/NFs/txt')
         if (confirm(`Deseja lançar od boletos?`)) {
-            for(let i=0; i<pageData.config.fatura.length; i++){
-                addBoleto(pageData.config.fatura[i])
+/*
+            for(let i=0; i<pageData.NFs.fatura.length; i++){
+                addBoleto(pageData.NFs.fatura[i])
             }
+*/
         }
         document.querySelector('#tab-export').click()
-    }) 
+    })
 }
 
 function uploadFile(file,path,filename){

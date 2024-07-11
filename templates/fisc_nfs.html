@@ -259,7 +259,7 @@ function startPage(){
     function saveFiscal(){
 
         const fat =  getFat()
-        const vNF = parseFloat(document.querySelector('#VlNFS').value)
+        const vNF = parseFloat(pageScreen.querySelector('#VlNFS').value)
 
         let fatura = ''
         let sum = 0
@@ -281,115 +281,39 @@ function startPage(){
         pageData.NFs.CONF.numNFS = pageScreen.querySelector('#numNFS').value
         pageData.NFs['10'].AlqIssSN_IP = pageData.NFs.CONF.AlqIssSN
         pageData.NFs['20'].AlqIss = pageData.NFs.CONF.AlqIssSN
-        pageData.NFs.CONF.LocalTom = document.querySelector('#cmbLocal').value
+        pageData.NFs.CONF.LocalTom = pageScreen.querySelector('#cmbLocal').value
+
+        pageData.NFs['10'].DtIni = pageScreen.querySelector('#dtEmit').value.date()
+        pageData.NFs['10'].DtFin = pageScreen.querySelector('#dtEmit').value.date()
+        pageData.NFs['20'].DtEmi = pageScreen.querySelector('#dtEmit').value.date()
 
         const vISS = vNF * (parseFloat(pageData.NFs.CONF.AlqIssSN)/100)
         const nRPS = (parseInt(pageData.NFs.CONF.numNFS)-parseInt(pageData.NFs.CONF.DefRPS)).toString().padStart(9,'0')
  
         const local = pageData.NFs.CONF.LocalTom     
-        const cliente = document.querySelector('#cliente')
-        const retido = document.querySelector('#cmbRetFont').value
+        const retido = pageScreen.querySelector('#cmbRetFont').value
 
         pageData.NFs['20'].NumRPS = nRPS
-        pageData.NFs['20'].VlNFS = vNF
+        pageData.NFs['20'].VlNFS = vNF.toFixed(2)
+        pageData.NFs['20'].VlBasCalc = vNF.toFixed(2)
         pageData.NFs['20'].VlIss = vISS.toFixed(2).replace('.',',')
-        pageData.NFs['20'].VlDed = vISS.toFixed(2)     
-        pageData.NFs['20'].DiscrSrv = document.querySelector('#DiscrSrv').value.replaceAll('\n', '\\\\')
-        pageData.NFs['20'].DiscrDed = document.querySelector('#DiscrDed').value.replaceAll('\n', '\\\\') + fatura
+        pageData.NFs['20'].DiscrSrv = pageScreen.querySelector('#DiscrSrv').value.replaceAll('\n', '\\\\')
+        pageData.NFs['20'].DiscrDed = pageScreen.querySelector('#DiscrDed').value.replaceAll('\n', '\\\\') + fatura
         pageData.NFs['20'].TipoLogLocPre = local=='TOM' ? '.' : ''
-        pageData.NFs['20'].LogLocPre = local=='TOM' ? cliente.querySelector('#LogTom').value : ''
-        pageData.NFs['20'].NumEndLocPre = local=='TOM' ? cliente.querySelector('#NumEndTom').value : ''
-        pageData.NFs['20'].ComplEndLocPre = local=='TOM' ? cliente.querySelector('#ComplEndTom').value : ''
-        pageData.NFs['20'].BairroLocPre = local=='TOM' ? cliente.querySelector('#BairroTom').value : ''
-        pageData.NFs['20'].MunLocPre = local=='TOM' ? cliente.querySelector('#MunTom').value : ''
-        pageData.NFs['20'].SiglaUFLocPre = local=='TOM' ? cliente.querySelector('#SiglaUFTom').value : ''
-        pageData.NFs['20'].CepLocPre = local=='TOM' ? getNum(cliente.querySelector('#CepTom').value) : ''
-        pageData.NFs['20'].Telefone = local=='TOM' ? getNum(cliente.querySelector('#Telefone').value) : ''
+        pageData.NFs['20'].LogLocPre = local=='TOM' ? pageData.NFs['20'].LogTom : ''
+        pageData.NFs['20'].NumEndLocPre = local=='TOM' ? pageData.NFs['20'].NumEndTom : ''
+        pageData.NFs['20'].ComplEndLocPre = local=='TOM' ? pageData.NFs['20'].ComplEndTom : ''
+        pageData.NFs['20'].BairroLocPre = local=='TOM' ? pageData.NFs['20'].BairroTom : ''
+        pageData.NFs['20'].MunLocPre = local=='TOM' ? pageData.NFs['20'].MunTom : ''
+        pageData.NFs['20'].SiglaUFLocpre = local=='TOM' ? pageData.NFs['20'].SiglaUFTom : ''
+        pageData.NFs['20'].CepLocPre = local=='TOM' ? pageData.NFs['20'].CepTom : ''
+        pageData.NFs['20'].Telefone = local=='TOM' ? getNum(pageScreen.querySelector('#cliente').querySelector('#Telefone').value) : ''
         pageData.NFs['20'].VlIss = retido=='SIM' ? '0,00' : vISS.toFixed(2).replace('.',',')
         pageData.NFs['20'].VlIssRet = retido=='SIM' ? vISS.toFixed(2).replace('.',',') : '0,00'
-        pageData.NFs['90'].ValorNFS = document.querySelector('#VlNFS').value.replace('.',',')
+        pageData.NFs['90'].ValorNFS = pageScreen.querySelector('#VlNFS').value.replace('.',',')
         pageData.NFs['90'].ValorISS = retido=='SIM' ? '0,00' : vISS.toFixed(2).replace('.',',')
-        pageData.NFs['90'].ValorIssRet = retido=='SIM' ? vISS.toFixed(2).replace('.',',') : '0,00'
-
-/*
-        pageData.config.CONF.DefRPS = document.querySelector('#edtRps').value.trim()
-
-        const emitente = document.querySelector('#emitente')
-        const local = document.querySelector('#cmbLocal').value
-        const cliente = document.querySelector('#cliente')
-        const retido = document.querySelector('#cmbRetFont').value
-        const iss = getNumComa(parseFloat(document.querySelector('#edtValor').value)*(parseFloat(document.querySelector('#edtAliq').value)/100))
-
-        const parc = document.querySelector('#edtDias').value.split('/')
-        const total = parseFloat(document.querySelector('#edtValor').value)
-        pageData.config.fatura = []
-        let fatura = ''
-        let pg = 0
-        let now = new Date
-        for(let i=0; i< parc.length; i++){
-            now = new Date            
-            now.change(parseInt(parc[i]))
-            const pgto = new Object            
-                pgto.sac = pageData.config['20'].RazSocTom.split(' ')[0]
-                pgto.nf = document.querySelector('#edtNfsNum').value.trim()
-                pgto.ref =  (i+1).toString().padStart(2,"0") +'/'+ (parc.length).toString().padStart(2,"0")
-                pgto.venc = now.getFormatDate()
-                pgto.val = i != (parc.length-1) ? (total/parc.length).toFixed(2) : (total-pg).toFixed(2)
-            pageData.config.fatura.push(pgto)
-
-            fatura += `\\\\Pgto ${pgto.ref} Venc.${now.getFormatBR()} Valor R$${pgto.val}`
-            pg += (total/parc.length)
-        }
-        fatura += '\\\\**Tributado pelo ANEXO III Simples Nacional Conforme LC 123/2006'
-
-        now = new Date
-        pageData.config['10'].CpfCnpj = getNum(emitente.querySelector('#CNPJ').value)
-        pageData.config['10'].DtIni = now.getFormatBR()
-        pageData.config['10'].DtFin = now.getFormatBR()
-        pageData.config['10'].TipoTrib = '4'
-        pageData.config['10'].AlqIssSN_IP = getNumComa(document.querySelector('#edtAliq').value)
-        pageData.config['10'].Versao = '2.00'
-
-        pageData.config['20'].TipoNFS = 'RPS'
-        pageData.config['20'].NumRps = (parseInt(document.querySelector('#edtNfsNum').value)-parseInt(document.querySelector('#edtRps').value)).toString().padStart(9,'0')
-        pageData.config['20'].SerRps = '001'
-        pageData.config['20'].DtEmi = now.getFormatBR()
-        pageData.config['20'].RetFonte = retido
-        pageData.config['20'].CodSrv = '14.01'
-        pageData.config['20'].DiscrSrv = document.querySelector('#txtServicos').value.replaceAll('\n', '\\\\')
-        pageData.config['20'].VlNFS = getNumComa(document.querySelector('#edtValor').value)
-        pageData.config['20'].VlDed =  '0,00'
-        pageData.config['20'].DiscrDed = document.querySelector('#DiscrDed').value.replaceAll('\n', '\\\\') + fatura
-        pageData.config['20'].VlBasCalc = getNumComa(document.querySelector('#edtValor').value)
-        pageData.config['20'].AlqIss = getNumComa(document.querySelector('#edtAliq').value)
-        pageData.config['20'].VlIss = retido=='SIM' ? '0,00' : iss
-        pageData.config['20'].VlIssRet = retido=='SIM' ? iss : '0,00' 
-
-        pageData.config['20'].TipoLogLocPre = local=='TOM' ? '.' : ''
-        pageData.config['20'].LogLocPre = local=='TOM' ? cliente.querySelector('#xLgr').value : ''
-        pageData.config['20'].NumEndLocPre = local=='TOM' ? cliente.querySelector('#nro').value : ''
-        pageData.config['20'].ComplEndLocPre = local=='TOM' ? cliente.querySelector('#cpl').value : ''
-        pageData.config['20'].BairroLocPre = local=='TOM' ? cliente.querySelector('#bairro').value : ''
-        pageData.config['20'].MunLocPre = local=='TOM' ? cliente.querySelector('#xMun').value : ''
-        pageData.config['20'].SiglaUFLocPre = local=='TOM' ? cliente.querySelector('#UF').value : ''
-        pageData.config['20'].CepLocPre = local=='TOM' ? getNum(cliente.querySelector('#CEP').value) : ''
-        pageData.config['20'].EMail_1 = emitente.querySelector('#email').value.trim().toLowerCase()
-        pageData.config['20'].EMail_2 = cliente.querySelector('#email').value.trim().toLowerCase()
-        pageData.config['20'].EMail_3 = ''
-
-        pageData.config['90'].QtdRegNormal = '00001'
-        pageData.config['90'].ValorNFS = getNumComa(document.querySelector('#edtValor').value)
-        pageData.config['90'].ValorISS = retido=='SIM' ? '0,00' : iss
-        pageData.config['90'].ValorDed = '0,00'
-        pageData.config['90'].ValorIssRet = retido=='SIM' ? iss : '0,00'
-        pageData.config['90'].QtdReg30 = '0'
-        pageData.config['90'].ValTrib = '0,00'
-
-        pageData.config['CONF'].numNFS = document.querySelector('#edtNfsNum').value.trim().padStart(9,'0')
-        pageData.config['CONF'].DtHrGerNf = now.getFullDate()
-
-        NFsConf(pageData.config)
-*/        
+        pageData.NFs['90'].ValorIssRetTom = retido=='SIM' ? vISS.toFixed(2).replace('.',',') : '0,00'
+      
     }
 
 
@@ -427,14 +351,10 @@ function startPage(){
 
     pageScreen.querySelector('#brnGeraNFs').addEventListener('click',()=>{
         saveNFs()
-/*        
-        pageData.NFs.CONF.AlqIssSN = pageScreen.querySelector('#AlqIssSN').value.replace('.',',')
-        pageData.NFs['10'].AlqIssSN_IP = pageData.NFs.CONF.AlqIssSN
-        pageData.NFs['20'].AlqIss = pageData.NFs.CONF.AlqIssSN
-        pageScreen.querySelector('#dtEmit').value        
-*/
         const txt = pageData.NFs.export('10,20,90')
-        console.log(txt)
+        const filename = 'NFs-'+(pageData.NFs.CONF.numNFS).padStart(6,'0')
+        uploadNFs(txt, filename) 
+
     })
 
     pageScreen.querySelector('#txtFiles').addEventListener('dblclick',()=>{
@@ -452,7 +372,7 @@ function startPage(){
     pageFunc.fillServExec = ()=>{
         
         function getDate(){
-            return (pageScreen.querySelector('#edtIni').value.length > 0 && pageScreen.querySelector('#edtFin').value.length > 0) || !document.getElementById('ckbData').checked
+            return (pageScreen.querySelector('#edtIni').value.length > 0 && pageScreen.querySelector('#edtFin').value.length > 0) || !pageScreen.querySelector('#ckbData').checked
         }
         
         if(getDate()){
