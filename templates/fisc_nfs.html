@@ -290,7 +290,7 @@ function startPage(){
         const vISS = vNF * (parseFloat(pageData.NFs.CONF.AlqIssSN)/100)
         const nRPS = (parseInt(pageData.NFs.CONF.numNFS)-parseInt(pageData.NFs.CONF.DefRPS)).toString().padStart(9,'0')
  
-        const local = pageData.NFs.CONF.LocalTom     
+        const local = pageData.NFs.CONF.LocalTom
         const retido = pageScreen.querySelector('#cmbRetFont').value
 
         pageData.NFs['20'].NumRPS = nRPS
