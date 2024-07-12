@@ -3,3 +3,8 @@
 03/07/2024 14:56 tales@flexibus.com.br : Menu Incluido (NFs Config)
 03/07/2024 14:58 tales@flexibus.com.br : Menu Alterado (NFs Config, sys_nfs_config.html, pop-up, Configuracao de Regras da NFs)
 10/07/2024 15:24 tales@flexibus.com.br : Funcionario Editado MARCELO CUSTODIO DE SIQUEIRA -> MARCELO CUSTODIO DE SIQUEIRA
+12/07/2024 15:17 tales@flexibus.com.br : INCLUSAO SERV EXEC - Cliente:undefined, Data:2024-07-12, N. Carro:teste, VALOR: R$0.00
+12/07/2024 15:20 tales@flexibus.com.br : INCLUSAO SERV EXEC - Cliente:undefined, Data:2024-07-12, N. Carro:teste, VALOR: R$0.00
+12/07/2024 15:24 tales@flexibus.com.br : DELECAO SERV EXEC - Cliente:3E COMERCIAL LTDA, Data:2024-07-12, N. Carro:teste, VALOR: R$0.00
+12/07/2024 15:24 tales@flexibus.com.br : INCLUSAO SERV EXEC - Cliente:undefined, Data:2024-07-12, N. Carro:12, VALOR: R$0.00
+12/07/2024 15:25 tales@flexibus.com.br : DELECAO SERV EXEC - Cliente:NEXT MOBILIDADE, Data:2024-07-12, N. Carro:12, VALOR: R$0.00

@@ -68,7 +68,7 @@
 
         /* SERVIÇO EXECUTADO */
         "SERV-0" => 'CALL sp_view_serv_exec(@access,@hash,"x00","x01","x02","x03","x04");', // FIELD,SIGNAL, VALUE, DT_INI, DT_FIN
-        "SERV-1" => 'CALL sp_set_serv_exec(@access, @hash, x00, x01,"x02","x03",x04,"x05","x06","x07","x08");', // ID,ID_EMP,DATA_ANALISE,NUM_CARRO,NF,FUNC,PEDIDO,VALOR,OBS
+        "SERV-1" => 'CALL sp_set_serv_exec(@access, @hash, x00, x01,"x02","x03","x04","x05","x06","x07","x08");', // ID,ID_EMP,DATA_ANALISE,NUM_CARRO,NF,FUNC,PEDIDO,VALOR,OBS
         "SERV-2" => 'CALL sp_del_serv_exec(@access,@hash,x00);', // ID
 
         /* TOOLS */

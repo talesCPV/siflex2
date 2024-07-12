@@ -299,6 +299,7 @@ function startPage(){
         pageData.NFs['20'].VlIss = vISS.toFixed(2).replace('.',',')
         pageData.NFs['20'].DiscrSrv = pageScreen.querySelector('#DiscrSrv').value.replaceAll('\n', '\\\\')
         pageData.NFs['20'].DiscrDed = pageScreen.querySelector('#DiscrDed').value.replaceAll('\n', '\\\\') + fatura
+        pageData.NFs['20'].RetFonte = retido
         pageData.NFs['20'].TipoLogLocPre = local=='TOM' ? '.' : ''
         pageData.NFs['20'].LogLocPre = local=='TOM' ? pageData.NFs['20'].LogTom : ''
         pageData.NFs['20'].NumEndLocPre = local=='TOM' ? pageData.NFs['20'].NumEndTom : ''

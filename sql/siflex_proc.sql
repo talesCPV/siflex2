@@ -900,6 +900,7 @@ DELIMITER $$
 	END $$
 	DELIMITER ;
 
+ DROP PROCEDURE sp_set_serv_exec;
 DELIMITER $$
 	CREATE PROCEDURE sp_set_serv_exec(
 		IN Iallow varchar(80),
