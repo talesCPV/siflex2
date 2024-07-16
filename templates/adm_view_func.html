@@ -76,7 +76,7 @@
                     <select id="cmbSetor" class="only-view" disabled></select>      
                     <label for="cmbAtivo">Status</label>
                     <select id="cmbAtivo" class="only-view" disabled>
-                        <option value="1">Ativo</option>
+                        <option value="1" selected>Ativo</option>
                         <option value="0">Inativo</option>
                     </select>
                 </div>
@@ -228,7 +228,7 @@
             params.id_setor = pageScreen.querySelector('#cmbSetor').value.trim()
             params.tel = pageScreen.querySelector('#edtFone').value.trim()
             params.cel = pageScreen.querySelector('#edtCel').value.trim()
-            params.ativo = pageScreen.querySelector('#cmbAtivo').value.trim()
+            params.ativo = pageScreen.querySelector('#cmbAtivo').value
             params.obs = pageScreen.querySelector('#edtObs').value.trim()
          
         const myPromisse = queryDB(params,'FUN-1');
@@ -284,7 +284,7 @@
                 cmb.appendChild(opt)
             }
             if(!achou){
-                cmb.value = 0
+                cmb.selectedIndex = 0
             }
         });
     }
@@ -311,7 +311,7 @@
                 cmb.appendChild(opt)
             }
             if(!achou){
-                cmb.value = 0
+                cmb.selectedIndex = 0
             }
         });
     }

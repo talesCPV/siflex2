@@ -122,7 +122,7 @@
             params.func = func         
         const myPromisse = queryDB(params,'REL-0')
         myPromisse.then((resolve)=>{
-            const json = JSON.parse(resolve)
+            const json = JSON.parse(resolve)        
             for(let i=0; i<pageData.funcionarios.length; i++){
                 pageData.funcionarios[i].horas = json.filter(obj => obj.id_func == pageData.funcionarios[i].id)
 //                pageData.funcionarios[i].resumo = {'H_Tot':0,'H_Trab':0, 'H_Norm':0,'H_Falta':0,'H_Ext':0,'H_ADN':0,'H_ADN_EXT':0}
@@ -232,14 +232,14 @@
                 cell_ent.innerHTML = he.hr_ent.substr(0,5)
                 cell_sai.innerHTML = he.hr_sai.substr(0,5)
                 cell_ent.dt_ent = he.dt_ent
-                cell_sai.dt_sai = he.dt_sai                
+                cell_sai.dt_sai = he.dt_sai
                 cell_ent.data = he
 
                 cell_ent.classList.add(he.calc.Faltas > 0 ? 'falta' : 'hora-extra')
                 cell_sai.classList.add(he.calc.Faltas > 0 ? 'falta' : 'hora-extra')
               
             }
-            tbl_resumo.plot(pageData.funcionarios[i].resumo,'Nome,HN,HE,ADN,HE_ADN,Faltas,HT')
+            tbl_resumo.plot(pageData.funcionarios[i].resumo,'Nome,HN,HE,ADN,HE_ADN,Faltas,HT','Upp,flo,flo,flo,flo,flo,flo')
         }
     }
 
@@ -278,14 +278,14 @@
 
         out.HN = (vac || [0,6].includes(dt_ini.getDay())) ? 0 : dt_ini.getDay()==5 ? 8 : 9
         out.HT = formatTime((dt_fin-dt_ini)/3600000) - almoco
-        out.Faltas = out.HT > out.HN ? 0 : formatTime(out.HN - out.HT)
+        out.HT =  out.HT<0 ? 0 : out.HT
+        out.Faltas = (out.HT > out.HN ? 0 : formatTime(out.HN - out.HT))
         out.Almoco = almoco
         const only_HE = new Date(dt_ini)
         out.HN ? only_HE.addHour(out.HN + almoco) : null      
         out.HE_ADN = adn_not(only_HE,dt_fin)
         out.ADN = adn_not(dt_ini,dt_fin) - out.HE_ADN
-        out.HE = out.HT > out.HN ? formatTime(out.HT - out.HN - out.HE_ADN) : 0
-
+        out.HE = out.HT > out.HN ? formatTime(out.HT - out.HN - out.HE_ADN) : 0      
         return out
     }
 

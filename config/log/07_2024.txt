@@ -8,3 +8,16 @@
 12/07/2024 15:24 tales@flexibus.com.br : DELECAO SERV EXEC - Cliente:3E COMERCIAL LTDA, Data:2024-07-12, N. Carro:teste, VALOR: R$0.00
 12/07/2024 15:24 tales@flexibus.com.br : INCLUSAO SERV EXEC - Cliente:undefined, Data:2024-07-12, N. Carro:12, VALOR: R$0.00
 12/07/2024 15:25 tales@flexibus.com.br : DELECAO SERV EXEC - Cliente:NEXT MOBILIDADE, Data:2024-07-12, N. Carro:12, VALOR: R$0.00
+16/07/2024 15:48 tales@flexibus.com.br : Registro de Hora Deletado: LUIZ ANTONIO DE MOURA Entrada: 15/07/2024 as 00:00, Saida: 15/07/2024 as 00:00
+16/07/2024 15:49 tales@flexibus.com.br : Novo Registro de Hora: LUIZ ANTONIO DE MOURA Entrada: 15/07/2024 as 00:00, Saida: 15/07/2024 as 00:00
+16/07/2024 16:21 tales@flexibus.com.br : Funcionario Cadastrado  -> 1
+16/07/2024 16:23 tales@flexibus.com.br : Funcionario Editado LUIZ ANTONIO DE MOURA -> LUIZ ANTONIO DE MOURA
+16/07/2024 16:23 tales@flexibus.com.br : Funcionario Deletado -> LUIZ ANTONIO DE MOURA
+16/07/2024 16:24 tales@flexibus.com.br : Funcionario Cadastrado  -> 1
+16/07/2024 16:25 tales@flexibus.com.br : Funcionario Cadastrado  -> teste
+16/07/2024 16:29 tales@flexibus.com.br : Funcionario Cadastrado  -> teste 2
+16/07/2024 16:30 tales@flexibus.com.br : Funcionario Cadastrado  -> teste 2
+16/07/2024 16:30 tales@flexibus.com.br : Funcionario Deletado -> teste 2
+16/07/2024 16:31 tales@flexibus.com.br : Funcionario Deletado -> teste
+16/07/2024 16:43 tales@flexibus.com.br : Funcionario Cadastrado  -> teste 3
+16/07/2024 16:43 tales@flexibus.com.br : Funcionario Deletado -> teste 3
