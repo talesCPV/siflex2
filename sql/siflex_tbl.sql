@@ -59,6 +59,18 @@ CREATE TABLE tb_relogio_ponto (
     PRIMARY KEY (id)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
  
+ 
+--  DROP TABLE tb_ferias;
+CREATE TABLE tb_ferias (
+	id int(11) NOT NULL AUTO_INCREMENT,
+    id_func int(11) NOT NULL,
+    saida date NOT NULL,
+    volta date NOT NULL,
+    obs varchar(255) DEFAULT NULL,
+    FOREIGN KEY (id_func) REFERENCES tb_funcionario(id),
+    PRIMARY KEY (id)
+) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+ 
 -- DROP TABLE tb_setores;
 CREATE TABLE tb_setores (
     id int(11) NOT NULL AUTO_INCREMENT,

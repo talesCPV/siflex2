@@ -158,6 +158,12 @@ HTMLTableElement.prototype.plot = function(obj, fields,type='',file=false, mark=
                 case 'flo': // Numero Decimal
                     html = obj[arr[0]] != null ? parseFloat(obj[arr[0]]).toFixed(2) : ''
                     break;
+
+                case 'hor': // HORA 00:00
+                    const a = obj[arr[0]] != null ? parseFloat(obj[arr[0]]).toFixed(2) : 0
+                    html =  Math.floor(a).toString().padStart(2,0)+':'+ Math.round(parseFloat((a - Math.floor(a)) * 60)).toString().padStart(2,0)                    
+                    break;
+
                 case 'Upp': // Upper Case
                     html = obj[arr[0]] != null ? obj[arr[0]].toUpperCase().trim() : ''
                     break

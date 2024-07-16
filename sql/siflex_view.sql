@@ -76,6 +76,15 @@ DROP VIEW vw_func;
         
 SELECT * FROM vw_func;
 
+DROP VIEW vw_ferias;
+-- CREATE VIEW vw_ferias AS
+	SELECT FUNC.*, FER.*,
+    IF(FUNC.status="ATIVO",1,0) AS ativo
+    FROM tb_funcionario AS FUNC    
+	LEFT JOIN tb_ferias AS FER	
+	ON FUNC.id_cargo = FER.id_func
+    ORDER BY FUNC.nome;
+
 DROP VIEW vw_setor;
  CREATE VIEW vw_setor AS
 	SELECT FUNC.id AS id_func, COALESCE(SETOR.nome,"") AS setor, COALESCE(SETOR.id,0) AS id_setor

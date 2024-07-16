@@ -674,6 +674,28 @@ DELIMITER $$
 	END $$
 DELIMITER ;
 
+ DROP PROCEDURE sp_view_ferias;
+DELIMITER $$
+	CREATE PROCEDURE sp_view_ferias(	
+		IN Iallow varchar(80),
+		IN Ihash varchar(64),
+		IN Ifield varchar(30),
+        IN Isignal varchar(4),
+		IN Ivalue varchar(50),
+        IN Iativo boolean
+    )
+	BEGIN    
+		CALL sp_allow(Iallow,Ihash);
+		IF(@allow)THEN
+			SET @quer =CONCAT('SELECT * FROM vw_func WHERE ativo = ',Iativo,' AND ',Ifield,' ',Isignal,' ',Ivalue,' ORDER BY nome;');
+			PREPARE stmt1 FROM @quer;
+			EXECUTE stmt1;
+		ELSE 
+			SELECT 0 AS id, "" AS nome;
+        END IF;
+	END $$
+DELIMITER ;
+
 /* EMPRESAS */
 
  DROP PROCEDURE sp_view_emp;
